@@ -1,5 +1,5 @@
 from django.db.models import QuerySet
-from rest_framework import generics, status, viewsets
+from rest_framework import generics, mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.request import Request
@@ -9,16 +9,20 @@ from dataclasses import asdict
 from accounts.permissions import (
     IsActiveAdmin,
     IsEditorOrSuperAdmin,
+    IsReviewerOrSuperAdmin,
     IsSuperAdmin,
 )
 
-from .models import Issue, Newspaper
+from .models import Issue, Newspaper, Page
 from .serializers import (
     IssueDetailSerializer,
     IssueListSerializer,
     IssuePdfUploadSerializer,
     IssueWriteSerializer,
     NewspaperOptionSerializer,
+    PageDetailSerializer,
+    PageListSerializer,
+    PageTextUpdateSerializer,
 )
 from .services.pdf_processor import (
     PdfProcessingError,
@@ -260,6 +264,241 @@ class AdminIssueViewSet(viewsets.ModelViewSet):
                     processing_result
                 ),
                 "issue": output_serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    @action(
+        detail=True,
+        methods=["get"],
+        url_path="pages",
+    )
+    def pages(
+        self,
+        request: Request,
+        pk=None,
+    ) -> Response:
+        issue = self.get_object()
+
+        queryset = issue.pages.all().order_by(
+            "page_number"
+        )
+
+        serializer = PageListSerializer(
+            queryset,
+            many=True,
+            context={
+                "request": request,
+            },
+        )
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK,
+        )
+
+
+class AdminPageViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
+    """
+    Gazeta betlarini ko‘rish, matnini tahrirlash
+    va tasdiqlash API'si.
+    """
+
+    queryset = (
+        Page.objects.select_related(
+            "issue",
+            "issue__newspaper",
+        )
+        .all()
+        .order_by(
+            "issue_id",
+            "page_number",
+        )
+    )
+
+    http_method_names = [
+        "get",
+        "patch",
+        "post",
+        "head",
+        "options",
+    ]
+
+    def get_permissions(self):
+        if self.action == "partial_update":
+            permission_classes = [
+                IsEditorOrSuperAdmin,
+            ]
+
+        elif self.action in {
+            "approve",
+            "reject",
+        }:
+            permission_classes = [
+                IsReviewerOrSuperAdmin,
+            ]
+
+        else:
+            permission_classes = [
+                IsActiveAdmin,
+            ]
+
+        return [
+            permission()
+            for permission in permission_classes
+        ]
+
+    def get_serializer_class(self):
+        if self.action == "partial_update":
+            return PageTextUpdateSerializer
+
+        return PageDetailSerializer
+
+    def perform_update(self, serializer):
+        serializer.save(
+            processing_status=(
+                Page.ProcessingStatus.REVIEW
+            ),
+            is_approved=False,
+        )
+
+    def partial_update(
+        self,
+        request: Request,
+        *args,
+        **kwargs,
+    ) -> Response:
+        page = self.get_object()
+
+        serializer = self.get_serializer(
+            page,
+            data=request.data,
+            partial=True,
+        )
+        serializer.is_valid(
+            raise_exception=True
+        )
+
+        self.perform_update(serializer)
+
+        page.refresh_from_db()
+
+        output_serializer = (
+            PageDetailSerializer(
+                page,
+                context={
+                    "request": request,
+                },
+            )
+        )
+
+        return Response(
+            {
+                "detail": (
+                    "Bet matni muvaffaqiyatli "
+                    "saqlandi."
+                ),
+                "page": output_serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    @action(
+        detail=True,
+        methods=["post"],
+        url_path="approve",
+    )
+    def approve(
+        self,
+        request: Request,
+        pk=None,
+    ) -> Response:
+        page = self.get_object()
+
+        if not page.final_text.strip():
+            fallback_text = (
+                page.ocr_text.strip()
+                or page.raw_text.strip()
+            )
+
+            if fallback_text:
+                page.final_text = fallback_text
+
+        page.processing_status = (
+            Page.ProcessingStatus.APPROVED
+        )
+        page.is_approved = True
+
+        page.save(
+            update_fields=[
+                "final_text",
+                "processing_status",
+                "is_approved",
+                "updated_at",
+            ]
+        )
+
+        serializer = PageDetailSerializer(
+            page,
+            context={
+                "request": request,
+            },
+        )
+
+        return Response(
+            {
+                "detail": (
+                    f"{page.page_number}-bet "
+                    "tasdiqlandi."
+                ),
+                "page": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    @action(
+        detail=True,
+        methods=["post"],
+        url_path="reject",
+    )
+    def reject(
+        self,
+        request: Request,
+        pk=None,
+    ) -> Response:
+        page = self.get_object()
+
+        page.processing_status = (
+            Page.ProcessingStatus.REVIEW
+        )
+        page.is_approved = False
+
+        page.save(
+            update_fields=[
+                "processing_status",
+                "is_approved",
+                "updated_at",
+            ]
+        )
+
+        serializer = PageDetailSerializer(
+            page,
+            context={
+                "request": request,
+            },
+        )
+
+        return Response(
+            {
+                "detail": (
+                    f"{page.page_number}-bet "
+                    "qayta tahrirlashga yuborildi."
+                ),
+                "page": serializer.data,
             },
             status=status.HTTP_200_OK,
         )

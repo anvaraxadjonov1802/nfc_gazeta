@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     AdminIssueViewSet,
     AdminNewspaperListView,
+    AdminPageViewSet,
 )
 
 app_name = "newspapers"
@@ -14,6 +15,12 @@ router.register(
     "issues",
     AdminIssueViewSet,
     basename="admin-issues",
+)
+
+router.register(
+    "pages",
+    AdminPageViewSet,
+    basename="admin-pages",
 )
 
 urlpatterns = [

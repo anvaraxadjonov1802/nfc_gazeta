@@ -52,3 +52,50 @@ export interface NewspaperOption {
     is_public: boolean;
     created_at: string;
   }
+
+  export type PageProcessingStatus =
+  | "PENDING"
+  | "PROCESSING"
+  | "READY"
+  | "REVIEW"
+  | "APPROVED"
+  | "FAILED";
+
+  export interface IssueDetail
+    extends IssueListItem {
+    original_pdf: string | null;
+    approved_by_name: string;
+    published_at: string | null;
+  }
+  
+  export interface NewspaperPageListItem {
+    id: number;
+    issue_id: number;
+    page_number: number;
+    page_image: string | null;
+    processing_status: PageProcessingStatus;
+    processing_status_display: string;
+    extraction_confidence: string;
+    is_approved: boolean;
+    has_text: boolean;
+    text_length: number;
+    created_at: string;
+    updated_at: string;
+  }
+  
+  export interface NewspaperPageDetail
+    extends NewspaperPageListItem {
+    issue_title: string;
+    issue_number: number;
+    issue_year: number;
+    newspaper_name: string;
+    raw_text: string;
+    ocr_text: string;
+    final_text: string;
+    audio: string | null;
+  }
+  
+  export interface PageUpdateResponse {
+    detail: string;
+    page: NewspaperPageDetail;
+  }

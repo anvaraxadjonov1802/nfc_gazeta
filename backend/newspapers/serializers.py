@@ -4,7 +4,7 @@ from django.conf import settings
 from django.utils.text import slugify
 from rest_framework import serializers
 
-from .models import Issue, Newspaper
+from .models import Issue, Newspaper, Page
 
 
 def generate_unique_slug(
@@ -280,3 +280,87 @@ class IssuePdfUploadSerializer(serializers.Serializer):
             )
 
         return uploaded_file
+    
+class PageListSerializer(serializers.ModelSerializer):
+    processing_status_display = serializers.CharField(
+        source="get_processing_status_display",
+        read_only=True,
+    )
+    has_text = serializers.SerializerMethodField()
+    text_length = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Page
+        fields = (
+            "id",
+            "issue_id",
+            "page_number",
+            "page_image",
+            "processing_status",
+            "processing_status_display",
+            "extraction_confidence",
+            "is_approved",
+            "has_text",
+            "text_length",
+            "created_at",
+            "updated_at",
+        )
+        read_only_fields = fields
+
+    def get_has_text(self, obj: Page) -> bool:
+        return bool(
+            obj.final_text.strip()
+            or obj.ocr_text.strip()
+            or obj.raw_text.strip()
+        )
+
+    def get_text_length(self, obj: Page) -> int:
+        text = (
+            obj.final_text
+            or obj.ocr_text
+            or obj.raw_text
+        )
+
+        return len(text.strip())
+
+
+class PageDetailSerializer(PageListSerializer):
+    issue_title = serializers.CharField(
+        source="issue.title",
+        read_only=True,
+    )
+    issue_number = serializers.IntegerField(
+        source="issue.issue_number",
+        read_only=True,
+    )
+    issue_year = serializers.IntegerField(
+        source="issue.year",
+        read_only=True,
+    )
+    newspaper_name = serializers.CharField(
+        source="issue.newspaper.name",
+        read_only=True,
+    )
+
+    class Meta(PageListSerializer.Meta):
+        fields = PageListSerializer.Meta.fields + (
+            "issue_title",
+            "issue_number",
+            "issue_year",
+            "newspaper_name",
+            "raw_text",
+            "ocr_text",
+            "final_text",
+            "audio",
+        )
+
+
+class PageTextUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Page
+        fields = (
+            "final_text",
+        )
+
+    def validate_final_text(self, value: str) -> str:
+        return value.replace("\r\n", "\n").strip()

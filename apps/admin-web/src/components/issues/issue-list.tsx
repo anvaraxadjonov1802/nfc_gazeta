@@ -6,6 +6,8 @@ import {
   useState,
 } from "react";
 
+import Link from "next/link";
+
 import { getApiErrorMessage } from "@/lib/auth";
 import type {
   IssueListItem,
@@ -399,6 +401,13 @@ export function IssueList() {
                 ) : null}
 
                 <div className="issue-card-actions">
+                  <Link
+                    href={`/nashrlar/${issue.id}`}
+                    className="secondary-link-button"
+                    >
+                    Nashrni ochish
+                  </Link>  
+                  
                   {canProcess ? (
                     <button
                       type="button"
