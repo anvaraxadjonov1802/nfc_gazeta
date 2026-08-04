@@ -1,7 +1,10 @@
 from pathlib import Path
 
 from django.conf import settings
-from django.core.validators import FileExtensionValidator
+from django.core.validators import (
+    FileExtensionValidator,
+    MaxValueValidator,
+)
 from django.db import models
 from django.utils import timezone
 
@@ -188,6 +191,15 @@ class Issue(TimeStampedModel):
     page_count = models.PositiveIntegerField(
         default=0,
         verbose_name="Betlar soni",
+    )
+    processing_progress = models.PositiveSmallIntegerField(
+        default=0,
+        validators=[MaxValueValidator(100)],
+        verbose_name="Qayta ishlash foizi",
+    )
+    processing_error = models.TextField(
+        blank=True,
+        verbose_name="Qayta ishlash xatosi",
     )
     estimated_audio_duration = models.PositiveIntegerField(
         default=0,

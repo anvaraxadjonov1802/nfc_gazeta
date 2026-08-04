@@ -26,6 +26,8 @@ export interface NewspaperOption {
     description: string;
     cover_image: string | null;
     page_count: number;
+    processing_progress: number;
+    processing_error: string;
     estimated_audio_duration: number;
     status: IssueStatus;
     status_display: string;

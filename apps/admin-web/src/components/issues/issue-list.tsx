@@ -84,6 +84,12 @@ export function IssueList() {
   const [error, setError] =
     useState("");
 
+  const [successMessage, setSuccessMessage] =
+    useState("");
+
+  const [processingIssueId, setProcessingIssueId] =
+    useState<number | null>(null);
+
   const loadIssues = useCallback(
     async () => {
       setIsLoading(true);
@@ -136,20 +142,86 @@ export function IssueList() {
     };
   }, []);
 
+  async function handleProcessPdf(
+    issueId: number,
+  ) {
+    setProcessingIssueId(issueId);
+    setError("");
+    setSuccessMessage("");
+
+    try {
+      const response = await fetch(
+        `/api/issues/${issueId}/process`,
+        {
+          method: "POST",
+        },
+      );
+
+      const data = await response
+        .json()
+        .catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(
+          getApiErrorMessage(
+            data,
+            "PDF'ni qayta ishlab bo‘lmadi.",
+          ),
+        );
+      }
+
+      const result = data as {
+        detail?: string;
+        result?: {
+          page_count?: number;
+          text_pages?: number;
+          empty_text_pages?: number;
+        };
+      };
+
+      setSuccessMessage(
+        result.result
+          ? (
+              `${result.result.page_count ?? 0} ta bet ajratildi. ` +
+              `${result.result.text_pages ?? 0} ta betdan matn olindi.`
+            )
+          : (
+              result.detail ??
+              "PDF muvaffaqiyatli qayta ishlandi."
+            ),
+      );
+
+      const updatedIssues =
+        await requestIssues();
+
+      setIssues(updatedIssues);
+    } catch (processingError) {
+      setError(
+        processingError instanceof Error
+          ? processingError.message
+          : "Kutilmagan xatolik yuz berdi.",
+      );
+    } finally {
+      setProcessingIssueId(null);
+    }
+  }
+
   if (isLoading) {
     return (
       <section className="content-panel">
         <div className="form-loading-state">
           <div className="loading-spinner" />
-          <p>
-            Nashrlar yuklanmoqda...
-          </p>
+
+          <p>Nashrlar yuklanmoqda...</p>
         </div>
       </section>
     );
   }
 
-  if (error) {
+  if (
+    error &&
+    issues.length === 0
+  ) {
     return (
       <section className="content-panel">
         <div className="loading-error issue-load-error">
@@ -186,7 +258,9 @@ export function IssueList() {
           </h2>
 
           <p>
-            Birinchi gazeta sonini yaratish uchun yuqoridagi “Yangi nashr” tugmasini bosing.
+            Birinchi gazeta sonini yaratish
+            uchun yuqoridagi “Yangi nashr”
+            tugmasini bosing.
           </p>
         </div>
       </section>
@@ -194,91 +268,173 @@ export function IssueList() {
   }
 
   return (
-    <section
-      className="issue-list"
-      aria-label="Gazeta nashrlari"
-    >
-      {issues.map((issue) => (
-        <article
-          key={issue.id}
-          className="issue-list-card"
+    <>
+      {successMessage ? (
+        <div
+          className="success-message"
+          role="status"
         >
-          <div className="issue-cover-placeholder">
-            <span>
-              {issue.issue_number}
-            </span>
-            <small>SON</small>
-          </div>
+          {successMessage}
+        </div>
+      ) : null}
 
-          <div className="issue-card-content">
-            <div className="issue-card-top">
-              <div>
-                <span className="issue-newspaper-name">
-                  {issue.newspaper.name}
+      {error ? (
+        <div
+          className="error-message"
+          role="alert"
+        >
+          {error}
+        </div>
+      ) : null}
+
+      <section
+        className="issue-list"
+        aria-label="Gazeta nashrlari"
+      >
+        {issues.map((issue) => {
+          const isProcessing =
+            processingIssueId === issue.id;
+
+          const canProcess =
+            issue.has_pdf &&
+            issue.status !== "PUBLISHED" &&
+            issue.status !== "ARCHIVED";
+
+          return (
+            <article
+              key={issue.id}
+              className="issue-list-card"
+            >
+              <div className="issue-cover-placeholder">
+                <span>
+                  {issue.issue_number}
                 </span>
 
-                <h2>
-                  {issue.year}-yil,{" "}
-                  {issue.issue_number}-son
-                </h2>
+                <small>SON</small>
               </div>
 
-              <span
-                className={`status-badge ${getStatusClass(
-                  issue.status,
-                )}`}
-              >
-                {issue.status_display}
-              </span>
-            </div>
+              <div className="issue-card-content">
+                <div className="issue-card-top">
+                  <div>
+                    <span className="issue-newspaper-name">
+                      {issue.newspaper.name}
+                    </span>
 
-            <div className="issue-metadata">
-              <span>
-                Nashr sanasi:{" "}
-                <strong>
-                  {formatDate(
-                    issue.publication_date,
-                  )}
-                </strong>
-              </span>
+                    <h2>
+                      {issue.year}-yil,{" "}
+                      {issue.issue_number}-son
+                    </h2>
+                  </div>
 
-              <span>
-                PDF:{" "}
-                <strong>
-                  {issue.has_pdf
-                    ? "Yuklangan"
-                    : "Yuklanmagan"}
-                </strong>
-              </span>
+                  <span
+                    className={`status-badge ${getStatusClass(
+                      issue.status,
+                    )}`}
+                  >
+                    {isProcessing
+                      ? "Qayta ishlanmoqda"
+                      : issue.status_display}
+                  </span>
+                </div>
 
-              <span>
-                Betlar:{" "}
-                <strong>
-                  {issue.page_count}
-                </strong>
-              </span>
-            </div>
+                <div className="issue-metadata">
+                  <span>
+                    Nashr sanasi:{" "}
+                    <strong>
+                      {formatDate(
+                        issue.publication_date,
+                      )}
+                    </strong>
+                  </span>
 
-            {issue.description ? (
-              <p className="issue-description">
-                {issue.description}
-              </p>
-            ) : null}
+                  <span>
+                    PDF:{" "}
+                    <strong>
+                      {issue.has_pdf
+                        ? "Yuklangan"
+                        : "Yuklanmagan"}
+                    </strong>
+                  </span>
 
-            <div className="issue-card-footer">
-              <code>
-                NFC: /n/{issue.nfc_slug}
-              </code>
+                  <span>
+                    Betlar:{" "}
+                    <strong>
+                      {issue.page_count}
+                    </strong>
+                  </span>
+                </div>
 
-              <span>
-                {issue.created_by_name
-                  ? `Yaratdi: ${issue.created_by_name}`
-                  : ""}
-              </span>
-            </div>
-          </div>
-        </article>
-      ))}
-    </section>
+                {issue.description ? (
+                  <p className="issue-description">
+                    {issue.description}
+                  </p>
+                ) : null}
+
+                {issue.processing_progress > 0 ? (
+                  <div className="processing-progress">
+                    <div className="processing-progress-heading">
+                      <span>
+                        PDF qayta ishlash
+                      </span>
+
+                      <strong>
+                        {issue.processing_progress}%
+                      </strong>
+                    </div>
+
+                    <div className="processing-progress-track">
+                      <span
+                        style={{
+                          width: `${issue.processing_progress}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                ) : null}
+
+                {issue.processing_error ? (
+                  <div className="inline-processing-error">
+                    {issue.processing_error}
+                  </div>
+                ) : null}
+
+                <div className="issue-card-actions">
+                  {canProcess ? (
+                    <button
+                      type="button"
+                      className="process-pdf-button"
+                      disabled={isProcessing}
+                      onClick={() => {
+                        void handleProcessPdf(
+                          issue.id,
+                        );
+                      }}
+                    >
+                      {isProcessing
+                        ? "Betlar ajratilmoqda..."
+                        : issue.page_count > 0
+                          ? "PDF’ni qayta ishlash"
+                          : "PDF’ni betlarga ajratish"}
+                    </button>
+                  ) : null}
+                </div>
+
+                <div className="issue-card-footer">
+                  <code>
+                    NFC: /n/{issue.nfc_slug}
+                  </code>
+
+                  <span>
+                    {issue.created_by_name
+                      ? `Yaratdi: ${issue.created_by_name}`
+                      : ""}
+                  </span>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </section>
+    </>
   );
 }

@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.request import Request
 from rest_framework.response import Response
+from dataclasses import asdict
 
 from accounts.permissions import (
     IsActiveAdmin,
@@ -18,6 +19,10 @@ from .serializers import (
     IssuePdfUploadSerializer,
     IssueWriteSerializer,
     NewspaperOptionSerializer,
+)
+from .services.pdf_processor import (
+    PdfProcessingError,
+    process_issue_pdf,
 )
 
 
@@ -67,6 +72,7 @@ class AdminIssueViewSet(viewsets.ModelViewSet):
             "create",
             "partial_update",
             "upload_pdf",
+            "process_pdf",
         }:
             permission_classes = [
                 IsEditorOrSuperAdmin,
@@ -151,6 +157,8 @@ class AdminIssueViewSet(viewsets.ModelViewSet):
 
         issue.original_pdf = uploaded_file
         issue.page_count = 0
+        issue.processing_progress = 0
+        issue.processing_error = ""
         issue.status = Issue.Status.DRAFT
         issue.is_public = False
 
@@ -158,6 +166,8 @@ class AdminIssueViewSet(viewsets.ModelViewSet):
             update_fields=[
                 "original_pdf",
                 "page_count",
+                "processing_progress",
+                "processing_error",
                 "status",
                 "is_public",
                 "updated_at",
@@ -174,6 +184,81 @@ class AdminIssueViewSet(viewsets.ModelViewSet):
         return Response(
             {
                 "detail": "PDF muvaffaqiyatli yuklandi.",
+                "issue": output_serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+    
+    @action(
+        detail=True,
+        methods=["post"],
+        url_path="process-pdf",
+    )
+    def process_pdf(
+        self,
+        request: Request,
+        pk=None,
+    ) -> Response:
+        issue = self.get_object()
+
+        if not issue.original_pdf:
+            return Response(
+                {
+                    "detail": (
+                        "Avval ushbu nashrga "
+                        "PDF fayl yuklang."
+                    )
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if issue.status in {
+            Issue.Status.PUBLISHED,
+            Issue.Status.ARCHIVED,
+        }:
+            return Response(
+                {
+                    "detail": (
+                        "Nashr qilingan yoki "
+                        "arxivlangan gazetani "
+                        "qayta ishlab bo‘lmaydi."
+                    )
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            processing_result = (
+                process_issue_pdf(issue)
+            )
+        except PdfProcessingError as exc:
+            return Response(
+                {
+                    "detail": str(exc),
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        issue.refresh_from_db()
+
+        output_serializer = (
+            IssueDetailSerializer(
+                issue,
+                context={
+                    "request": request,
+                },
+            )
+        )
+
+        return Response(
+            {
+                "detail": (
+                    "PDF muvaffaqiyatli "
+                    "qayta ishlandi."
+                ),
+                "result": asdict(
+                    processing_result
+                ),
                 "issue": output_serializer.data,
             },
             status=status.HTTP_200_OK,

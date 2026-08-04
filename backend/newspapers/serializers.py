@@ -73,6 +73,8 @@ class IssueListSerializer(serializers.ModelSerializer):
             "description",
             "cover_image",
             "page_count",
+            "processing_progress",
+            "processing_error",
             "estimated_audio_duration",
             "status",
             "status_display",
