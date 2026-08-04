@@ -1,10 +1,10 @@
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from .permissions import IsActiveAdmin
 from .serializers import (
     AdminTokenObtainPairSerializer,
     UserSerializer,
@@ -16,7 +16,7 @@ class AdminTokenObtainPairView(TokenObtainPairView):
 
 
 class MeView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsActiveAdmin]
 
     def get(self, request):
         serializer = UserSerializer(request.user)
@@ -24,7 +24,7 @@ class MeView(APIView):
 
 
 class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsActiveAdmin]
 
     def post(self, request):
         refresh_token = request.data.get("refresh")
