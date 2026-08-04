@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -173,3 +173,11 @@ CORS_ALLOW_CREDENTIALS = True
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+
+MAX_PDF_SIZE_MB = int(
+    os.getenv(
+        "MAX_PDF_SIZE_MB",
+        "100",
+    )
+)

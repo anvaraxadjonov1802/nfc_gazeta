@@ -16,8 +16,22 @@ def health_check(request):
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/health/", health_check, name="health-check"),
-    path("api/auth/", include("accounts.urls")),
+
+    path(
+        "api/health/",
+        health_check,
+        name="health-check",
+    ),
+
+    path(
+        "api/auth/",
+        include("accounts.urls"),
+    ),
+
+    path(
+        "api/admin/",
+        include("newspapers.urls"),
+    ),
 ]
 
 if settings.DEBUG:
