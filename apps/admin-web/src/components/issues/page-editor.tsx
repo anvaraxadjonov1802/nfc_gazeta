@@ -57,6 +57,11 @@ export function PageEditor({
   const [success, setSuccess] =
     useState("");
 
+  const [
+      isRunningOcr,
+      setIsRunningOcr,
+    ] = useState(false);
+
   const canEdit =
     user.role === "SUPER_ADMIN" ||
     user.role === "EDITOR";
@@ -174,6 +179,62 @@ export function PageEditor({
       );
     } finally {
       setIsSaving(false);
+    }
+  }
+
+  async function runOcr() {
+    if (!canEdit) {
+      return;
+    }
+  
+    setIsRunningOcr(true);
+    setError("");
+    setSuccess("");
+  
+    try {
+      const response = await fetch(
+        `/api/pages/${pageId}/ocr`,
+        {
+          method: "POST",
+        },
+      );
+  
+      const data = await response
+        .json()
+        .catch(() => null);
+  
+      if (!response.ok) {
+        throw new Error(
+          getApiErrorMessage(
+            data,
+            "OCR orqali matnni aniqlab bo‘lmadi.",
+          ),
+        );
+      }
+  
+      const result =
+        data as PageUpdateResponse;
+  
+      setPage(result.page);
+  
+      setFinalText(
+        result.page.final_text
+        || result.page.ocr_text
+        || result.page.raw_text,
+      );
+  
+      setActiveTab("final");
+      setSuccess(result.detail);
+  
+    } catch (ocrError) {
+      setError(
+        ocrError instanceof Error
+          ? ocrError.message
+          : "OCR bajarishda xatolik yuz berdi.",
+      );
+  
+    } finally {
+      setIsRunningOcr(false);
     }
   }
 
@@ -434,13 +495,35 @@ export function PageEditor({
             {canEdit ? (
               <button
                 type="button"
+                className="secondary-button"
+                onClick={() => {
+                  void runOcr();
+                }}
+                disabled={
+                  isSaving
+                  || isReviewing
+                  || isRunningOcr
+                }
+              >
+                {isRunningOcr
+                  ? "OCR ishlamoqda..."
+                  : page.ocr_text
+                    ? "OCR’ni qayta ishlatish"
+                    : "OCR orqali matnni aniqlash"}
+              </button>
+            ) : null}
+            
+            {canEdit ? (
+              <button
+                type="button"
                 className="primary-button"
                 onClick={() => {
                   void saveText();
                 }}
                 disabled={
-                  isSaving ||
-                  isReviewing
+                  isSaving
+                  || isReviewing
+                  || isRunningOcr
                 }
               >
                 {isSaving
@@ -460,8 +543,9 @@ export function PageEditor({
                     );
                   }}
                   disabled={
-                    isSaving ||
-                    isReviewing
+                    isSaving
+                    || isReviewing
+                    || isRunningOcr
                   }
                 >
                   Betni tasdiqlash
@@ -476,8 +560,9 @@ export function PageEditor({
                     );
                   }}
                   disabled={
-                    isSaving ||
-                    isReviewing
+                    isSaving
+                    || isReviewing
+                    || isRunningOcr
                   }
                 >
                   Qayta tahrirlashga yuborish

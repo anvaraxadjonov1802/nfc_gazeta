@@ -177,7 +177,9 @@ export function IssueList() {
         result?: {
           page_count?: number;
           text_pages?: number;
+          ocr_pages?: number;
           empty_text_pages?: number;
+          ocr_failed_pages?: number;
         };
       };
 
@@ -185,7 +187,9 @@ export function IssueList() {
         result.result
           ? (
               `${result.result.page_count ?? 0} ta bet ajratildi. ` +
-              `${result.result.text_pages ?? 0} ta betdan matn olindi.`
+              `${result.result.text_pages ?? 0} ta betdan matn olindi. ` +
+              `${result.result.ocr_pages ?? 0} ta betda OCR ishladi. ` +
+              `${result.result.ocr_failed_pages ?? 0} ta betda OCR natija bermadi.`
             )
           : (
               result.detail ??
