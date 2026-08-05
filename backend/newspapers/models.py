@@ -592,6 +592,12 @@ class Article(TimeStampedModel):
         verbose_name="Nashr qilingan",
     )
 
+    published_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Nashr qilingan vaqt",
+    )
+
     class Meta:
         verbose_name = "Maqola"
         verbose_name_plural = "Maqolalar"

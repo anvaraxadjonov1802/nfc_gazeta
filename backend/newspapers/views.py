@@ -5,6 +5,7 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.request import Request
 from rest_framework.response import Response
 from dataclasses import asdict
+from django.utils import timezone
 
 from accounts.permissions import (
     IsActiveAdmin,
@@ -36,6 +37,7 @@ from .serializers import (
     ArticleDetailSerializer,
     ArticleListSerializer,
     CategoryOptionSerializer,
+    ArticleUpdateSerializer,
 )
 from .services.ocr_service import (
     OcrProcessingError,
@@ -691,10 +693,7 @@ class AdminCategoryListView(
 
 
 class AdminArticleViewSet(
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet,
+    viewsets.ModelViewSet
 ):
     queryset = (
         Article.objects.select_related(
@@ -717,6 +716,8 @@ class AdminArticleViewSet(
     http_method_names = [
         "get",
         "post",
+        "patch",
+        "delete",
         "head",
         "options",
     ]
@@ -732,6 +733,14 @@ class AdminArticleViewSet(
             "page"
         )
 
+        published = self.request.query_params.get(
+            "published"
+        )
+
+        search = self.request.query_params.get(
+            "search"
+        )
+
         if issue_id and issue_id.isdigit():
             queryset = queryset.filter(
                 issue_id=int(issue_id)
@@ -742,13 +751,45 @@ class AdminArticleViewSet(
                 page_id=int(page_id)
             )
 
+        if published == "true":
+            queryset = queryset.filter(
+                is_published=True
+            )
+
+        elif published == "false":
+            queryset = queryset.filter(
+                is_published=False
+            )
+
+        if search:
+            queryset = queryset.filter(
+                title__icontains=search.strip()
+            )
+
         return queryset
 
     def get_permissions(self):
-        if self.action == "create":
+        if self.action in {
+            "create",
+            "partial_update",
+        }:
             permission_classes = [
                 IsEditorOrSuperAdmin,
             ]
+
+        elif self.action in {
+            "publish",
+            "unpublish",
+        }:
+            permission_classes = [
+                IsReviewerOrSuperAdmin,
+            ]
+
+        elif self.action == "destroy":
+            permission_classes = [
+                IsSuperAdmin,
+            ]
+
         else:
             permission_classes = [
                 IsActiveAdmin,
@@ -762,6 +803,9 @@ class AdminArticleViewSet(
     def get_serializer_class(self):
         if self.action == "create":
             return ArticleCreateSerializer
+
+        if self.action == "partial_update":
+            return ArticleUpdateSerializer
 
         if self.action == "list":
             return ArticleListSerializer
@@ -804,5 +848,151 @@ class AdminArticleViewSet(
                 ),
             },
             status=status.HTTP_201_CREATED,
+        )
+
+    def partial_update(
+        self,
+        request: Request,
+        *args,
+        **kwargs,
+    ) -> Response:
+        article = self.get_object()
+
+        serializer = self.get_serializer(
+            article,
+            data=request.data,
+            partial=True,
+        )
+
+        serializer.is_valid(
+            raise_exception=True
+        )
+
+        serializer.save()
+
+        article.refresh_from_db()
+
+        output_serializer = (
+            ArticleDetailSerializer(
+                article,
+                context={
+                    "request": request,
+                },
+            )
+        )
+
+        return Response(
+            {
+                "detail": (
+                    "Maqola muvaffaqiyatli "
+                    "saqlandi."
+                ),
+                "article": (
+                    output_serializer.data
+                ),
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    @action(
+        detail=True,
+        methods=["post"],
+        url_path="publish",
+    )
+    def publish(
+        self,
+        request: Request,
+        pk=None,
+    ) -> Response:
+        article = self.get_object()
+
+        if not article.title.strip():
+            return Response(
+                {
+                    "detail": (
+                        "Maqolada sarlavha mavjud emas."
+                    )
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if not article.content.strip():
+            return Response(
+                {
+                    "detail": (
+                        "Bo‘sh maqolani nashr qilib bo‘lmaydi."
+                    )
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        article.is_published = True
+        article.published_at = timezone.now()
+
+        article.save(
+            update_fields=[
+                "is_published",
+                "published_at",
+                "updated_at",
+            ]
+        )
+
+        serializer = ArticleDetailSerializer(
+            article,
+            context={
+                "request": request,
+            },
+        )
+
+        return Response(
+            {
+                "detail": (
+                    "Maqola muvaffaqiyatli "
+                    "nashr qilindi."
+                ),
+                "article": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    @action(
+        detail=True,
+        methods=["post"],
+        url_path="unpublish",
+    )
+    def unpublish(
+        self,
+        request: Request,
+        pk=None,
+    ) -> Response:
+        article = self.get_object()
+
+        article.is_published = False
+        article.published_at = None
+
+        article.save(
+            update_fields=[
+                "is_published",
+                "published_at",
+                "updated_at",
+            ]
+        )
+
+        serializer = ArticleDetailSerializer(
+            article,
+            context={
+                "request": request,
+            },
+        )
+
+        return Response(
+            {
+                "detail": (
+                    "Maqola ommaviy saytdan "
+                    "olib tashlandi."
+                ),
+                "article": serializer.data,
+            },
+            status=status.HTTP_200_OK,
         )
 

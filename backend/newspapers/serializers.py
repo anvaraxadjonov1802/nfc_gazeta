@@ -539,6 +539,7 @@ class ArticleListSerializer(
             "reading_order",
             "is_featured",
             "is_published",
+            "published_at",
             "created_at",
             "updated_at",
         )
@@ -826,3 +827,103 @@ class ArticleCreateSerializer(
         )
 
         return article
+    
+
+class ArticleUpdateSerializer(
+    serializers.ModelSerializer
+):
+    category_id = serializers.PrimaryKeyRelatedField(
+        source="category",
+        queryset=Category.objects.filter(
+            is_active=True
+        ),
+        required=False,
+        allow_null=True,
+    )
+
+    source_image_id = serializers.PrimaryKeyRelatedField(
+        source="source_image",
+        queryset=PageImage.objects.filter(
+            is_ignored=False
+        ),
+        required=False,
+        allow_null=True,
+    )
+
+    class Meta:
+        model = Article
+        fields = (
+            "category_id",
+            "source_image_id",
+            "title",
+            "summary",
+            "content",
+            "author",
+            "is_featured",
+        )
+
+    def validate_title(
+        self,
+        value: str,
+    ) -> str:
+        normalized_title = " ".join(
+            value.split()
+        )
+
+        if not normalized_title:
+            raise serializers.ValidationError(
+                "Maqola sarlavhasini kiriting."
+            )
+
+        return normalized_title
+
+    def validate_content(
+        self,
+        value: str,
+    ) -> str:
+        return value.replace(
+            "\r\n",
+            "\n",
+        ).strip()
+
+    def validate_summary(
+        self,
+        value: str,
+    ) -> str:
+        return value.strip()
+
+    def validate_author(
+        self,
+        value: str,
+    ) -> str:
+        return " ".join(
+            value.split()
+        )
+
+    def validate(self, attrs):
+        article = self.instance
+
+        if not article:
+            return attrs
+
+        source_image = attrs.get(
+            "source_image",
+            article.source_image,
+        )
+
+        if (
+            source_image
+            and article.page_id
+            and source_image.page_id
+            != article.page_id
+        ):
+            raise serializers.ValidationError(
+                {
+                    "source_image_id": (
+                        "Tanlangan rasm maqola "
+                        "joylashgan betga tegishli emas."
+                    )
+                }
+            )
+
+        return attrs
