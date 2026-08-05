@@ -13,7 +13,12 @@ from accounts.permissions import (
     IsSuperAdmin,
 )
 
-from .models import Issue, Newspaper, Page
+from .models import (
+    Issue,
+    Newspaper,
+    Page,
+    PageImage,
+)
 from .serializers import (
     IssueDetailSerializer,
     IssueListSerializer,
@@ -23,6 +28,8 @@ from .serializers import (
     PageDetailSerializer,
     PageListSerializer,
     PageTextUpdateSerializer,
+    PageImageSerializer,
+    PageImageUpdateSerializer,
 )
 from .services.ocr_service import (
     OcrProcessingError,
@@ -317,6 +324,10 @@ class AdminPageViewSet(
             "issue",
             "issue__newspaper",
         )
+        .prefetch_related(
+            "text_blocks",
+            "extracted_images",
+        )
         .all()
         .order_by(
             "issue_id",
@@ -567,3 +578,91 @@ class AdminPageViewSet(
             },
             status=status.HTTP_200_OK,
         )
+
+
+class AdminPageImageViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
+    queryset = (
+        PageImage.objects.select_related(
+            "page",
+            "page__issue",
+        )
+        .all()
+        .order_by(
+            "page_id",
+            "reading_order",
+        )
+    )
+
+    http_method_names = [
+        "get",
+        "patch",
+        "head",
+        "options",
+    ]
+
+    def get_permissions(self):
+        if self.action == "partial_update":
+            permission_classes = [
+                IsEditorOrSuperAdmin,
+            ]
+        else:
+            permission_classes = [
+                IsActiveAdmin,
+            ]
+
+        return [
+            permission()
+            for permission in permission_classes
+        ]
+
+    def get_serializer_class(self):
+        if self.action == "partial_update":
+            return PageImageUpdateSerializer
+
+        return PageImageSerializer
+
+    def partial_update(
+        self,
+        request: Request,
+        *args,
+        **kwargs,
+    ) -> Response:
+        page_image = self.get_object()
+
+        serializer = self.get_serializer(
+            page_image,
+            data=request.data,
+            partial=True,
+        )
+        serializer.is_valid(
+            raise_exception=True
+        )
+        serializer.save()
+
+        page_image.refresh_from_db()
+
+        output_serializer = PageImageSerializer(
+            page_image,
+            context={
+                "request": request,
+            },
+        )
+
+        return Response(
+            {
+                "detail": (
+                    "Rasm ma’lumotlari "
+                    "muvaffaqiyatli saqlandi."
+                ),
+                "image": output_serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+    
+
+
+    

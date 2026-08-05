@@ -4,7 +4,13 @@ from django.conf import settings
 from django.utils.text import slugify
 from rest_framework import serializers
 
-from .models import Issue, Newspaper, Page
+from .models import (
+    Issue,
+    Newspaper,
+    Page,
+    PageImage,
+    PageTextBlock,
+)
 
 
 def generate_unique_slug(
@@ -280,7 +286,87 @@ class IssuePdfUploadSerializer(serializers.Serializer):
             )
 
         return uploaded_file
-    
+
+class PageTextBlockSerializer(
+    serializers.ModelSerializer
+):
+    block_type_display = serializers.CharField(
+        source="get_block_type_display",
+        read_only=True,
+    )
+
+    class Meta:
+        model = PageTextBlock
+        fields = (
+            "id",
+            "block_index",
+            "block_type",
+            "block_type_display",
+            "raw_text",
+            "final_text",
+            "x0",
+            "y0",
+            "x1",
+            "y1",
+            "font_size",
+            "font_name",
+            "is_bold",
+            "reading_order",
+            "is_ignored",
+        )
+        read_only_fields = fields
+
+
+class PageImageSerializer(
+    serializers.ModelSerializer
+):
+    class Meta:
+        model = PageImage
+        fields = (
+            "id",
+            "page_id",
+            "block_index",
+            "image",
+            "caption",
+            "alt_text",
+            "x0",
+            "y0",
+            "x1",
+            "y1",
+            "width",
+            "height",
+            "reading_order",
+            "checksum",
+            "is_ignored",
+            "created_at",
+            "updated_at",
+        )
+        read_only_fields = fields
+
+
+class PageImageUpdateSerializer(
+    serializers.ModelSerializer
+):
+    class Meta:
+        model = PageImage
+        fields = (
+            "caption",
+            "alt_text",
+            "is_ignored",
+        )
+
+    def validate_caption(
+        self,
+        value: str,
+    ) -> str:
+        return value.strip()
+
+    def validate_alt_text(
+        self,
+        value: str,
+    ) -> str:
+        return value.strip()
+
 class PageListSerializer(serializers.ModelSerializer):
     processing_status_display = serializers.CharField(
         source="get_processing_status_display",
@@ -288,6 +374,8 @@ class PageListSerializer(serializers.ModelSerializer):
     )
     has_text = serializers.SerializerMethodField()
     text_length = serializers.SerializerMethodField()
+    image_count = serializers.SerializerMethodField()
+    text_block_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Page
@@ -302,6 +390,8 @@ class PageListSerializer(serializers.ModelSerializer):
             "is_approved",
             "has_text",
             "text_length",
+            "image_count",
+            "text_block_count",
             "created_at",
             "updated_at",
         )
@@ -323,6 +413,22 @@ class PageListSerializer(serializers.ModelSerializer):
 
         return len(text.strip())
 
+    def get_image_count(
+        self,
+        obj: Page,
+    ) -> int:
+        return obj.extracted_images.filter(
+            is_ignored=False
+        ).count()
+
+    def get_text_block_count(
+        self,
+        obj: Page,
+    ) -> int:
+        return obj.text_blocks.filter(
+            is_ignored=False
+        ).count()
+
 
 class PageDetailSerializer(PageListSerializer):
     issue_title = serializers.CharField(
@@ -341,6 +447,16 @@ class PageDetailSerializer(PageListSerializer):
         source="issue.newspaper.name",
         read_only=True,
     )
+    text_blocks = PageTextBlockSerializer(
+        many=True,
+        read_only=True,
+    )
+
+    images = PageImageSerializer(
+        source="extracted_images",
+        many=True,
+        read_only=True,
+    )
 
     class Meta(PageListSerializer.Meta):
         fields = PageListSerializer.Meta.fields + (
@@ -352,6 +468,8 @@ class PageDetailSerializer(PageListSerializer):
             "ocr_text",
             "final_text",
             "audio",
+            "text_blocks",
+            "images",
         )
 
 

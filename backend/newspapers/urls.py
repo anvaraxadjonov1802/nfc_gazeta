@@ -5,6 +5,7 @@ from .views import (
     AdminIssueViewSet,
     AdminNewspaperListView,
     AdminPageViewSet,
+    AdminPageImageViewSet,
 )
 
 app_name = "newspapers"
@@ -21,6 +22,12 @@ router.register(
     "pages",
     AdminPageViewSet,
     basename="admin-pages",
+)
+
+router.register(
+    "page-images",
+    AdminPageImageViewSet,
+    basename="admin-page-images",
 )
 
 urlpatterns = [

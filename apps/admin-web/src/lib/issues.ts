@@ -38,6 +38,12 @@ export interface NewspaperOption {
     updated_at: string;
   }
   
+  export interface IssueDetail extends IssueListItem {
+    original_pdf: string | null;
+    approved_by_name: string;
+    published_at: string | null;
+  }
+  
   export interface CreatedIssue {
     id: number;
     newspaper_id: number;
@@ -52,20 +58,58 @@ export interface NewspaperOption {
     is_public: boolean;
     created_at: string;
   }
-
+  
   export type PageProcessingStatus =
-  | "PENDING"
-  | "PROCESSING"
-  | "READY"
-  | "REVIEW"
-  | "APPROVED"
-  | "FAILED";
-
-  export interface IssueDetail
-    extends IssueListItem {
-    original_pdf: string | null;
-    approved_by_name: string;
-    published_at: string | null;
+    | "PENDING"
+    | "PROCESSING"
+    | "READY"
+    | "REVIEW"
+    | "APPROVED"
+    | "FAILED";
+  
+  export type TextBlockType =
+    | "TITLE"
+    | "TEXT"
+    | "CAPTION"
+    | "SIDEBAR"
+    | "UNKNOWN";
+  
+  export interface PageTextBlock {
+    id: number;
+    block_index: number;
+    block_type: TextBlockType;
+    block_type_display: string;
+    raw_text: string;
+    final_text: string;
+    x0: number;
+    y0: number;
+    x1: number;
+    y1: number;
+    font_size: number;
+    font_name: string;
+    is_bold: boolean;
+    reading_order: number;
+    is_ignored: boolean;
+  }
+  
+  export interface ExtractedPageImage {
+    id: number;
+    page_id: number;
+    block_index: number;
+    image: string;
+    caption: string;
+    alt_text: string;
+    x0: number;
+    y0: number;
+    x1: number;
+    y1: number;
+    width: number;
+    height: number;
+    reading_order: number;
+    checksum: string;
+    is_ignored: boolean;
+    created_at: string;
+    updated_at: string;
   }
   
   export interface NewspaperPageListItem {
@@ -79,12 +123,13 @@ export interface NewspaperOption {
     is_approved: boolean;
     has_text: boolean;
     text_length: number;
+    image_count: number;
+    text_block_count: number;
     created_at: string;
     updated_at: string;
   }
   
-  export interface NewspaperPageDetail
-    extends NewspaperPageListItem {
+  export interface NewspaperPageDetail extends NewspaperPageListItem {
     issue_title: string;
     issue_number: number;
     issue_year: number;
@@ -93,9 +138,16 @@ export interface NewspaperOption {
     ocr_text: string;
     final_text: string;
     audio: string | null;
+    text_blocks: PageTextBlock[];
+    images: ExtractedPageImage[];
   }
   
   export interface PageUpdateResponse {
     detail: string;
     page: NewspaperPageDetail;
+  }
+  
+  export interface PageImageUpdateResponse {
+    detail: string;
+    image: ExtractedPageImage;
   }

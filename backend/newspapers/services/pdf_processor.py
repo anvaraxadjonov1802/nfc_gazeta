@@ -14,7 +14,9 @@ from .ocr_service import (
     extract_page_text_with_ocr,
     should_run_ocr,
 )
-
+from .layout_extractor import (
+    extract_page_layout,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +32,9 @@ class PdfProcessingResult:
     ocr_pages: int
     empty_text_pages: int
     ocr_failed_pages: int
+    text_block_count: int
+    image_count: int
+    skipped_image_count: int
 
 
 @dataclass(frozen=True)
@@ -164,10 +169,22 @@ def delete_existing_pages(
     issue: Issue,
 ) -> None:
     existing_pages = list(
-        issue.pages.all()
+        issue.pages.prefetch_related(
+            "extracted_images"
+        ).all()
     )
 
     for existing_page in existing_pages:
+        for extracted_image in (
+            existing_page
+            .extracted_images
+            .all()
+        ):
+            if extracted_image.image:
+                extracted_image.image.delete(
+                    save=False
+                )
+
         if existing_page.page_image:
             existing_page.page_image.delete(
                 save=False
@@ -179,7 +196,6 @@ def delete_existing_pages(
             )
 
     issue.pages.all().delete()
-
 
 def mark_issue_failed(
     issue: Issue,
@@ -253,6 +269,9 @@ def process_issue_pdf(
             ocr_pages = 0
             empty_text_pages = 0
             ocr_failed_pages = 0
+            total_text_blocks = 0
+            total_images = 0
+            total_skipped_images = 0
 
             first_page_image: (
                 bytes | None
@@ -384,6 +403,28 @@ def process_issue_pdf(
 
                 database_page.save()
 
+                layout_result = (
+                    extract_page_layout(
+                        pdf_page,
+                        database_page,
+                    )
+                )
+
+                total_text_blocks += (
+                    layout_result
+                    .text_block_count
+                )
+
+                total_images += (
+                    layout_result
+                    .image_count
+                )
+
+                total_skipped_images += (
+                    layout_result
+                    .skipped_image_count
+                )
+
                 progress = int(
                     page_number
                     / total_pages
@@ -442,6 +483,13 @@ def process_issue_pdf(
                 ),
                 ocr_failed_pages=(
                     ocr_failed_pages
+                ),
+                text_block_count=(
+                    total_text_blocks
+                ),
+                image_count=total_images,
+                skipped_image_count=(
+                    total_skipped_images
                 ),
             )
 
