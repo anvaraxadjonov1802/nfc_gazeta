@@ -1,7 +1,5 @@
 from django.urls import path
 
-from analytics_app.views import PublicAnalyticsTrackView
-
 from .public_views import (
     PublicArticleDetailView,
     PublicArticleListView,
@@ -15,11 +13,6 @@ app_name = "public-newspapers"
 
 
 urlpatterns = [
-    path(
-        "analytics/track/",
-        PublicAnalyticsTrackView.as_view(),
-        name="analytics-track",
-    ),
     path(
         "home/",
         PublicHomeView.as_view(),

@@ -104,7 +104,7 @@ export function ArticleReader({
       <div className="flex flex-col gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <Link
           className="inline-flex items-center gap-2 text-xs font-bold text-[#003366] transition hover:text-[#D4AF37]"
-          href={`/n/${article.issue_nfc_slug}?src=web`}
+          href={`/n/${article.issue_nfc_slug}`}
         >
           <Icon name="arrow-left" size={16} />
           {article.issue_year}-yil, {article.issue_number}-songa qaytish
@@ -304,7 +304,7 @@ export function ArticleReader({
         <div className="mx-auto mt-10 flex max-w-3xl flex-col gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <Link
             className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#003366] px-5 text-xs font-bold text-white transition hover:bg-[#002244]"
-            href={`/n/${article.issue_nfc_slug}?src=web`}
+            href={`/n/${article.issue_nfc_slug}`}
           >
             <Icon
               className="text-[#D4AF37]"

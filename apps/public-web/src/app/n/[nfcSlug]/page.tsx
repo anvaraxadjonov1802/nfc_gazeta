@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ArticleCard } from "@/components/article-card";
+import { AnalyticsTracker } from "@/components/analytics/analytics-tracker";
 import { IssueViewer } from "@/components/issues/issue-viewer";
 import { Icon } from "@/components/ui/icon";
 import {
@@ -10,11 +11,43 @@ import {
   issueLabel,
 } from "@/lib/format";
 import { getPublicIssue } from "@/lib/public-api";
+import type { AnalyticsSource } from "@/lib/analytics-client";
 
 interface IssuePageProps {
   params: Promise<{
     nfcSlug: string;
   }>;
+  searchParams: Promise<{
+    src?: string | string[];
+    source?: string | string[];
+    utm_source?: string | string[];
+  }>;
+}
+
+function resolveTrackingSource(
+  value: string | string[] | undefined,
+): AnalyticsSource {
+  const normalized = Array.isArray(value)
+    ? value[0]?.toLowerCase()
+    : value?.toLowerCase();
+
+  if (normalized === "web") {
+    return "WEB";
+  }
+
+  if (normalized === "direct") {
+    return "DIRECT";
+  }
+
+  if (normalized === "external" || normalized === "social") {
+    return "EXTERNAL";
+  }
+
+  if (normalized === "unknown") {
+    return "UNKNOWN";
+  }
+
+  return "NFC";
 }
 
 export async function generateMetadata({
@@ -49,8 +82,13 @@ export async function generateMetadata({
 
 export default async function IssuePage({
   params,
+  searchParams,
 }: IssuePageProps) {
   const { nfcSlug } = await params;
+  const query = await searchParams;
+  const trackingSource = resolveTrackingSource(
+    query.src ?? query.source ?? query.utm_source,
+  );
 
   let issue;
 
@@ -77,6 +115,11 @@ export default async function IssuePage({
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+      <AnalyticsTracker
+        eventType="ISSUE_OPEN"
+        issueId={issue.id}
+        source={trackingSource}
+      />
       <header className="mb-7 rounded-2xl border border-slate-200 border-t-4 border-t-[#D4AF37] bg-white p-5 shadow-sm sm:p-7">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-4xl">
@@ -91,7 +134,9 @@ export default async function IssuePage({
             <div className="mt-5 flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-emerald-800">
                 <Icon name="nfc" size={14} />
-                NFC orqali ochilgan nashr
+                {trackingSource === "NFC"
+                  ? "NFC orqali ochilgan nashr"
+                  : "Elektron gazeta nashri"}
               </span>
               <span className="rounded-full bg-slate-100 px-3 py-1.5 text-[10px] font-bold text-slate-600">
                 {formatUzbekDate(
@@ -169,7 +214,10 @@ export default async function IssuePage({
         </div>
       </header>
 
-      <IssueViewer issue={issue} />
+      <IssueViewer
+        issue={issue}
+        trackingSource={trackingSource}
+      />
 
       {issue.articles.length > 0 ? (
         <section className="mt-14 space-y-6">

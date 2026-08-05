@@ -66,7 +66,7 @@ export function IssueCard({
           <Link
             aria-label={`${label} nashrini ochish`}
             className="relative mx-auto aspect-[0.72] w-full max-w-[340px] overflow-hidden rounded-xl border border-white/15 bg-white/10 shadow-2xl md:col-span-5"
-            href={`/n/${issue.nfc_slug}?src=web`}
+            href={`/n/${issue.nfc_slug}`}
           >
             <IssueCover
               featured
@@ -110,7 +110,7 @@ export function IssueCard({
             <div className="mt-7 flex flex-wrap gap-3">
               <Link
                 className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#D4AF37] px-5 text-sm font-black text-[#003366] shadow transition hover:bg-[#E5C358]"
-                href={`/n/${issue.nfc_slug}?src=web`}
+                href={`/n/${issue.nfc_slug}`}
               >
                 <Icon name="book" size={18} />
                 Gazetani o‘qish
@@ -134,7 +134,7 @@ export function IssueCard({
       <Link
         aria-label={`${label} nashrini ochish`}
         className="relative block aspect-[0.72] overflow-hidden bg-slate-100"
-        href={`/n/${issue.nfc_slug}?src=web`}
+        href={`/n/${issue.nfc_slug}`}
       >
         <IssueCover issue={issue} />
         <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-[#003366]/90 px-2 py-1 text-[9px] font-bold text-white shadow">
@@ -152,7 +152,7 @@ export function IssueCard({
           {issue.newspaper_name}
         </span>
         <h3 className="mt-2 font-serif text-lg font-bold leading-snug text-[#003366] transition group-hover:text-[#004080]">
-          <Link href={`/n/${issue.nfc_slug}?src=web`}>
+          <Link href={`/n/${issue.nfc_slug}`}>
             {label}
           </Link>
         </h3>
@@ -161,7 +161,7 @@ export function IssueCard({
         </p>
         <Link
           className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#003366] transition hover:text-[#D4AF37]"
-          href={`/n/${issue.nfc_slug}?src=web`}
+          href={`/n/${issue.nfc_slug}`}
         >
           Nashrni o‘qish
           <Icon name="arrow-right" size={15} />

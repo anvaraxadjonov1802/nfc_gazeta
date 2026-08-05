@@ -11,17 +11,12 @@ import {
 } from "react";
 
 import { Icon } from "@/components/ui/icon";
-import {
-  type AnalyticsSource,
-  trackAnalyticsEvent,
-} from "@/lib/analytics-client";
 import type {
   PublicIssueDetail,
 } from "@/lib/public-types";
 
 interface IssueViewerProps {
   issue: PublicIssueDetail;
-  trackingSource: AnalyticsSource;
 }
 
 type ViewerMode = "image" | "text";
@@ -40,7 +35,6 @@ function clamp(
 
 export function IssueViewer({
   issue,
-  trackingSource,
 }: IssueViewerProps) {
   const pages = issue.pages;
   const viewerRef = useRef<HTMLElement | null>(null);
@@ -59,28 +53,6 @@ export function IssueViewer({
     () => pages[currentIndex] ?? null,
     [currentIndex, pages],
   );
-
-  useEffect(() => {
-    if (!currentPage) {
-      return;
-    }
-
-    void trackAnalyticsEvent({
-      eventType: "PAGE_VIEW",
-      issueId: issue.id,
-      pageNumber: currentPage.page_number,
-      source: trackingSource,
-      dedupeKey: `page:${issue.id}:${currentPage.page_number}`,
-      metadata: {
-        viewer_mode: mode,
-      },
-    });
-  }, [
-    currentPage,
-    issue.id,
-    mode,
-    trackingSource,
-  ]);
 
   const selectPage = useCallback(
     (pageIndex: number) => {

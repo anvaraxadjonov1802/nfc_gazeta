@@ -68,7 +68,7 @@ export default async function HomePage() {
         {latestIssue ? (
           <Link
             className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#D4AF37] px-5 text-xs font-black text-[#003366] shadow transition hover:bg-[#E5C358]"
-            href={`/n/${latestIssue.nfc_slug}?src=web`}
+            href={`/n/${latestIssue.nfc_slug}`}
           >
             Eng so‘nggi son
             <Icon name="arrow-right" size={16} />
