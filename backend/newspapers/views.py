@@ -14,6 +14,8 @@ from accounts.permissions import (
 )
 
 from .models import (
+    Article,
+    Category,
     Issue,
     Newspaper,
     Page,
@@ -30,6 +32,10 @@ from .serializers import (
     PageTextUpdateSerializer,
     PageImageSerializer,
     PageImageUpdateSerializer,
+    ArticleCreateSerializer,
+    ArticleDetailSerializer,
+    ArticleListSerializer,
+    CategoryOptionSerializer,
 )
 from .services.ocr_service import (
     OcrProcessingError,
@@ -664,5 +670,139 @@ class AdminPageImageViewSet(
         )
     
 
+class AdminCategoryListView(
+    generics.ListAPIView
+):
+    permission_classes = [
+        IsActiveAdmin,
+    ]
 
-    
+    serializer_class = (
+        CategoryOptionSerializer
+    )
+
+    def get_queryset(self):
+        return Category.objects.filter(
+            is_active=True
+        ).order_by(
+            "order",
+            "name",
+        )
+
+
+class AdminArticleViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
+    queryset = (
+        Article.objects.select_related(
+            "issue",
+            "issue__newspaper",
+            "page",
+            "category",
+            "source_image",
+        )
+        .prefetch_related(
+            "source_blocks",
+        )
+        .all()
+        .order_by(
+            "-issue__publication_date",
+            "reading_order",
+        )
+    )
+
+    http_method_names = [
+        "get",
+        "post",
+        "head",
+        "options",
+    ]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        issue_id = self.request.query_params.get(
+            "issue"
+        )
+
+        page_id = self.request.query_params.get(
+            "page"
+        )
+
+        if issue_id and issue_id.isdigit():
+            queryset = queryset.filter(
+                issue_id=int(issue_id)
+            )
+
+        if page_id and page_id.isdigit():
+            queryset = queryset.filter(
+                page_id=int(page_id)
+            )
+
+        return queryset
+
+    def get_permissions(self):
+        if self.action == "create":
+            permission_classes = [
+                IsEditorOrSuperAdmin,
+            ]
+        else:
+            permission_classes = [
+                IsActiveAdmin,
+            ]
+
+        return [
+            permission()
+            for permission in permission_classes
+        ]
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return ArticleCreateSerializer
+
+        if self.action == "list":
+            return ArticleListSerializer
+
+        return ArticleDetailSerializer
+
+    def create(
+        self,
+        request: Request,
+        *args,
+        **kwargs,
+    ) -> Response:
+        serializer = self.get_serializer(
+            data=request.data
+        )
+
+        serializer.is_valid(
+            raise_exception=True
+        )
+
+        article = serializer.save()
+
+        output_serializer = (
+            ArticleDetailSerializer(
+                article,
+                context={
+                    "request": request,
+                },
+            )
+        )
+
+        return Response(
+            {
+                "detail": (
+                    "Elektron maqola "
+                    "muvaffaqiyatli yaratildi."
+                ),
+                "article": (
+                    output_serializer.data
+                ),
+            },
+            status=status.HTTP_201_CREATED,
+        )
+

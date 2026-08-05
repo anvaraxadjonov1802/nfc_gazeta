@@ -6,6 +6,8 @@ from .views import (
     AdminNewspaperListView,
     AdminPageViewSet,
     AdminPageImageViewSet,
+    AdminArticleViewSet,
+    AdminCategoryListView,
 )
 
 app_name = "newspapers"
@@ -30,6 +32,12 @@ router.register(
     basename="admin-page-images",
 )
 
+router.register(
+    "articles",
+    AdminArticleViewSet,
+    basename="admin-articles",
+)
+
 urlpatterns = [
     path(
         "newspapers/",
@@ -39,5 +47,11 @@ urlpatterns = [
     path(
         "",
         include(router.urls),
+    ),
+
+    path(
+        "categories/",
+        AdminCategoryListView.as_view(),
+        name="admin-category-list",
     ),
 ]

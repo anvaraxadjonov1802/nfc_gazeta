@@ -4,7 +4,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
+import { ArticleComposerPanel } from "@/components/issues/article-composer-panel";
 import { useAuth } from "@/components/auth/auth-provider";
 import { PageImagesPanel } from "@/components/issues/page-images-panel";
 import { getApiErrorMessage } from "@/lib/auth";
@@ -488,6 +488,11 @@ export function PageEditor({
         images={pageImages}
         canEdit={canEdit}
         onImageUpdated={handleImageUpdated}
+      />
+
+      <ArticleComposerPanel
+        page={page}
+        canEdit={canEdit}
       />
     </>
   );

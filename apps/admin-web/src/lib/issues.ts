@@ -151,3 +151,41 @@ export interface NewspaperOption {
     detail: string;
     image: ExtractedPageImage;
   }
+
+  export interface CategoryOption {
+    id: number;
+    name: string;
+    slug: string;
+  }
+  
+  export interface ArticleListItem {
+    id: number;
+    issue_id: number;
+    page_id: number | null;
+    page_number: number | null;
+    newspaper_name: string;
+    category: CategoryOption | null;
+    title: string;
+    slug: string;
+    summary: string;
+    author: string;
+    image: string | null;
+    source_image: ExtractedPageImage | null;
+    reading_order: number;
+    is_featured: boolean;
+    is_published: boolean;
+    created_at: string;
+    updated_at: string;
+  }
+  
+  export interface ArticleDetail
+    extends ArticleListItem {
+    content: string;
+    audio: string | null;
+    source_blocks: PageTextBlock[];
+  }
+  
+  export interface ArticleCreateResponse {
+    detail: string;
+    article: ArticleDetail;
+  }

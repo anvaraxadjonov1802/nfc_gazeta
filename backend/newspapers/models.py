@@ -558,6 +558,21 @@ class Article(TimeStampedModel):
         null=True,
         verbose_name="Asosiy rasm",
     )
+    source_blocks = models.ManyToManyField(
+        PageTextBlock,
+        related_name="articles",
+        blank=True,
+        verbose_name="Manba matn bloklari",
+    )
+
+    source_image = models.ForeignKey(
+        PageImage,
+        on_delete=models.SET_NULL,
+        related_name="articles",
+        null=True,
+        blank=True,
+        verbose_name="Manba rasmi",
+    )
     audio = models.FileField(
         upload_to="newspapers/articles/audio/",
         blank=True,
