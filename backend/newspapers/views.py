@@ -24,9 +24,13 @@ from .serializers import (
     PageListSerializer,
     PageTextUpdateSerializer,
 )
+from .services.ocr_service import (
+    OcrProcessingError,
+)
 from .services.pdf_processor import (
     PdfProcessingError,
     process_issue_pdf,
+    run_ocr_for_database_page,
 )
 
 
@@ -329,7 +333,10 @@ class AdminPageViewSet(
     ]
 
     def get_permissions(self):
-        if self.action == "partial_update":
+        if self.action in {
+            "partial_update",
+            "run_ocr",
+        }:
             permission_classes = [
                 IsEditorOrSuperAdmin,
             ]
@@ -497,6 +504,64 @@ class AdminPageViewSet(
                 "detail": (
                     f"{page.page_number}-bet "
                     "qayta tahrirlashga yuborildi."
+                ),
+                "page": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+    
+    @action(
+        detail=True,
+        methods=["post"],
+        url_path="run-ocr",
+    )
+    def run_ocr(
+        self,
+        request: Request,
+        pk=None,
+    ) -> Response:
+        page = self.get_object()
+
+        try:
+            ocr_result = (
+                run_ocr_for_database_page(
+                    page
+                )
+            )
+
+        except (
+            OcrProcessingError,
+            PdfProcessingError,
+        ) as exc:
+            return Response(
+                {
+                    "detail": str(exc),
+                },
+                status=(
+                    status
+                    .HTTP_400_BAD_REQUEST
+                ),
+            )
+
+        page.refresh_from_db()
+
+        serializer = (
+            PageDetailSerializer(
+                page,
+                context={
+                    "request": request,
+                },
+            )
+        )
+
+        return Response(
+            {
+                "detail": (
+                    f"{page.page_number}-bet "
+                    "OCR orqali qayta ishlandi."
+                ),
+                "result": asdict(
+                    ocr_result
                 ),
                 "page": serializer.data,
             },
