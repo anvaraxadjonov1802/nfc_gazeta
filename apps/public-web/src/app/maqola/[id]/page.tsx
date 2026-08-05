@@ -1,159 +1,73 @@
-/* eslint-disable @next/next/no-img-element */
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-import type {
-    Metadata,
-  } from "next";
-  import Link from "next/link";
-  import {
-    notFound,
-  } from "next/navigation";
-  
-  import {
-    getPublicArticle,
-  } from "@/lib/public-api";
-  
-  interface ArticlePageProps {
-    params: Promise<{
-      id: string;
-    }>;
-  }
-  
-  export async function generateMetadata({
-    params,
-  }: ArticlePageProps): Promise<Metadata> {
-    const { id } = await params;
-  
-    const article =
-      await getPublicArticle(id);
-  
+import { ArticleReader } from "@/components/articles/article-reader";
+import { getPublicArticle } from "@/lib/public-api";
+
+interface ArticlePageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+export async function generateMetadata({
+  params,
+}: ArticlePageProps): Promise<Metadata> {
+  const { id } = await params;
+
+  try {
+    const article = await getPublicArticle(id);
+
     if (!article) {
       return {
         title: "Maqola topilmadi",
       };
     }
-  
+
     return {
       title: article.title,
       description:
         article.summary ||
         article.content.slice(0, 160),
     };
+  } catch {
+    return {
+      title: "Elektron maqola",
+    };
   }
-  
-  export default async function ArticlePage({
-    params,
-  }: ArticlePageProps) {
-    const { id } = await params;
-  
-    const article =
-      await getPublicArticle(id);
-  
-    if (!article) {
-      notFound();
-    }
-  
-    const paragraphs =
-      article.content
-        .split(/\n{2,}/)
-        .map((paragraph) =>
-          paragraph.trim()
-        )
-        .filter(Boolean);
-  
+}
+
+export default async function ArticlePage({
+  params,
+}: ArticlePageProps) {
+  const { id } = await params;
+
+  let article;
+
+  try {
+    article = await getPublicArticle(id);
+  } catch {
     return (
-      <main className="site-container public-page">
-        <article className="public-article-detail">
-          <header className="public-article-header">
-            <Link
-              href={`/n/${article.issue_nfc_slug}`}
-              className="public-back-link"
-            >
-              ← {article.issue_year}-yil,{" "}
-              {article.issue_number}-songa
-              qaytish
-            </Link>
-  
-            <span className="public-eyebrow">
-              {article.category?.name ??
-                article.newspaper_name}
-            </span>
-  
-            <h1>{article.title}</h1>
-  
-            {article.summary ? (
-              <p className="public-article-lead">
-                {article.summary}
-              </p>
-            ) : null}
-  
-            <div className="public-article-detail-meta">
-              {article.author ? (
-                <span>
-                  Muallif:{" "}
-                  <strong>
-                    {article.author}
-                  </strong>
-                </span>
-              ) : null}
-  
-              <span>
-                {article.issue_year}-yil,{" "}
-                {article.issue_number}-son
-              </span>
-            </div>
-          </header>
-  
-          {article.main_image ? (
-            <figure className="public-article-main-image">
-              <img
-                src={article.main_image}
-                alt={article.title}
-              />
-            </figure>
-          ) : null}
-  
-          <div className="public-article-body">
-            {paragraphs.length > 0 ? (
-              paragraphs.map(
-                (
-                  paragraph,
-                  paragraphIndex,
-                ) => (
-                  <p key={paragraphIndex}>
-                    {paragraph}
-                  </p>
-                ),
-              )
-            ) : (
-              <p>
-                Maqola matni mavjud emas.
-              </p>
-            )}
-          </div>
-  
-          {article.audio ? (
-            <section className="public-article-audio">
-              <h2>
-                Maqolani tinglash
-              </h2>
-  
-              <audio
-                controls
-                src={article.audio}
-                className="public-audio-player"
-              />
-            </section>
-          ) : null}
-  
-          <footer className="public-article-footer">
-            <Link
-              href={`/n/${article.issue_nfc_slug}`}
-              className="public-secondary-button"
-            >
-              Gazeta sonini ko‘rish
-            </Link>
-          </footer>
-        </article>
+      <main className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <section className="rounded-2xl border border-red-200 bg-red-50 p-10 text-center">
+          <h1 className="font-serif text-2xl font-black text-red-900">
+            Maqolani yuklab bo‘lmadi
+          </h1>
+          <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-red-700">
+            Backend server bilan aloqa mavjudligini tekshiring.
+          </p>
+        </section>
       </main>
     );
   }
+
+  if (!article) {
+    notFound();
+  }
+
+  return (
+    <main className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+      <ArticleReader article={article} />
+    </main>
+  );
+}
