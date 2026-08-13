@@ -45,6 +45,10 @@ export function IssueViewer({
   const pages = issue.pages;
   const viewerRef = useRef<HTMLElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const touchStartRef = useRef<{
+    x: number;
+    y: number;
+  } | null>(null);
 
   const [currentIndex, setCurrentIndex] =
     useState(0);
@@ -52,10 +56,17 @@ export function IssueViewer({
     useState<ViewerMode>("image");
   const [isFullscreen, setIsFullscreen] =
     useState(false);
+  const [isImmersive, setIsImmersive] =
+    useState(false);
   const [flipDirection, setFlipDirection] =
     useState<FlipDirection>(null);
+  const [flipActive, setFlipActive] =
+    useState(false);
   const [isAudioPlaying, setIsAudioPlaying] =
     useState(false);
+
+  const isStageFullscreen =
+    isFullscreen || isImmersive;
 
   const currentPage = useMemo(
     () => pages[currentIndex] ?? null,
@@ -104,6 +115,58 @@ export function IssueViewer({
     }
   }, [currentIndex]);
 
+  useEffect(() => {
+    if (
+      typeof window === "undefined" ||
+      typeof window.matchMedia !== "function"
+    ) {
+      return;
+    }
+
+    if (
+      window.matchMedia("(max-width: 767px)")
+        .matches
+    ) {
+      setIsImmersive(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isImmersive) {
+      return;
+    }
+
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [isImmersive]);
+
+  useEffect(() => {
+    if (!flipDirection) {
+      setFlipActive(false);
+      return;
+    }
+
+    let secondFrame = 0;
+    const firstFrame = window.requestAnimationFrame(
+      () => {
+        secondFrame = window.requestAnimationFrame(
+          () => {
+            setFlipActive(true);
+          },
+        );
+      },
+    );
+
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+    };
+  }, [flipDirection]);
+
   const selectPage = useCallback(
     (pageIndex: number) => {
       setCurrentIndex(
@@ -134,7 +197,7 @@ export function IssueViewer({
       window.setTimeout(() => {
         selectPage(target);
         setFlipDirection(null);
-      }, 900);
+      }, 960);
       return;
     }
 
@@ -158,7 +221,7 @@ export function IssueViewer({
       window.setTimeout(() => {
         selectPage(target);
         setFlipDirection(null);
-      }, 900);
+      }, 960);
       return;
     }
 
@@ -284,10 +347,12 @@ export function IssueViewer({
 
   return (
     <section
-      className={`issue-reader overflow-hidden rounded-2xl border border-[#E7DCC3] bg-[#FFFCF5] shadow-2xl ${
+      className={`issue-reader overflow-hidden border border-[#E7DCC3] bg-[#FFFCF5] shadow-2xl ${
         isFullscreen
           ? "h-screen w-screen rounded-none border-0"
-          : ""
+          : isImmersive
+            ? "fixed inset-0 z-50 h-[100dvh] w-screen overflow-y-auto rounded-none border-0"
+            : "rounded-2xl"
       }`}
       ref={viewerRef}
     >
@@ -384,14 +449,30 @@ export function IssueViewer({
           ) : null}
 
           <button
-            aria-label="To‘liq ekran"
+            aria-label={
+              isStageFullscreen
+                ? "Yopish"
+                : "To‘liq ekran"
+            }
             className="grid h-10 w-10 place-items-center rounded-lg border border-white/15 bg-white/5 transition hover:bg-white/10"
             onClick={() => {
+              if (isImmersive) {
+                setIsImmersive(false);
+                return;
+              }
+
               void toggleFullscreen();
             }}
             type="button"
           >
-            <Icon name="fullscreen" size={17} />
+            <Icon
+              name={
+                isStageFullscreen
+                  ? "close"
+                  : "fullscreen"
+              }
+              size={17}
+            />
           </button>
         </div>
       </div>
@@ -445,7 +526,45 @@ export function IssueViewer({
 
         <div className="min-w-0 bg-[#F7F1E3]">
           {mode === "image" ? (
-            <div className="issue-stage-book relative flex items-center justify-center px-3 py-6 sm:px-8 sm:py-10 lg:h-[780px] lg:py-12">
+            <div
+              className="issue-stage-book relative flex items-center justify-center px-3 py-6 sm:px-8 sm:py-10 lg:h-[780px] lg:py-12"
+              onTouchEnd={(event) => {
+                const start = touchStartRef.current;
+                touchStartRef.current = null;
+
+                if (!start) {
+                  return;
+                }
+
+                const touch =
+                  event.changedTouches[0];
+                const deltaX =
+                  touch.clientX - start.x;
+                const deltaY =
+                  touch.clientY - start.y;
+
+                if (
+                  Math.abs(deltaX) < 48 ||
+                  Math.abs(deltaX) <
+                    Math.abs(deltaY) * 1.4
+                ) {
+                  return;
+                }
+
+                if (deltaX < 0) {
+                  goToNextPage();
+                } else {
+                  goToPreviousPage();
+                }
+              }}
+              onTouchStart={(event) => {
+                const touch = event.touches[0];
+                touchStartRef.current = {
+                  x: touch.clientX,
+                  y: touch.clientY,
+                };
+              }}
+            >
               <button
                 aria-label="Oldingi varaq"
                 className="absolute left-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-[#E7DCC3] bg-white text-[#1E4468] shadow-md transition hover:scale-105 hover:bg-[#FBF8F2] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:h-11 sm:w-11 lg:left-6"
@@ -511,7 +630,9 @@ export function IssueViewer({
                             right: 0,
                             transformStyle: "preserve-3d",
                             transformOrigin: "left center",
-                            transform: "rotateY(-180deg)",
+                            transform: flipActive
+                              ? "rotateY(-180deg)"
+                              : "rotateY(0deg)",
                             transition:
                               "transform 0.9s cubic-bezier(0.45,0.05,0.15,1)",
                           }
@@ -519,7 +640,9 @@ export function IssueViewer({
                             left: 0,
                             transformStyle: "preserve-3d",
                             transformOrigin: "right center",
-                            transform: "rotateY(180deg)",
+                            transform: flipActive
+                              ? "rotateY(180deg)"
+                              : "rotateY(0deg)",
                             transition:
                               "transform 0.9s cubic-bezier(0.45,0.05,0.15,1)",
                           }
