@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 
 import { Icon } from "@/components/ui/icon";
 import {
@@ -49,6 +50,7 @@ export function IssueViewer({
     x: number;
     y: number;
   } | null>(null);
+  const flipRafRef = useRef<number | null>(null);
 
   const [currentIndex, setCurrentIndex] =
     useState(0);
@@ -60,8 +62,8 @@ export function IssueViewer({
     useState(false);
   const [flipDirection, setFlipDirection] =
     useState<FlipDirection>(null);
-  const [flipActive, setFlipActive] =
-    useState(false);
+  const [flipProgress, setFlipProgress] =
+    useState(0);
   const [isAudioPlaying, setIsAudioPlaying] =
     useState(false);
 
@@ -145,27 +147,14 @@ export function IssueViewer({
   }, [isImmersive]);
 
   useEffect(() => {
-    if (!flipDirection) {
-      setFlipActive(false);
-      return;
-    }
-
-    let secondFrame = 0;
-    const firstFrame = window.requestAnimationFrame(
-      () => {
-        secondFrame = window.requestAnimationFrame(
-          () => {
-            setFlipActive(true);
-          },
-        );
-      },
-    );
-
     return () => {
-      window.cancelAnimationFrame(firstFrame);
-      window.cancelAnimationFrame(secondFrame);
+      if (flipRafRef.current !== null) {
+        window.cancelAnimationFrame(
+          flipRafRef.current,
+        );
+      }
     };
-  }, [flipDirection]);
+  }, []);
 
   const selectPage = useCallback(
     (pageIndex: number) => {
@@ -178,6 +167,46 @@ export function IssueViewer({
       );
     },
     [pages.length],
+  );
+
+  const runFlip = useCallback(
+    (direction: "next" | "prev", target: number) => {
+      const durationMs = 820;
+      const startTime = performance.now();
+
+      setFlipDirection(direction);
+      setFlipProgress(0);
+
+      function step(now: number) {
+        const elapsed = now - startTime;
+        const t = Math.min(
+          elapsed / durationMs,
+          1,
+        );
+        const eased =
+          t < 0.5
+            ? 4 * t * t * t
+            : 1 -
+              Math.pow(-2 * t + 2, 3) / 2;
+
+        setFlipProgress(eased);
+
+        if (t < 1) {
+          flipRafRef.current =
+            window.requestAnimationFrame(step);
+          return;
+        }
+
+        flipRafRef.current = null;
+        selectPage(target);
+        setFlipDirection(null);
+        setFlipProgress(0);
+      }
+
+      flipRafRef.current =
+        window.requestAnimationFrame(step);
+    },
+    [selectPage],
   );
 
   const goToPreviousPage = useCallback(() => {
@@ -193,16 +222,18 @@ export function IssueViewer({
     }
 
     if (mode === "image") {
-      setFlipDirection("prev");
-      window.setTimeout(() => {
-        selectPage(target);
-        setFlipDirection(null);
-      }, 960);
+      runFlip("prev", target);
       return;
     }
 
     selectPage(target);
-  }, [currentIndex, flipDirection, mode, selectPage]);
+  }, [
+    currentIndex,
+    flipDirection,
+    mode,
+    runFlip,
+    selectPage,
+  ]);
 
   const goToNextPage = useCallback(() => {
     if (flipDirection) {
@@ -217,11 +248,7 @@ export function IssueViewer({
     }
 
     if (mode === "image") {
-      setFlipDirection("next");
-      window.setTimeout(() => {
-        selectPage(target);
-        setFlipDirection(null);
-      }, 960);
+      runFlip("next", target);
       return;
     }
 
@@ -231,6 +258,7 @@ export function IssueViewer({
     flipDirection,
     mode,
     pages.length,
+    runFlip,
     selectPage,
   ]);
 
@@ -345,7 +373,17 @@ export function IssueViewer({
       ? `${leftPage?.page_number}–${rightPage.page_number} / ${pages.length}`
       : `${currentPage.page_number} / ${pages.length}`;
 
-  return (
+  const flipDeg =
+    flipDirection === "next"
+      ? -180 * flipProgress
+      : flipDirection === "prev"
+        ? 180 * flipProgress
+        : 0;
+  const flipShadow = flipDirection
+    ? Math.sin(flipProgress * Math.PI)
+    : 0;
+
+  const content = (
     <section
       className={`issue-reader overflow-hidden border border-[#E7DCC3] bg-[#FFFCF5] shadow-2xl ${
         isFullscreen
@@ -623,6 +661,27 @@ export function IssueViewer({
 
                 {flipDirection ? (
                   <div
+                    className="pointer-events-none absolute inset-y-0 w-1/2"
+                    style={
+                      flipDirection === "next"
+                        ? {
+                            left: 0,
+                            opacity: flipShadow * 0.55,
+                            background:
+                              "linear-gradient(to left, rgba(0,0,0,.4), transparent 65%)",
+                          }
+                        : {
+                            right: 0,
+                            opacity: flipShadow * 0.55,
+                            background:
+                              "linear-gradient(to right, rgba(0,0,0,.4), transparent 65%)",
+                          }
+                    }
+                  />
+                ) : null}
+
+                {flipDirection ? (
+                  <div
                     className="absolute top-0 h-full w-1/2"
                     style={
                       flipDirection === "next"
@@ -630,21 +689,25 @@ export function IssueViewer({
                             right: 0,
                             transformStyle: "preserve-3d",
                             transformOrigin: "left center",
-                            transform: flipActive
-                              ? "rotateY(-180deg)"
-                              : "rotateY(0deg)",
-                            transition:
-                              "transform 0.9s cubic-bezier(0.45,0.05,0.15,1)",
+                            transform: `rotateY(${flipDeg}deg)`,
+                            boxShadow: `0 0 ${
+                              16 + 50 * flipShadow
+                            }px rgba(0,0,0,${(
+                              0.1 +
+                              0.35 * flipShadow
+                            ).toFixed(2)})`,
                           }
                         : {
                             left: 0,
                             transformStyle: "preserve-3d",
                             transformOrigin: "right center",
-                            transform: flipActive
-                              ? "rotateY(180deg)"
-                              : "rotateY(0deg)",
-                            transition:
-                              "transform 0.9s cubic-bezier(0.45,0.05,0.15,1)",
+                            transform: `rotateY(${flipDeg}deg)`,
+                            boxShadow: `0 0 ${
+                              16 + 50 * flipShadow
+                            }px rgba(0,0,0,${(
+                              0.1 +
+                              0.35 * flipShadow
+                            ).toFixed(2)})`,
                           }
                     }
                   >
@@ -768,4 +831,16 @@ export function IssueViewer({
       </footer>
     </section>
   );
+
+  if (
+    isImmersive &&
+    typeof document !== "undefined"
+  ) {
+    return createPortal(
+      content,
+      document.body,
+    );
+  }
+
+  return content;
 }
