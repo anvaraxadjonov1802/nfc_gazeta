@@ -3,13 +3,16 @@
 /* eslint-disable @next/next/no-img-element */
 
 import {
+  forwardRef,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
+  type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
+import HTMLFlipBook from "react-pageflip";
 
 import { Icon } from "@/components/ui/icon";
 import {
@@ -26,7 +29,6 @@ interface IssueViewerProps {
 }
 
 type ViewerMode = "image" | "text";
-type FlipDirection = "next" | "prev" | null;
 
 function clamp(
   value: number,
@@ -39,6 +41,20 @@ function clamp(
   );
 }
 
+const FlipPage = forwardRef<
+  HTMLDivElement,
+  { children: ReactNode }
+>(function FlipPage({ children }, ref) {
+  return (
+    <div
+      className="relative h-full w-full overflow-hidden bg-white"
+      ref={ref}
+    >
+      {children}
+    </div>
+  );
+});
+
 export function IssueViewer({
   issue,
   trackingSource,
@@ -46,11 +62,9 @@ export function IssueViewer({
   const pages = issue.pages;
   const viewerRef = useRef<HTMLElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const touchStartRef = useRef<{
-    x: number;
-    y: number;
-  } | null>(null);
-  const flipRafRef = useRef<number | null>(null);
+  const flipBookRef = useRef<HTMLFlipBook | null>(
+    null,
+  );
 
   const [currentIndex, setCurrentIndex] =
     useState(0);
@@ -60,10 +74,6 @@ export function IssueViewer({
     useState(false);
   const [isImmersive, setIsImmersive] =
     useState(false);
-  const [flipDirection, setFlipDirection] =
-    useState<FlipDirection>(null);
-  const [flipProgress, setFlipProgress] =
-    useState(0);
   const [isAudioPlaying, setIsAudioPlaying] =
     useState(false);
 
@@ -75,16 +85,9 @@ export function IssueViewer({
     [currentIndex, pages],
   );
 
-  const spreadStart = currentIndex - (currentIndex % 2);
-  const leftPage = pages[spreadStart] ?? null;
-  const rightPage = pages[spreadStart + 1] ?? null;
-
-  const step = mode === "image" ? 2 : 1;
-  const prevDisabled =
-    flipDirection !== null || currentIndex - step < 0;
+  const prevDisabled = currentIndex <= 0;
   const nextDisabled =
-    flipDirection !== null ||
-    currentIndex + step >= pages.length;
+    currentIndex >= pages.length - 1;
 
   useEffect(() => {
     if (!currentPage) {
@@ -146,16 +149,6 @@ export function IssueViewer({
     };
   }, [isImmersive]);
 
-  useEffect(() => {
-    return () => {
-      if (flipRafRef.current !== null) {
-        window.cancelAnimationFrame(
-          flipRafRef.current,
-        );
-      }
-    };
-  }, []);
-
   const selectPage = useCallback(
     (pageIndex: number) => {
       setCurrentIndex(
@@ -169,98 +162,41 @@ export function IssueViewer({
     [pages.length],
   );
 
-  const runFlip = useCallback(
-    (direction: "next" | "prev", target: number) => {
-      const durationMs = 820;
-      const startTime = performance.now();
-
-      setFlipDirection(direction);
-      setFlipProgress(0);
-
-      function step(now: number) {
-        const elapsed = now - startTime;
-        const t = Math.min(
-          elapsed / durationMs,
-          1,
-        );
-        const eased =
-          t < 0.5
-            ? 4 * t * t * t
-            : 1 -
-              Math.pow(-2 * t + 2, 3) / 2;
-
-        setFlipProgress(eased);
-
-        if (t < 1) {
-          flipRafRef.current =
-            window.requestAnimationFrame(step);
-          return;
-        }
-
-        flipRafRef.current = null;
-        selectPage(target);
-        setFlipDirection(null);
-        setFlipProgress(0);
-      }
-
-      flipRafRef.current =
-        window.requestAnimationFrame(step);
-    },
-    [selectPage],
-  );
-
   const goToPreviousPage = useCallback(() => {
-    if (flipDirection) {
-      return;
-    }
-
-    const navStep = mode === "image" ? 2 : 1;
-    const target = currentIndex - navStep;
-
-    if (target < 0) {
-      return;
-    }
-
     if (mode === "image") {
-      runFlip("prev", target);
+      flipBookRef.current
+        ?.pageFlip()
+        .flipPrev();
       return;
     }
 
-    selectPage(target);
-  }, [
-    currentIndex,
-    flipDirection,
-    mode,
-    runFlip,
-    selectPage,
-  ]);
+    selectPage(currentIndex - 1);
+  }, [currentIndex, mode, selectPage]);
 
   const goToNextPage = useCallback(() => {
-    if (flipDirection) {
-      return;
-    }
-
-    const navStep = mode === "image" ? 2 : 1;
-    const target = currentIndex + navStep;
-
-    if (target >= pages.length) {
-      return;
-    }
-
     if (mode === "image") {
-      runFlip("next", target);
+      flipBookRef.current
+        ?.pageFlip()
+        .flipNext();
       return;
     }
 
-    selectPage(target);
-  }, [
-    currentIndex,
-    flipDirection,
-    mode,
-    pages.length,
-    runFlip,
-    selectPage,
-  ]);
+    selectPage(currentIndex + 1);
+  }, [currentIndex, mode, selectPage]);
+
+  const goToPage = useCallback(
+    (index: number) => {
+      if (mode === "image") {
+        flipBookRef.current
+          ?.pageFlip()
+          .flip(index);
+        return;
+      }
+
+      selectPage(index);
+    },
+    [mode, selectPage],
+  );
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -368,21 +304,6 @@ export function IssueViewer({
     );
   }
 
-  const pageRangeLabel =
-    mode === "image" && rightPage
-      ? `${leftPage?.page_number}–${rightPage.page_number} / ${pages.length}`
-      : `${currentPage.page_number} / ${pages.length}`;
-
-  const flipDeg =
-    flipDirection === "next"
-      ? -180 * flipProgress
-      : flipDirection === "prev"
-        ? 180 * flipProgress
-        : 0;
-  const flipShadow = flipDirection
-    ? Math.sin(flipProgress * Math.PI)
-    : 0;
-
   const content = (
     <section
       className={`issue-reader overflow-hidden border border-[#E7DCC3] bg-[#FFFCF5] shadow-2xl ${
@@ -413,7 +334,7 @@ export function IssueViewer({
               <Icon name="chevron-left" />
             </button>
             <span className="min-w-24 text-center text-xs font-black">
-              {pageRangeLabel}
+              {currentPage.page_number} / {pages.length}
             </span>
             <button
               aria-label="Keyingi bet"
@@ -525,19 +446,12 @@ export function IssueViewer({
                   : undefined
               }
               className={`w-24 shrink-0 rounded-xl border-2 bg-white p-1.5 text-left transition hover:-translate-y-0.5 lg:w-full ${
-                index === spreadStart ||
-                index === spreadStart + 1
+                index === currentIndex
                   ? "border-[#C79A3C] shadow-md ring-2 ring-[#C79A3C]/20"
                   : "border-transparent hover:border-[#E7DCC3] hover:shadow-md"
               }`}
               key={page.id}
-              onClick={() =>
-                selectPage(
-                  mode === "image"
-                    ? index - (index % 2)
-                    : index,
-                )
-              }
+              onClick={() => goToPage(index)}
               type="button"
             >
               <span className="grid aspect-[0.72] place-items-center overflow-hidden rounded-md bg-slate-200">
@@ -564,45 +478,7 @@ export function IssueViewer({
 
         <div className="min-w-0 bg-[#F7F1E3]">
           {mode === "image" ? (
-            <div
-              className="issue-stage-book relative flex items-center justify-center px-3 py-6 sm:px-8 sm:py-10 lg:h-[780px] lg:py-12"
-              onTouchEnd={(event) => {
-                const start = touchStartRef.current;
-                touchStartRef.current = null;
-
-                if (!start) {
-                  return;
-                }
-
-                const touch =
-                  event.changedTouches[0];
-                const deltaX =
-                  touch.clientX - start.x;
-                const deltaY =
-                  touch.clientY - start.y;
-
-                if (
-                  Math.abs(deltaX) < 48 ||
-                  Math.abs(deltaX) <
-                    Math.abs(deltaY) * 1.4
-                ) {
-                  return;
-                }
-
-                if (deltaX < 0) {
-                  goToNextPage();
-                } else {
-                  goToPreviousPage();
-                }
-              }}
-              onTouchStart={(event) => {
-                const touch = event.touches[0];
-                touchStartRef.current = {
-                  x: touch.clientX,
-                  y: touch.clientY,
-                };
-              }}
-            >
+            <div className="issue-stage-book relative flex items-center justify-center px-3 py-6 sm:px-8 sm:py-10 lg:h-[780px] lg:py-12">
               <button
                 aria-label="Oldingi varaq"
                 className="absolute left-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-[#E7DCC3] bg-white text-[#1E4468] shadow-md transition hover:scale-105 hover:bg-[#FBF8F2] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:h-11 sm:w-11 lg:left-6"
@@ -613,153 +489,48 @@ export function IssueViewer({
                 <Icon name="chevron-left" />
               </button>
 
-              <div
-                className="relative w-full max-w-4xl"
-                style={{
-                  aspectRatio: "16 / 10.2",
-                  perspective: "2400px",
-                }}
+              <HTMLFlipBook
+                className="mx-auto"
+                drawShadow
+                flippingTime={700}
+                height={733}
+                maxHeight={1350}
+                maxShadowOpacity={0.5}
+                maxWidth={1000}
+                minHeight={420}
+                minWidth={280}
+                mobileScrollSupport={false}
+                onFlip={(event) =>
+                  setCurrentIndex(event.data)
+                }
+                ref={flipBookRef}
+                showCover
+                size="stretch"
+                startPage={currentIndex}
+                style={{}}
+                useMouseEvents
+                usePortrait
+                width={550}
               >
-                <div className="absolute inset-0 flex overflow-hidden rounded-sm bg-white shadow-2xl">
-                  <div className="relative flex-1 border-r border-[#E7DCC3] bg-white">
-                    {leftPage?.page_image ? (
+                {pages.map((page) => (
+                  <FlipPage key={page.id}>
+                    {page.page_image ? (
                       <img
-                        alt={`${leftPage.page_number}-bet`}
+                        alt={`${page.page_number}-bet`}
                         className="h-full w-full object-contain"
-                        src={leftPage.page_image}
+                        src={page.page_image}
                       />
                     ) : (
                       <div className="grid h-full place-items-center text-xs text-slate-400">
-                        {leftPage ? "Bet rasmi yo‘q" : ""}
+                        Bet rasmi yo‘q
                       </div>
                     )}
-                    {leftPage ? (
-                      <span className="absolute bottom-2 left-3 text-[10px] font-semibold text-[#A79E8C]">
-                        {leftPage.page_number}-bet
-                      </span>
-                    ) : null}
-                  </div>
-                  <div className="relative flex-1 bg-white">
-                    {rightPage?.page_image ? (
-                      <img
-                        alt={`${rightPage.page_number}-bet`}
-                        className="h-full w-full object-contain"
-                        src={rightPage.page_image}
-                      />
-                    ) : (
-                      <div className="grid h-full place-items-center text-xs text-slate-400">
-                        {rightPage ? "Bet rasmi yo‘q" : ""}
-                      </div>
-                    )}
-                    {rightPage ? (
-                      <span className="absolute bottom-2 right-3 text-[10px] font-semibold text-[#A79E8C]">
-                        {rightPage.page_number}-bet
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
-
-                {flipDirection ? (
-                  <div
-                    className="pointer-events-none absolute inset-y-0 w-1/2"
-                    style={
-                      flipDirection === "next"
-                        ? {
-                            left: 0,
-                            opacity: flipShadow * 0.55,
-                            background:
-                              "linear-gradient(to left, rgba(0,0,0,.4), transparent 65%)",
-                          }
-                        : {
-                            right: 0,
-                            opacity: flipShadow * 0.55,
-                            background:
-                              "linear-gradient(to right, rgba(0,0,0,.4), transparent 65%)",
-                          }
-                    }
-                  />
-                ) : null}
-
-                {flipDirection ? (
-                  <div
-                    className="absolute top-0 h-full w-1/2"
-                    style={
-                      flipDirection === "next"
-                        ? {
-                            right: 0,
-                            transformStyle: "preserve-3d",
-                            transformOrigin: "left center",
-                            transform: `rotateY(${flipDeg}deg)`,
-                            boxShadow: `0 0 ${
-                              16 + 50 * flipShadow
-                            }px rgba(0,0,0,${(
-                              0.1 +
-                              0.35 * flipShadow
-                            ).toFixed(2)})`,
-                          }
-                        : {
-                            left: 0,
-                            transformStyle: "preserve-3d",
-                            transformOrigin: "right center",
-                            transform: `rotateY(${flipDeg}deg)`,
-                            boxShadow: `0 0 ${
-                              16 + 50 * flipShadow
-                            }px rgba(0,0,0,${(
-                              0.1 +
-                              0.35 * flipShadow
-                            ).toFixed(2)})`,
-                          }
-                    }
-                  >
-                    <div
-                      className="absolute inset-0 overflow-hidden bg-white shadow-2xl"
-                      style={{ backfaceVisibility: "hidden" }}
-                    >
-                      {(flipDirection === "next"
-                        ? rightPage?.page_image
-                        : leftPage?.page_image) ? (
-                        <img
-                          alt=""
-                          className="h-full w-full object-contain"
-                          src={
-                            (flipDirection === "next"
-                              ? rightPage?.page_image
-                              : leftPage?.page_image) ?? undefined
-                          }
-                        />
-                      ) : null}
-                      <div
-                        className="pointer-events-none absolute inset-0"
-                        style={{
-                          background:
-                            flipDirection === "next"
-                              ? "linear-gradient(to right, rgba(0,0,0,.14), transparent 30%)"
-                              : "linear-gradient(to left, rgba(0,0,0,.14), transparent 30%)",
-                        }}
-                      />
-                    </div>
-                    <div
-                      className="absolute inset-0 bg-[#FBF8F0] shadow-2xl"
-                      style={{
-                        backfaceVisibility: "hidden",
-                        transform: "rotateY(180deg)",
-                      }}
-                    >
-                      <div
-                        className="pointer-events-none absolute inset-0"
-                        style={{
-                          background:
-                            flipDirection === "next"
-                              ? "linear-gradient(to left, rgba(0,0,0,.14), transparent 30%)"
-                              : "linear-gradient(to right, rgba(0,0,0,.14), transparent 30%)",
-                        }}
-                      />
-                    </div>
-                  </div>
-                ) : null}
-
-                <div className="pointer-events-none absolute inset-y-0 left-1/2 w-4 -translate-x-1/2 bg-gradient-to-r from-black/10 via-transparent to-black/10" />
-              </div>
+                    <span className="absolute bottom-2 right-3 text-[10px] font-semibold text-[#A79E8C]">
+                      {page.page_number}-bet
+                    </span>
+                  </FlipPage>
+                ))}
+              </HTMLFlipBook>
 
               <button
                 aria-label="Keyingi varaq"
