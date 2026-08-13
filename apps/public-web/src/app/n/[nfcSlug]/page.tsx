@@ -120,32 +120,45 @@ export default async function IssuePage({
         issueId={issue.id}
         source={trackingSource}
       />
-      <header className="mb-7 rounded-2xl border border-slate-200 border-t-4 border-t-[#C79A3C] bg-white p-5 shadow-sm sm:p-7">
+      <div className="animate-fade-in-up mb-5 flex flex-wrap items-center justify-between gap-3">
+        <Link
+          className="inline-flex items-center gap-2 text-xs font-bold text-[#1E4468] transition hover:text-[#C79A3C]"
+          href="/arxiv"
+        >
+          <Icon name="arrow-left" size={16} />
+          Gazeta arxiviga qaytish
+        </Link>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-emerald-800">
+            <Icon name="nfc" size={14} />
+            {trackingSource === "NFC"
+              ? "NFC orqali ochilgan nashr"
+              : "Elektron gazeta nashri"}
+          </span>
+          <span className="rounded-full bg-[#FFFCF5] px-3 py-1.5 text-[10px] font-bold text-[#5C6673]">
+            {formatUzbekDate(issue.publication_date)}
+          </span>
+        </div>
+      </div>
+
+      <div
+        className="animate-fade-in-up"
+        style={{ animationDelay: "0.08s" }}
+      >
+        <IssueViewer
+          issue={issue}
+          trackingSource={trackingSource}
+        />
+      </div>
+
+      <header
+        className="animate-fade-in-up mt-8 rounded-2xl border border-[#E7DCC3] border-t-4 border-t-[#C79A3C] bg-[#FFFCF5] p-5 shadow-sm sm:p-7"
+        style={{ animationDelay: "0.16s" }}
+      >
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-4xl">
-            <Link
-              className="inline-flex items-center gap-2 text-xs font-bold text-[#1E4468] transition hover:text-[#C79A3C]"
-              href="/arxiv"
-            >
-              <Icon name="arrow-left" size={16} />
-              Gazeta arxiviga qaytish
-            </Link>
-
-            <div className="mt-5 flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-emerald-800">
-                <Icon name="nfc" size={14} />
-                {trackingSource === "NFC"
-                  ? "NFC orqali ochilgan nashr"
-                  : "Elektron gazeta nashri"}
-              </span>
-              <span className="rounded-full bg-slate-100 px-3 py-1.5 text-[10px] font-bold text-slate-600">
-                {formatUzbekDate(
-                  issue.publication_date,
-                )}
-              </span>
-            </div>
-
-            <span className="mt-5 block text-[10px] font-black uppercase tracking-[0.18em] text-[#9C7826]">
+            <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-[#9C7826]">
               {issue.newspaper_name}
             </span>
             <h1 className="mt-2 font-serif text-4xl font-black tracking-tight text-[#1E4468] sm:text-5xl lg:text-6xl">
@@ -163,7 +176,7 @@ export default async function IssuePage({
           <div className="flex flex-col items-stretch gap-3 sm:flex-row lg:flex-col lg:items-end">
             {issue.original_pdf ? (
               <a
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 text-xs font-bold text-[#1E4468] transition hover:border-[#1E4468]"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#E7DCC3] bg-white px-5 text-xs font-bold text-[#1E4468] transition hover:border-[#1E4468]"
                 href={issue.original_pdf}
                 rel="noreferrer"
                 target="_blank"
@@ -172,14 +185,14 @@ export default async function IssuePage({
                 Original PDF
               </a>
             ) : null}
-            <code className="rounded-lg bg-slate-100 px-3 py-2 text-[10px] text-slate-500">
+            <code className="rounded-lg bg-[#F7F1E3] px-3 py-2 text-[10px] text-slate-500">
               /n/{issue.nfc_slug}
             </code>
           </div>
         </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-3 border-t border-slate-100 pt-5 text-xs sm:grid-cols-4">
-          <div className="rounded-xl bg-slate-50 p-3">
+        <div className="mt-6 grid grid-cols-2 gap-3 border-t border-[#E7DCC3] pt-5 text-xs sm:grid-cols-4">
+          <div className="rounded-xl bg-[#F7F1E3] p-3">
             <span className="block text-[10px] text-slate-500">
               Nashr soni
             </span>
@@ -187,7 +200,7 @@ export default async function IssuePage({
               {issue.issue_number}-son
             </strong>
           </div>
-          <div className="rounded-xl bg-slate-50 p-3">
+          <div className="rounded-xl bg-[#F7F1E3] p-3">
             <span className="block text-[10px] text-slate-500">
               Gazeta betlari
             </span>
@@ -195,7 +208,7 @@ export default async function IssuePage({
               {issue.page_count} bet
             </strong>
           </div>
-          <div className="rounded-xl bg-slate-50 p-3">
+          <div className="rounded-xl bg-[#F7F1E3] p-3">
             <span className="block text-[10px] text-slate-500">
               Elektron maqolalar
             </span>
@@ -203,7 +216,7 @@ export default async function IssuePage({
               {issue.article_count} ta
             </strong>
           </div>
-          <div className="rounded-xl bg-slate-50 p-3">
+          <div className="rounded-xl bg-[#F7F1E3] p-3">
             <span className="block text-[10px] text-slate-500">
               Holati
             </span>
@@ -214,14 +227,12 @@ export default async function IssuePage({
         </div>
       </header>
 
-      <IssueViewer
-        issue={issue}
-        trackingSource={trackingSource}
-      />
-
       {issue.articles.length > 0 ? (
-        <section className="mt-14 space-y-6">
-          <div className="flex items-end justify-between gap-4 border-b border-slate-200 pb-3">
+        <section
+          className="animate-fade-in-up mt-10 space-y-6"
+          style={{ animationDelay: "0.24s" }}
+        >
+          <div className="flex items-end justify-between gap-4 border-b border-[#E7DCC3] pb-3">
             <div>
               <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#9C7826]">
                 Ushbu gazeta sonida

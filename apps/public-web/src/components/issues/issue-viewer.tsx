@@ -134,7 +134,7 @@ export function IssueViewer({
       window.setTimeout(() => {
         selectPage(target);
         setFlipDirection(null);
-      }, 600);
+      }, 700);
       return;
     }
 
@@ -158,7 +158,7 @@ export function IssueViewer({
       window.setTimeout(() => {
         selectPage(target);
         setFlipDirection(null);
-      }, 600);
+      }, 700);
       return;
     }
 
@@ -405,11 +405,11 @@ export function IssueViewer({
                   ? "page"
                   : undefined
               }
-              className={`w-24 shrink-0 rounded-xl border-2 bg-white p-1.5 text-left transition lg:w-full ${
+              className={`w-24 shrink-0 rounded-xl border-2 bg-white p-1.5 text-left transition hover:-translate-y-0.5 lg:w-full ${
                 index === spreadStart ||
                 index === spreadStart + 1
                   ? "border-[#C79A3C] shadow-md ring-2 ring-[#C79A3C]/20"
-                  : "border-transparent hover:border-[#E7DCC3]"
+                  : "border-transparent hover:border-[#E7DCC3] hover:shadow-md"
               }`}
               key={page.id}
               onClick={() =>
@@ -448,7 +448,7 @@ export function IssueViewer({
             <div className="relative flex h-[760px] items-center justify-center px-4 py-8 sm:px-10 lg:h-[850px] lg:py-12">
               <button
                 aria-label="Oldingi varaq"
-                className="absolute left-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-[#E7DCC3] bg-white text-[#1E4468] shadow-md transition hover:bg-[#FBF8F2] disabled:cursor-not-allowed disabled:opacity-30 sm:grid lg:left-6"
+                className="absolute left-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-[#E7DCC3] bg-white text-[#1E4468] shadow-md transition hover:scale-105 hover:bg-[#FBF8F2] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:grid lg:left-6"
                 disabled={prevDisabled}
                 onClick={goToPreviousPage}
                 type="button"
@@ -504,38 +504,71 @@ export function IssueViewer({
 
                 {flipDirection ? (
                   <div
-                    className="absolute top-0 h-full w-1/2 bg-white shadow-xl"
+                    className="absolute top-0 h-full w-1/2"
                     style={
                       flipDirection === "next"
                         ? {
                             right: 0,
                             transformStyle: "preserve-3d",
                             transformOrigin: "left center",
-                            transform: "rotateY(-165deg)",
+                            transform: "rotateY(-180deg)",
                             transition:
-                              "transform 0.6s cubic-bezier(0.4,0.1,0.2,1)",
+                              "transform 0.7s cubic-bezier(0.4,0.1,0.2,1)",
                           }
                         : {
                             left: 0,
                             transformStyle: "preserve-3d",
                             transformOrigin: "right center",
-                            transform: "rotateY(165deg)",
+                            transform: "rotateY(180deg)",
                             transition:
-                              "transform 0.6s cubic-bezier(0.4,0.1,0.2,1)",
+                              "transform 0.7s cubic-bezier(0.4,0.1,0.2,1)",
                           }
                     }
                   >
-                    <img
-                      alt=""
-                      className="h-full w-full object-contain"
-                      src={
-                        (flipDirection === "next"
-                          ? rightPage?.page_image
-                          : leftPage?.page_image) ??
-                        undefined
-                      }
+                    <div
+                      className="absolute inset-0 overflow-hidden bg-white shadow-2xl"
                       style={{ backfaceVisibility: "hidden" }}
-                    />
+                    >
+                      {(flipDirection === "next"
+                        ? rightPage?.page_image
+                        : leftPage?.page_image) ? (
+                        <img
+                          alt=""
+                          className="h-full w-full object-contain"
+                          src={
+                            (flipDirection === "next"
+                              ? rightPage?.page_image
+                              : leftPage?.page_image) ?? undefined
+                          }
+                        />
+                      ) : null}
+                      <div
+                        className="pointer-events-none absolute inset-0"
+                        style={{
+                          background:
+                            flipDirection === "next"
+                              ? "linear-gradient(to right, rgba(0,0,0,.14), transparent 30%)"
+                              : "linear-gradient(to left, rgba(0,0,0,.14), transparent 30%)",
+                        }}
+                      />
+                    </div>
+                    <div
+                      className="absolute inset-0 bg-[#FBF8F0] shadow-2xl"
+                      style={{
+                        backfaceVisibility: "hidden",
+                        transform: "rotateY(180deg)",
+                      }}
+                    >
+                      <div
+                        className="pointer-events-none absolute inset-0"
+                        style={{
+                          background:
+                            flipDirection === "next"
+                              ? "linear-gradient(to left, rgba(0,0,0,.14), transparent 30%)"
+                              : "linear-gradient(to right, rgba(0,0,0,.14), transparent 30%)",
+                        }}
+                      />
+                    </div>
                   </div>
                 ) : null}
 
@@ -544,7 +577,7 @@ export function IssueViewer({
 
               <button
                 aria-label="Keyingi varaq"
-                className="absolute right-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-[#E7DCC3] bg-white text-[#1E4468] shadow-md transition hover:bg-[#FBF8F2] disabled:cursor-not-allowed disabled:opacity-30 sm:grid lg:right-6"
+                className="absolute right-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-[#E7DCC3] bg-white text-[#1E4468] shadow-md transition hover:scale-105 hover:bg-[#FBF8F2] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:grid lg:right-6"
                 disabled={nextDisabled}
                 onClick={goToNextPage}
                 type="button"
