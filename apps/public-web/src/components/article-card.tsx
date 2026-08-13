@@ -36,14 +36,14 @@ export function ArticleCard({
   if (variant === "compact") {
     return (
       <article className="group border-b border-slate-100 py-4 last:border-0">
-        <div className="mb-1.5 flex flex-wrap items-center gap-2 text-[10px] font-black uppercase tracking-wider text-[#C59B27]">
+        <div className="mb-1.5 flex flex-wrap items-center gap-2 text-[10px] font-black uppercase tracking-wider text-[#9C7826]">
           <span>{category}</span>
           <span className="text-slate-300">•</span>
           <span className="text-slate-500">
             {article.issue_year}-yil, {article.issue_number}-son
           </span>
         </div>
-        <h3 className="font-serif text-sm font-bold leading-snug text-[#003366] transition group-hover:text-[#004080]">
+        <h3 className="font-serif text-sm font-bold leading-snug text-[#1E4468] transition group-hover:text-[#2A5C8A]">
           <Link href={`/maqola/${article.id}`}>
             {article.title}
           </Link>
@@ -58,7 +58,7 @@ export function ArticleCard({
 
   if (variant === "horizontal") {
     return (
-      <article className="group overflow-hidden rounded-2xl border border-slate-200 border-t-4 border-t-[#D4AF37] bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg sm:flex">
+      <article className="group overflow-hidden rounded-2xl border border-slate-200 border-t-4 border-t-[#C79A3C] bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg sm:flex">
         <Link
           aria-label={article.title}
           className="relative block h-52 overflow-hidden bg-slate-100 sm:h-auto sm:w-2/5"
@@ -72,11 +72,11 @@ export function ArticleCard({
               src={article.main_image}
             />
           ) : (
-            <div className="grid h-full min-h-48 place-items-center bg-gradient-to-br from-[#E9EEF4] to-[#F8FAFC] font-serif text-sm font-black tracking-[0.14em] text-[#003366]/45">
+            <div className="grid h-full min-h-48 place-items-center bg-gradient-to-br from-[#E9EEF4] to-[#F8FAFC] font-serif text-sm font-black tracking-[0.14em] text-[#1E4468]/45">
               TEMIRYO‘LCHI
             </div>
           )}
-          <span className="absolute left-3 top-3 rounded-md bg-[#003366] px-2.5 py-1 text-[10px] font-bold text-white shadow">
+          <span className="absolute left-3 top-3 rounded-md bg-[#1E4468] px-2.5 py-1 text-[10px] font-bold text-white shadow">
             {category}
           </span>
         </Link>
@@ -87,7 +87,7 @@ export function ArticleCard({
               {date ? (
                 <span className="inline-flex items-center gap-1">
                   <Icon
-                    className="text-[#D4AF37]"
+                    className="text-[#C79A3C]"
                     name="calendar"
                     size={14}
                   />
@@ -97,7 +97,7 @@ export function ArticleCard({
               <span>{readingMinutes} daqiqa o‘qish</span>
             </div>
 
-            <h3 className="font-serif text-lg font-bold leading-snug text-[#003366] transition group-hover:text-[#004080]">
+            <h3 className="font-serif text-lg font-bold leading-snug text-[#1E4468] transition group-hover:text-[#2A5C8A]">
               <Link href={`/maqola/${article.id}`}>
                 {article.title}
               </Link>
@@ -115,7 +115,7 @@ export function ArticleCard({
               {article.author || "Tahririyat"}
             </span>
             <Link
-              className="inline-flex shrink-0 items-center gap-1 font-bold text-[#003366] transition hover:text-[#D4AF37]"
+              className="inline-flex shrink-0 items-center gap-1 font-bold text-[#1E4468] transition hover:text-[#C79A3C]"
               href={`/maqola/${article.id}`}
             >
               O‘qish
@@ -142,11 +142,11 @@ export function ArticleCard({
             src={article.main_image}
           />
         ) : (
-          <div className="grid h-full place-items-center bg-gradient-to-br from-[#E7EDF3] to-[#F8FAFC] font-serif text-xs font-black tracking-[0.15em] text-[#003366]/45">
+          <div className="grid h-full place-items-center bg-gradient-to-br from-[#E7EDF3] to-[#F8FAFC] font-serif text-xs font-black tracking-[0.15em] text-[#1E4468]/45">
             TEMIRYO‘LCHI
           </div>
         )}
-        <span className="absolute left-3 top-3 rounded-md bg-[#003366] px-2.5 py-1 text-[10px] font-bold text-white shadow">
+        <span className="absolute left-3 top-3 rounded-md bg-[#1E4468] px-2.5 py-1 text-[10px] font-bold text-white shadow">
           {category}
         </span>
       </Link>
@@ -156,7 +156,7 @@ export function ArticleCard({
           {date ? (
             <span className="inline-flex items-center gap-1">
               <Icon
-                className="text-[#D4AF37]"
+                className="text-[#C79A3C]"
                 name="calendar"
                 size={14}
               />
@@ -166,7 +166,7 @@ export function ArticleCard({
           <span>{readingMinutes} daq.</span>
         </div>
 
-        <h3 className="font-serif text-lg font-bold leading-snug text-[#003366] transition group-hover:text-[#004080]">
+        <h3 className="font-serif text-lg font-bold leading-snug text-[#1E4468] transition group-hover:text-[#2A5C8A]">
           <Link href={`/maqola/${article.id}`}>
             {article.title}
           </Link>
@@ -183,7 +183,7 @@ export function ArticleCard({
             {article.author || "Tahririyat"}
           </span>
           <Link
-            className="inline-flex shrink-0 items-center gap-1 font-bold text-[#003366] transition hover:text-[#D4AF37]"
+            className="inline-flex shrink-0 items-center gap-1 font-bold text-[#1E4468] transition hover:text-[#C79A3C]"
             href={`/maqola/${article.id}`}
           >
             Batafsil

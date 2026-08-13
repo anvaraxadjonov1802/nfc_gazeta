@@ -14,18 +14,18 @@ export function SiteFooter({
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-16 border-t-4 border-[#D4AF37] bg-[#002244] text-slate-300">
+    <footer className="mt-16 border-t-4 border-[#C79A3C] bg-[#163552] text-slate-300">
       <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-3 lg:px-8">
         <div>
           <div className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-white/10 font-serif text-xl font-black text-[#D4AF37]">
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-white/10 font-serif text-xl font-black text-[#C79A3C]">
               T
             </span>
             <div>
               <strong className="block font-serif text-xl text-white">
                 Temiryo‘lchi
               </strong>
-              <small className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#D4AF37]">
+              <small className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#C79A3C]">
                 Elektron gazeta
               </small>
             </div>
@@ -41,19 +41,19 @@ export function SiteFooter({
           </h2>
           <div className="mt-4 flex flex-col items-start gap-3 text-xs font-semibold">
             <Link
-              className="transition hover:text-[#D4AF37]"
+              className="transition hover:text-[#C79A3C]"
               href="/"
             >
               Bosh sahifa
             </Link>
             <Link
-              className="transition hover:text-[#D4AF37]"
+              className="transition hover:text-[#C79A3C]"
               href="/arxiv"
             >
               Gazeta arxivi
             </Link>
             <button
-              className="transition hover:text-[#D4AF37]"
+              className="transition hover:text-[#C79A3C]"
               onClick={onOpenAccessibility}
               type="button"
             >
@@ -68,7 +68,7 @@ export function SiteFooter({
           </h2>
           <div className="mt-4 flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
             <Icon
-              className="mt-0.5 shrink-0 text-[#D4AF37]"
+              className="mt-0.5 shrink-0 text-[#C79A3C]"
               name="nfc"
             />
             <p className="text-xs leading-6 text-slate-400">

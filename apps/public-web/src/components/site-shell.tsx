@@ -30,7 +30,7 @@ export function SiteShell({
 
   return (
     <AccessibilityProvider>
-      <div className="flex min-h-screen flex-col bg-[#F4F6F9] text-slate-900 selection:bg-[#D4AF37] selection:text-[#002244]">
+      <div className="flex min-h-screen flex-col bg-[#F7F1E3] text-slate-900 selection:bg-[#C79A3C] selection:text-[#163552]">
         <SiteHeader
           currentDate={currentDate}
           onOpenAccessibility={() =>

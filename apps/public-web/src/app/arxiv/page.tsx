@@ -36,11 +36,11 @@ export default async function ArchivePage() {
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
       <header className="mb-10 max-w-3xl">
-        <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-[#C59B27]">
+        <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-[#9C7826]">
           <Icon name="archive" size={16} />
           Elektron kutubxona
         </span>
-        <h1 className="mt-3 font-serif text-4xl font-black tracking-tight text-[#003366] sm:text-5xl lg:text-6xl">
+        <h1 className="mt-3 font-serif text-4xl font-black tracking-tight text-[#1E4468] sm:text-5xl lg:text-6xl">
           Gazeta arxivi
         </h1>
         <p className="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
@@ -55,7 +55,7 @@ export default async function ArchivePage() {
           <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-slate-100 text-slate-400">
             <Icon name="archive" size={30} />
           </div>
-          <h2 className="mt-4 font-serif text-xl font-bold text-[#003366]">
+          <h2 className="mt-4 font-serif text-xl font-bold text-[#1E4468]">
             Arxivda nashr mavjud emas
           </h2>
           <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-500">

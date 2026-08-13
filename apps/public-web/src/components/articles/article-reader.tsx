@@ -103,7 +103,7 @@ export function ArticleReader({
     <article className="mx-auto max-w-5xl space-y-8">
       <div className="flex flex-col gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <Link
-          className="inline-flex items-center gap-2 text-xs font-bold text-[#003366] transition hover:text-[#D4AF37]"
+          className="inline-flex items-center gap-2 text-xs font-bold text-[#1E4468] transition hover:text-[#C79A3C]"
           href={`/n/${article.issue_nfc_slug}?src=web`}
         >
           <Icon name="arrow-left" size={16} />
@@ -124,7 +124,7 @@ export function ArticleReader({
             <button
               className={`rounded-lg px-3 py-1.5 text-[10px] font-bold transition ${
                 fontSize === value
-                  ? "bg-[#003366] text-white"
+                  ? "bg-[#1E4468] text-white"
                   : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
               key={value}
@@ -136,7 +136,7 @@ export function ArticleReader({
           ))}
 
           <button
-            className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-1.5 text-[10px] font-bold text-[#003366] transition hover:bg-slate-200"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-1.5 text-[10px] font-bold text-[#1E4468] transition hover:bg-slate-200"
             onClick={() => {
               void handleShare();
             }}
@@ -153,7 +153,7 @@ export function ArticleReader({
 
       <header className="space-y-5">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-md bg-[#003366] px-3 py-1 text-[10px] font-bold text-white">
+          <span className="rounded-md bg-[#1E4468] px-3 py-1 text-[10px] font-bold text-white">
             {article.category?.name ??
               article.newspaper_name}
           </span>
@@ -162,23 +162,23 @@ export function ArticleReader({
           </span>
         </div>
 
-        <h1 className="max-w-4xl font-serif text-4xl font-black leading-[1.05] tracking-tight text-[#003366] sm:text-5xl lg:text-6xl">
+        <h1 className="max-w-4xl font-serif text-4xl font-black leading-[1.05] tracking-tight text-[#1E4468] sm:text-5xl lg:text-6xl">
           {article.title}
         </h1>
 
         {article.summary ? (
-          <p className="max-w-4xl border-l-4 border-[#D4AF37] pl-5 font-serif text-lg leading-8 text-slate-600 sm:text-xl">
+          <p className="max-w-4xl border-l-4 border-[#C79A3C] pl-5 font-serif text-lg leading-8 text-slate-600 sm:text-xl">
             {article.summary}
           </p>
         ) : null}
 
         <div className="flex flex-col gap-4 border-y border-slate-200 py-4 text-xs sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-full bg-[#003366] text-[#D4AF37]">
+            <span className="grid h-11 w-11 place-items-center rounded-full bg-[#1E4468] text-[#C79A3C]">
               <Icon name="user" size={20} />
             </span>
             <div>
-              <strong className="block text-sm text-[#003366]">
+              <strong className="block text-sm text-[#1E4468]">
                 {article.author || "Temiryo‘lchi tahririyati"}
               </strong>
               <span className="text-slate-500">
@@ -191,7 +191,7 @@ export function ArticleReader({
             {article.published_at ? (
               <span className="inline-flex items-center gap-1.5">
                 <Icon
-                  className="text-[#D4AF37]"
+                  className="text-[#C79A3C]"
                   name="calendar"
                   size={15}
                 />
@@ -206,7 +206,7 @@ export function ArticleReader({
       </header>
 
       {article.audio ? (
-        <section className="flex flex-col gap-4 rounded-2xl border border-[#004080] border-t-4 border-t-[#D4AF37] bg-[#003366] p-5 text-white shadow-xl sm:flex-row sm:items-center sm:justify-between">
+        <section className="flex flex-col gap-4 rounded-2xl border border-[#2A5C8A] border-t-4 border-t-[#C79A3C] bg-[#1E4468] p-5 text-white shadow-xl sm:flex-row sm:items-center sm:justify-between">
           <audio
             onEnded={() => setIsPlaying(false)}
             ref={audioRef}
@@ -219,7 +219,7 @@ export function ArticleReader({
                   ? "Audio pauza"
                   : "Audioni ijro etish"
               }
-              className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#D4AF37] text-[#003366] shadow transition hover:scale-105"
+              className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#C79A3C] text-[#1E4468] shadow transition hover:scale-105"
               onClick={() => {
                 void toggleAudio();
               }}
@@ -233,7 +233,7 @@ export function ArticleReader({
             <div>
               <strong className="flex items-center gap-2 text-sm">
                 <Icon
-                  className="text-[#D4AF37]"
+                  className="text-[#C79A3C]"
                   name="volume"
                   size={17}
                 />
@@ -253,7 +253,7 @@ export function ArticleReader({
               <button
                 className={`rounded-md px-2.5 py-1.5 font-bold transition ${
                   speed === value
-                    ? "bg-[#D4AF37] text-[#003366]"
+                    ? "bg-[#C79A3C] text-[#1E4468]"
                     : "text-white hover:bg-white/10"
                 }`}
                 key={value}
@@ -286,7 +286,7 @@ export function ArticleReader({
               <p
                 className={
                   index === 0
-                    ? "first-letter:float-left first-letter:mr-2 first-letter:font-serif first-letter:text-5xl first-letter:font-black first-letter:leading-none first-letter:text-[#003366]"
+                    ? "first-letter:float-left first-letter:mr-2 first-letter:font-serif first-letter:text-5xl first-letter:font-black first-letter:leading-none first-letter:text-[#1E4468]"
                     : undefined
                 }
                 key={index}
@@ -303,18 +303,18 @@ export function ArticleReader({
 
         <div className="mx-auto mt-10 flex max-w-3xl flex-col gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <Link
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#003366] px-5 text-xs font-bold text-white transition hover:bg-[#002244]"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#1E4468] px-5 text-xs font-bold text-white transition hover:bg-[#163552]"
             href={`/n/${article.issue_nfc_slug}?src=web`}
           >
             <Icon
-              className="text-[#D4AF37]"
+              className="text-[#C79A3C]"
               name="book"
               size={17}
             />
             Gazeta soniga qaytish
           </Link>
           <button
-            className="inline-flex items-center justify-center gap-2 px-3 py-2 text-xs font-bold text-[#003366] transition hover:text-[#D4AF37]"
+            className="inline-flex items-center justify-center gap-2 px-3 py-2 text-xs font-bold text-[#1E4468] transition hover:text-[#C79A3C]"
             onClick={() => {
               void handleShare();
             }}

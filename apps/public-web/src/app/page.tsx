@@ -50,16 +50,16 @@ export default async function HomePage() {
 
   return (
     <main className="mx-auto w-full max-w-7xl space-y-12 px-4 py-8 sm:px-6 lg:px-8">
-      <section className="flex flex-col items-start justify-between gap-4 rounded-2xl border border-[#002244] border-t-4 border-t-[#D4AF37] bg-[#003366] p-5 text-white shadow-lg sm:flex-row sm:items-center">
+      <section className="flex flex-col items-start justify-between gap-4 rounded-2xl border border-[#E7DCC3] border-l-4 border-l-[#C79A3C] bg-[#FFFCF5] p-5 shadow-sm sm:flex-row sm:items-center">
         <div className="flex items-start gap-3">
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 text-[#D4AF37]">
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#FBF1DE] text-[#9C7826]">
             <Icon name="nfc" size={22} />
           </span>
           <div>
-            <span className="block text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37]">
+            <span className="block text-[10px] font-black uppercase tracking-[0.16em] text-[#1E4468]">
               NFC avtomatik o‘quvchi
             </span>
-            <p className="mt-1 max-w-3xl text-sm font-semibold leading-6 text-slate-100">
+            <p className="mt-1 max-w-3xl text-sm font-semibold leading-6 text-[#5C6673]">
               Bosma gazetadagi NFC stikerga telefoningizni yaqinlashtirsangiz, aynan o‘sha elektron son darhol ochiladi.
             </p>
           </div>
@@ -67,7 +67,7 @@ export default async function HomePage() {
 
         {latestIssue ? (
           <Link
-            className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#D4AF37] px-5 text-xs font-black text-[#003366] shadow transition hover:bg-[#E5C358]"
+            className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#C79A3C] px-5 text-xs font-black text-[#1E4468] shadow transition hover:bg-[#D9B25E]"
             href={`/n/${latestIssue.nfc_slug}?src=web`}
           >
             Eng so‘nggi son
@@ -81,15 +81,15 @@ export default async function HomePage() {
           <div className="mb-4 flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <Icon
-                className="text-[#003366]"
+                className="text-[#1E4468]"
                 name="newspaper"
               />
-              <h2 className="font-serif text-xl font-black text-[#003366] sm:text-2xl">
+              <h2 className="font-serif text-xl font-black text-[#1E4468] sm:text-2xl">
                 Eng so‘nggi elektron nashr
               </h2>
             </div>
             <Link
-              className="inline-flex items-center gap-1 text-xs font-bold text-[#003366] transition hover:text-[#D4AF37]"
+              className="inline-flex items-center gap-1 text-xs font-bold text-[#1E4468] transition hover:text-[#C79A3C]"
               href="/arxiv"
             >
               Arxivga o‘tish
@@ -107,7 +107,7 @@ export default async function HomePage() {
           <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-slate-100 text-slate-400">
             <Icon name="newspaper" size={30} />
           </div>
-          <h2 className="mt-4 font-serif text-xl font-bold text-[#003366]">
+          <h2 className="mt-4 font-serif text-xl font-bold text-[#1E4468]">
             Hozircha ommaviy nashr mavjud emas
           </h2>
           <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-500">
@@ -120,10 +120,10 @@ export default async function HomePage() {
         <section className="space-y-5">
           <div className="flex items-end justify-between gap-4 border-b border-slate-200 pb-3">
             <div>
-              <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#C59B27]">
+              <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#9C7826]">
                 Tahririyat tanlovi
               </span>
-              <h2 className="mt-1 font-serif text-2xl font-black text-[#003366] sm:text-3xl">
+              <h2 className="mt-1 font-serif text-2xl font-black text-[#1E4468] sm:text-3xl">
                 Muhim maqola
               </h2>
             </div>
@@ -146,9 +146,9 @@ export default async function HomePage() {
 
       {data.categories.length > 0 ? (
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-[#003366]">
+          <div className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-[#1E4468]">
             <Icon
-              className="text-[#D4AF37]"
+              className="text-[#C79A3C]"
               name="archive"
               size={17}
             />
@@ -157,7 +157,7 @@ export default async function HomePage() {
           <div className="flex flex-wrap gap-2">
             {data.categories.map((category) => (
               <Link
-                className="rounded-lg bg-slate-100 px-4 py-2 text-xs font-bold text-slate-700 transition hover:bg-[#003366] hover:text-white"
+                className="rounded-lg bg-slate-100 px-4 py-2 text-xs font-bold text-slate-700 transition hover:bg-[#1E4468] hover:text-white"
                 href={`/qidiruv?category=${encodeURIComponent(
                   category.slug,
                 )}`}
@@ -173,10 +173,10 @@ export default async function HomePage() {
       <section className="space-y-5">
         <div className="flex items-end justify-between gap-4 border-b border-slate-200 pb-3">
           <div>
-            <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#C59B27]">
+            <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#9C7826]">
               So‘nggi materiallar
             </span>
-            <h2 className="mt-1 font-serif text-2xl font-black text-[#003366] sm:text-3xl">
+            <h2 className="mt-1 font-serif text-2xl font-black text-[#1E4468] sm:text-3xl">
               Yangi maqolalar va tahlillar
             </h2>
           </div>
@@ -204,19 +204,19 @@ export default async function HomePage() {
         <section className="space-y-6 rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm sm:p-8">
           <div className="flex flex-col gap-3 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#C59B27]">
+              <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#9C7826]">
                 Elektron arxivdan
               </span>
-              <h2 className="mt-1 font-serif text-2xl font-black text-[#003366]">
+              <h2 className="mt-1 font-serif text-2xl font-black text-[#1E4468]">
                 O‘tgan gazeta sonlari
               </h2>
             </div>
             <Link
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#003366] px-5 text-xs font-bold text-white transition hover:bg-[#002244]"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#1E4468] px-5 text-xs font-bold text-white transition hover:bg-[#163552]"
               href="/arxiv"
             >
               <Icon
-                className="text-[#D4AF37]"
+                className="text-[#C79A3C]"
                 name="archive"
                 size={17}
               />
@@ -235,10 +235,10 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      <section className="relative overflow-hidden rounded-2xl border-b-4 border-[#D4AF37] bg-[#003366] p-7 text-white shadow-xl sm:p-10">
-        <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#D4AF37]/10 blur-3xl" />
+      <section className="relative overflow-hidden rounded-2xl border-b-4 border-[#C79A3C] bg-[#1E4468] p-7 text-white shadow-xl sm:p-10">
+        <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#C79A3C]/10 blur-3xl" />
         <div className="relative max-w-4xl">
-          <span className="inline-flex items-center gap-2 rounded-full bg-[#D4AF37] px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-[#003366]">
+          <span className="inline-flex items-center gap-2 rounded-full bg-[#C79A3C] px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-[#1E4468]">
             <Icon name="nfc" size={14} />
             Rasmiy NFC integratsiya
           </span>
@@ -248,7 +248,7 @@ export default async function HomePage() {
           <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-200 sm:text-base">
             Har bir bosma sonning muqovasidagi NFC stiker foydalanuvchini aynan o‘sha gazetaning elektron nusxasiga olib boradi. Betlarni asl ko‘rinishda ko‘rish, matnni qulay o‘qish va audio shaklini tinglash mumkin.
           </p>
-          <div className="mt-5 flex flex-wrap gap-4 text-xs font-bold text-[#D4AF37]">
+          <div className="mt-5 flex flex-wrap gap-4 text-xs font-bold text-[#C79A3C]">
             <span className="inline-flex items-center gap-1.5">
               <Icon name="shield" size={16} />
               Rasmiy elektron nusxa

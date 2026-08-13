@@ -1,10 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --railway-navy: #003366;
-  --railway-navy-dark: #002244;
-  --railway-gold: #d4af37;
-  --railway-bg: #f4f6f9;
+  --railway-navy: #1E4468;
+  --railway-navy-dark: #163552;
+  --railway-blue: #2A5C8A;
+  --railway-gold: #C79A3C;
+  --railway-gold-deep: #9C7826;
+  --railway-bg: #F7F1E3;
+  --railway-card: #FFFCF5;
+  --railway-line: #E7DCC3;
+  --font-sans-fallback: Inter, Arial, Helvetica, sans-serif;
+  --font-serif-fallback: Georgia, "Times New Roman", serif;
 }
 
 * {
@@ -20,11 +26,8 @@ body {
   min-height: 100vh;
   margin: 0;
   background: var(--railway-bg);
-  color: #17212b;
-  font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
+  color: #2B2620;
+  font-family: var(--font-sans, var(--font-sans-fallback));
   -webkit-font-smoothing: antialiased;
 }
 
@@ -41,10 +44,7 @@ a {
 }
 
 .font-serif {
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
+  font-family: var(--font-serif, var(--font-serif-fallback));
 }
 
 html.font-size-small {
@@ -76,7 +76,8 @@ html.theme-contrast body {
 html.theme-contrast .bg-white,
 html.theme-contrast .bg-slate-50,
 html.theme-contrast .bg-slate-100,
-html.theme-contrast .bg-\[\#F4F6F9\] {
+html.theme-contrast .bg-\[\#F7F1E3\],
+html.theme-contrast .bg-\[\#FFFCF5\] {
   background-color: #101010 !important;
   color: #fff !important;
 }
@@ -100,7 +101,7 @@ html.theme-contrast a {
 }
 
 .custom-scrollbar {
-  scrollbar-color: #003366 #dbe3ea;
+  scrollbar-color: #1E4468 #E7DCC3;
   scrollbar-width: thin;
 }
 
@@ -110,16 +111,16 @@ html.theme-contrast a {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #dbe3ea;
+  background: #E7DCC3;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: #003366;
+  background: #1E4468;
 }
 
 .issue-reader:fullscreen {
-  background: #e2e8f0;
+  background: #F7F1E3;
 }
 
 .issue-reader:fullscreen > div:nth-child(2) {

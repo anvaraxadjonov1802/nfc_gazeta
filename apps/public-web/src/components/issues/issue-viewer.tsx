@@ -25,7 +25,7 @@ interface IssueViewerProps {
 }
 
 type ViewerMode = "image" | "text";
-type FitMode = "manual" | "width";
+type FlipDirection = "next" | "prev" | null;
 
 function clamp(
   value: number,
@@ -44,21 +44,34 @@ export function IssueViewer({
 }: IssueViewerProps) {
   const pages = issue.pages;
   const viewerRef = useRef<HTMLElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const [currentIndex, setCurrentIndex] =
     useState(0);
-  const [zoom, setZoom] = useState(1);
   const [mode, setMode] =
     useState<ViewerMode>("image");
-  const [fitMode, setFitMode] =
-    useState<FitMode>("width");
   const [isFullscreen, setIsFullscreen] =
+    useState(false);
+  const [flipDirection, setFlipDirection] =
+    useState<FlipDirection>(null);
+  const [isAudioPlaying, setIsAudioPlaying] =
     useState(false);
 
   const currentPage = useMemo(
     () => pages[currentIndex] ?? null,
     [currentIndex, pages],
   );
+
+  const spreadStart = currentIndex - (currentIndex % 2);
+  const leftPage = pages[spreadStart] ?? null;
+  const rightPage = pages[spreadStart + 1] ?? null;
+
+  const step = mode === "image" ? 2 : 1;
+  const prevDisabled =
+    flipDirection !== null || currentIndex - step < 0;
+  const nextDisabled =
+    flipDirection !== null ||
+    currentIndex + step >= pages.length;
 
   useEffect(() => {
     if (!currentPage) {
@@ -82,6 +95,15 @@ export function IssueViewer({
     trackingSource,
   ]);
 
+  useEffect(() => {
+    setIsAudioPlaying(false);
+
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+  }, [currentIndex]);
+
   const selectPage = useCallback(
     (pageIndex: number) => {
       setCurrentIndex(
@@ -91,19 +113,63 @@ export function IssueViewer({
           Math.max(pages.length - 1, 0),
         ),
       );
-      setZoom(1);
-      setFitMode("width");
     },
     [pages.length],
   );
 
   const goToPreviousPage = useCallback(() => {
-    selectPage(currentIndex - 1);
-  }, [currentIndex, selectPage]);
+    if (flipDirection) {
+      return;
+    }
+
+    const navStep = mode === "image" ? 2 : 1;
+    const target = currentIndex - navStep;
+
+    if (target < 0) {
+      return;
+    }
+
+    if (mode === "image") {
+      setFlipDirection("prev");
+      window.setTimeout(() => {
+        selectPage(target);
+        setFlipDirection(null);
+      }, 600);
+      return;
+    }
+
+    selectPage(target);
+  }, [currentIndex, flipDirection, mode, selectPage]);
 
   const goToNextPage = useCallback(() => {
-    selectPage(currentIndex + 1);
-  }, [currentIndex, selectPage]);
+    if (flipDirection) {
+      return;
+    }
+
+    const navStep = mode === "image" ? 2 : 1;
+    const target = currentIndex + navStep;
+
+    if (target >= pages.length) {
+      return;
+    }
+
+    if (mode === "image") {
+      setFlipDirection("next");
+      window.setTimeout(() => {
+        selectPage(target);
+        setFlipDirection(null);
+      }, 600);
+      return;
+    }
+
+    selectPage(target);
+  }, [
+    currentIndex,
+    flipDirection,
+    mode,
+    pages.length,
+    selectPage,
+  ]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -123,20 +189,6 @@ export function IssueViewer({
 
       if (event.key === "ArrowRight") {
         goToNextPage();
-      }
-
-      if (event.key === "+" || event.key === "=") {
-        setFitMode("manual");
-        setZoom((current) =>
-          clamp(current + 0.2, 0.5, 3),
-        );
-      }
-
-      if (event.key === "-") {
-        setFitMode("manual");
-        setZoom((current) =>
-          clamp(current - 0.2, 0.5, 3),
-        );
       }
     }
 
@@ -189,13 +241,33 @@ export function IssueViewer({
     }
   }
 
+  async function toggleAudio() {
+    const audio = audioRef.current;
+
+    if (!audio) {
+      return;
+    }
+
+    if (audio.paused) {
+      try {
+        await audio.play();
+        setIsAudioPlaying(true);
+      } catch {
+        setIsAudioPlaying(false);
+      }
+    } else {
+      audio.pause();
+      setIsAudioPlaying(false);
+    }
+  }
+
   if (!currentPage || pages.length === 0) {
     return (
-      <section className="rounded-2xl border border-slate-200 bg-white p-10 text-center shadow-sm">
+      <section className="rounded-2xl border border-[#E7DCC3] bg-[#FFFCF5] p-10 text-center shadow-sm">
         <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-slate-100 text-slate-400">
           <Icon name="file-text" size={30} />
         </div>
-        <h2 className="mt-4 font-serif text-xl font-bold text-[#003366]">
+        <h2 className="mt-4 font-serif text-xl font-bold text-[#1E4468]">
           Gazeta betlari topilmadi
         </h2>
         <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-500">
@@ -205,36 +277,45 @@ export function IssueViewer({
     );
   }
 
+  const pageRangeLabel =
+    mode === "image" && rightPage
+      ? `${leftPage?.page_number}–${rightPage.page_number} / ${pages.length}`
+      : `${currentPage.page_number} / ${pages.length}`;
+
   return (
     <section
-      className={`issue-reader overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl ${
+      className={`issue-reader overflow-hidden rounded-2xl border border-[#E7DCC3] bg-[#FFFCF5] shadow-2xl ${
         isFullscreen
           ? "h-screen w-screen rounded-none border-0"
           : ""
       }`}
       ref={viewerRef}
     >
-      <div className="flex flex-col border-b border-slate-200 bg-[#003366] text-white xl:flex-row xl:items-center xl:justify-between">
+      <audio
+        onEnded={() => setIsAudioPlaying(false)}
+        ref={audioRef}
+        src={currentPage.audio ?? undefined}
+      />
+
+      <div className="flex flex-col border-b border-[#163552] bg-[#1E4468] text-white xl:flex-row xl:items-center xl:justify-between">
         <div className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-3 xl:border-b-0 xl:px-4">
           <div className="flex items-center gap-2">
             <button
               aria-label="Oldingi bet"
               className="grid h-10 w-10 place-items-center rounded-lg border border-white/15 bg-white/5 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-35"
-              disabled={currentIndex === 0}
+              disabled={prevDisabled}
               onClick={goToPreviousPage}
               type="button"
             >
               <Icon name="chevron-left" />
             </button>
             <span className="min-w-24 text-center text-xs font-black">
-              {currentPage.page_number} / {pages.length}
+              {pageRangeLabel}
             </span>
             <button
               aria-label="Keyingi bet"
               className="grid h-10 w-10 place-items-center rounded-lg border border-white/15 bg-white/5 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-35"
-              disabled={
-                currentIndex === pages.length - 1
-              }
+              disabled={nextDisabled}
               onClick={goToNextPage}
               type="button"
             >
@@ -244,7 +325,7 @@ export function IssueViewer({
 
           <span className="hidden items-center gap-1.5 text-[10px] text-slate-300 sm:inline-flex">
             <Icon
-              className="text-[#D4AF37]"
+              className="text-[#C79A3C]"
               name="nfc"
               size={14}
             />
@@ -257,7 +338,7 @@ export function IssueViewer({
             <button
               className={`inline-flex min-h-9 items-center gap-1.5 rounded-md px-3 text-[10px] font-bold transition ${
                 mode === "image"
-                  ? "bg-[#D4AF37] text-[#003366]"
+                  ? "bg-[#C79A3C] text-[#1E4468]"
                   : "text-white hover:bg-white/10"
               }`}
               onClick={() => setMode("image")}
@@ -269,7 +350,7 @@ export function IssueViewer({
             <button
               className={`inline-flex min-h-9 items-center gap-1.5 rounded-md px-3 text-[10px] font-bold transition ${
                 mode === "text"
-                  ? "bg-[#D4AF37] text-[#003366]"
+                  ? "bg-[#C79A3C] text-[#1E4468]"
                   : "text-white hover:bg-white/10"
               }`}
               onClick={() => setMode("text")}
@@ -280,56 +361,26 @@ export function IssueViewer({
             </button>
           </div>
 
-          {mode === "image" ? (
-            <>
-              <button
-                className={`inline-flex min-h-10 items-center gap-1.5 rounded-lg border px-3 text-[10px] font-bold transition ${
-                  fitMode === "width"
-                    ? "border-[#D4AF37] bg-[#D4AF37] text-[#003366]"
-                    : "border-white/15 bg-white/5 text-white hover:bg-white/10"
-                }`}
-                onClick={() => {
-                  setFitMode("width");
-                  setZoom(1);
-                }}
-                type="button"
-              >
-                <Icon name="fullscreen" size={15} />
-                Eniga moslash
-              </button>
-
-              <div className="flex items-center rounded-lg border border-white/15 bg-white/5 p-1">
-                <button
-                  aria-label="Kichraytirish"
-                  className="grid h-8 w-8 place-items-center rounded-md hover:bg-white/10"
-                  onClick={() => {
-                    setFitMode("manual");
-                    setZoom((current) =>
-                      clamp(current - 0.2, 0.5, 3),
-                    );
-                  }}
-                  type="button"
-                >
-                  <Icon name="minus" size={16} />
-                </button>
-                <span className="min-w-14 text-center text-[10px] font-bold">
-                  {Math.round(zoom * 100)}%
-                </span>
-                <button
-                  aria-label="Kattalashtirish"
-                  className="grid h-8 w-8 place-items-center rounded-md hover:bg-white/10"
-                  onClick={() => {
-                    setFitMode("manual");
-                    setZoom((current) =>
-                      clamp(current + 0.2, 0.5, 3),
-                    );
-                  }}
-                  type="button"
-                >
-                  <Icon name="plus" size={16} />
-                </button>
-              </div>
-            </>
+          {currentPage.audio ? (
+            <button
+              className={`inline-flex min-h-10 items-center gap-1.5 rounded-full px-4 text-[10px] font-black transition ${
+                isAudioPlaying
+                  ? "border border-white/20 bg-white/10 text-white"
+                  : "bg-[#C79A3C] text-[#1E4468] hover:bg-[#D9B25E]"
+              }`}
+              onClick={() => {
+                void toggleAudio();
+              }}
+              type="button"
+            >
+              <Icon
+                name={isAudioPlaying ? "pause" : "volume"}
+                size={15}
+              />
+              {isAudioPlaying
+                ? "Ovozni to‘xtatish"
+                : "Ovozda tinglash"}
+            </button>
           ) : null}
 
           <button
@@ -346,7 +397,7 @@ export function IssueViewer({
       </div>
 
       <div className="grid min-h-[720px] lg:grid-cols-[150px_minmax(0,1fr)]">
-        <aside className="custom-scrollbar flex gap-2 overflow-x-auto border-b border-slate-200 bg-slate-100 p-3 lg:block lg:max-h-[850px] lg:space-y-3 lg:overflow-y-auto lg:border-b-0 lg:border-r">
+        <aside className="custom-scrollbar flex gap-2 overflow-x-auto border-b border-[#E7DCC3] bg-[#F7F1E3] p-3 lg:block lg:max-h-[850px] lg:space-y-3 lg:overflow-y-auto lg:border-b-0 lg:border-r">
           {pages.map((page, index) => (
             <button
               aria-current={
@@ -355,12 +406,19 @@ export function IssueViewer({
                   : undefined
               }
               className={`w-24 shrink-0 rounded-xl border-2 bg-white p-1.5 text-left transition lg:w-full ${
-                index === currentIndex
-                  ? "border-[#D4AF37] shadow-md ring-2 ring-[#D4AF37]/20"
-                  : "border-transparent hover:border-slate-300"
+                index === spreadStart ||
+                index === spreadStart + 1
+                  ? "border-[#C79A3C] shadow-md ring-2 ring-[#C79A3C]/20"
+                  : "border-transparent hover:border-[#E7DCC3]"
               }`}
               key={page.id}
-              onClick={() => selectPage(index)}
+              onClick={() =>
+                selectPage(
+                  mode === "image"
+                    ? index - (index % 2)
+                    : index,
+                )
+              }
               type="button"
             >
               <span className="grid aspect-[0.72] place-items-center overflow-hidden rounded-md bg-slate-200">
@@ -378,57 +436,131 @@ export function IssueViewer({
                   />
                 )}
               </span>
-              <strong className="mt-1.5 block text-center text-[10px] text-[#003366]">
+              <strong className="mt-1.5 block text-center text-[10px] text-[#1E4468]">
                 {page.page_number}-bet
               </strong>
             </button>
           ))}
         </aside>
 
-        <div className="min-w-0 bg-slate-200/80">
+        <div className="min-w-0 bg-[#F7F1E3]">
           {mode === "image" ? (
-            <div className="custom-scrollbar h-[760px] overflow-auto p-3 text-center sm:p-6 lg:h-[850px]">
-              {currentPage.page_image ? (
-                <div
-                  className={`mx-auto transition-all duration-200 ${
-                    fitMode === "width"
-                      ? "w-full max-w-5xl"
-                      : "w-max"
-                  }`}
-                  style={
-                    fitMode === "manual"
-                      ? {
-                          transform: `scale(${zoom})`,
-                          transformOrigin: "top center",
-                        }
-                      : undefined
-                  }
-                >
-                  <img
-                    alt={`${currentPage.page_number}-bet`}
-                    className={`mx-auto block bg-white shadow-2xl ${
-                      fitMode === "width"
-                        ? "h-auto w-full object-contain"
-                        : "h-auto max-w-none"
-                    }`}
-                    src={currentPage.page_image}
-                  />
+            <div className="relative flex h-[760px] items-center justify-center px-4 py-8 sm:px-10 lg:h-[850px] lg:py-12">
+              <button
+                aria-label="Oldingi varaq"
+                className="absolute left-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-[#E7DCC3] bg-white text-[#1E4468] shadow-md transition hover:bg-[#FBF8F2] disabled:cursor-not-allowed disabled:opacity-30 sm:grid lg:left-6"
+                disabled={prevDisabled}
+                onClick={goToPreviousPage}
+                type="button"
+              >
+                <Icon name="chevron-left" />
+              </button>
+
+              <div
+                className="relative w-full max-w-4xl overflow-hidden rounded-sm bg-white shadow-2xl"
+                style={{
+                  aspectRatio: "16 / 10.2",
+                  perspective: "2400px",
+                }}
+              >
+                <div className="absolute inset-0 flex">
+                  <div className="relative flex-1 border-r border-[#E7DCC3] bg-white">
+                    {leftPage?.page_image ? (
+                      <img
+                        alt={`${leftPage.page_number}-bet`}
+                        className="h-full w-full object-contain"
+                        src={leftPage.page_image}
+                      />
+                    ) : (
+                      <div className="grid h-full place-items-center text-xs text-slate-400">
+                        {leftPage ? "Bet rasmi yo‘q" : ""}
+                      </div>
+                    )}
+                    {leftPage ? (
+                      <span className="absolute bottom-2 left-3 text-[10px] font-semibold text-[#A79E8C]">
+                        {leftPage.page_number}-bet
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="relative flex-1 bg-white">
+                    {rightPage?.page_image ? (
+                      <img
+                        alt={`${rightPage.page_number}-bet`}
+                        className="h-full w-full object-contain"
+                        src={rightPage.page_image}
+                      />
+                    ) : (
+                      <div className="grid h-full place-items-center text-xs text-slate-400">
+                        {rightPage ? "Bet rasmi yo‘q" : ""}
+                      </div>
+                    )}
+                    {rightPage ? (
+                      <span className="absolute bottom-2 right-3 text-[10px] font-semibold text-[#A79E8C]">
+                        {rightPage.page_number}-bet
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
-              ) : (
-                <div className="grid h-full place-items-center text-sm text-slate-500">
-                  Bet rasmi mavjud emas.
-                </div>
-              )}
+
+                {flipDirection ? (
+                  <div
+                    className="absolute top-0 h-full w-1/2 bg-white shadow-xl"
+                    style={
+                      flipDirection === "next"
+                        ? {
+                            right: 0,
+                            transformStyle: "preserve-3d",
+                            transformOrigin: "left center",
+                            transform: "rotateY(-165deg)",
+                            transition:
+                              "transform 0.6s cubic-bezier(0.4,0.1,0.2,1)",
+                          }
+                        : {
+                            left: 0,
+                            transformStyle: "preserve-3d",
+                            transformOrigin: "right center",
+                            transform: "rotateY(165deg)",
+                            transition:
+                              "transform 0.6s cubic-bezier(0.4,0.1,0.2,1)",
+                          }
+                    }
+                  >
+                    <img
+                      alt=""
+                      className="h-full w-full object-contain"
+                      src={
+                        (flipDirection === "next"
+                          ? rightPage?.page_image
+                          : leftPage?.page_image) ??
+                        undefined
+                      }
+                      style={{ backfaceVisibility: "hidden" }}
+                    />
+                  </div>
+                ) : null}
+
+                <div className="pointer-events-none absolute inset-y-0 left-1/2 w-4 -translate-x-1/2 bg-gradient-to-r from-black/10 via-transparent to-black/10" />
+              </div>
+
+              <button
+                aria-label="Keyingi varaq"
+                className="absolute right-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-[#E7DCC3] bg-white text-[#1E4468] shadow-md transition hover:bg-[#FBF8F2] disabled:cursor-not-allowed disabled:opacity-30 sm:grid lg:right-6"
+                disabled={nextDisabled}
+                onClick={goToNextPage}
+                type="button"
+              >
+                <Icon name="chevron-right" />
+              </button>
             </div>
           ) : (
-            <article className="custom-scrollbar h-[760px] overflow-y-auto bg-white px-5 py-8 sm:px-10 lg:h-[850px] lg:px-16 lg:py-14">
+            <article className="custom-scrollbar h-[760px] overflow-y-auto bg-[#FFFCF5] px-5 py-8 sm:px-10 lg:h-[850px] lg:px-16 lg:py-14">
               <div className="mx-auto max-w-3xl">
-                <div className="mb-7 flex items-center justify-between border-b border-slate-200 pb-4">
+                <div className="mb-7 flex items-center justify-between border-b border-[#E7DCC3] pb-4">
                   <div>
-                    <span className="text-[10px] font-black uppercase tracking-wider text-[#C59B27]">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#9C7826]">
                       Qulay o‘qish rejimi
                     </span>
-                    <h2 className="mt-1 font-serif text-2xl font-black text-[#003366]">
+                    <h2 className="mt-1 font-serif text-2xl font-black text-[#1E4468]">
                       {currentPage.page_number}-bet
                     </h2>
                   </div>
@@ -460,21 +592,9 @@ export function IssueViewer({
                 </div>
 
                 {currentPage.audio ? (
-                  <div className="mt-8 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                    <div className="mb-3 flex items-center gap-2 text-xs font-bold text-[#003366]">
-                      <Icon
-                        className="text-[#D4AF37]"
-                        name="volume"
-                        size={17}
-                      />
-                      Betni tinglash
-                    </div>
-                    <audio
-                      className="w-full"
-                      controls
-                      src={currentPage.audio}
-                    />
-                  </div>
+                  <p className="mt-8 text-xs font-semibold text-[#9C7826]">
+                    Bu betni yuqoridagi “Ovozda tinglash” tugmasi orqali tinglashingiz mumkin.
+                  </p>
                 ) : null}
               </div>
             </article>
@@ -482,9 +602,9 @@ export function IssueViewer({
         </div>
       </div>
 
-      <footer className="flex flex-col gap-2 border-t border-slate-200 bg-white px-4 py-3 text-[10px] text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+      <footer className="flex flex-col gap-2 border-t border-[#E7DCC3] bg-[#FFFCF5] px-4 py-3 text-[10px] text-slate-500 sm:flex-row sm:items-center sm:justify-between">
         <span>
-          Klaviatura: ← → bet almashtirish, + − masshtab
+          Klaviatura: ← → varaq almashtirish
         </span>
         <span>
           {issue.newspaper_name} · {issue.year}-yil, {issue.issue_number}-son

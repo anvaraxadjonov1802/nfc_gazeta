@@ -92,7 +92,7 @@ export function SearchDialog({
       <section className="relative z-10 w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
         <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4 sm:px-6">
           <div>
-            <h2 className="font-serif text-xl font-bold text-[#003366]">
+            <h2 className="font-serif text-xl font-bold text-[#1E4468]">
               Sayt bo‘yicha qidiruv
             </h2>
             <p className="mt-1 text-xs text-slate-500">
@@ -120,7 +120,7 @@ export function SearchDialog({
               size={20}
             />
             <input
-              className="h-14 w-full rounded-xl border border-slate-300 bg-slate-50 pl-12 pr-4 text-base text-slate-900 outline-none transition focus:border-[#003366] focus:bg-white focus:ring-4 focus:ring-[#003366]/10"
+              className="h-14 w-full rounded-xl border border-slate-300 bg-slate-50 pl-12 pr-4 text-base text-slate-900 outline-none transition focus:border-[#1E4468] focus:bg-white focus:ring-4 focus:ring-[#1E4468]/10"
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 setQuery(event.target.value)
               }
@@ -132,7 +132,7 @@ export function SearchDialog({
           </label>
 
           <button
-            className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#003366] px-5 text-sm font-bold text-white transition hover:bg-[#002244] disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#1E4468] px-5 text-sm font-bold text-white transition hover:bg-[#163552] disabled:cursor-not-allowed disabled:opacity-50"
             disabled={!query.trim()}
             type="submit"
           >

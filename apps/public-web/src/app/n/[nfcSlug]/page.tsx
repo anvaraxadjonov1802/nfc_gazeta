@@ -120,11 +120,11 @@ export default async function IssuePage({
         issueId={issue.id}
         source={trackingSource}
       />
-      <header className="mb-7 rounded-2xl border border-slate-200 border-t-4 border-t-[#D4AF37] bg-white p-5 shadow-sm sm:p-7">
+      <header className="mb-7 rounded-2xl border border-slate-200 border-t-4 border-t-[#C79A3C] bg-white p-5 shadow-sm sm:p-7">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-4xl">
             <Link
-              className="inline-flex items-center gap-2 text-xs font-bold text-[#003366] transition hover:text-[#D4AF37]"
+              className="inline-flex items-center gap-2 text-xs font-bold text-[#1E4468] transition hover:text-[#C79A3C]"
               href="/arxiv"
             >
               <Icon name="arrow-left" size={16} />
@@ -145,10 +145,10 @@ export default async function IssuePage({
               </span>
             </div>
 
-            <span className="mt-5 block text-[10px] font-black uppercase tracking-[0.18em] text-[#C59B27]">
+            <span className="mt-5 block text-[10px] font-black uppercase tracking-[0.18em] text-[#9C7826]">
               {issue.newspaper_name}
             </span>
-            <h1 className="mt-2 font-serif text-4xl font-black tracking-tight text-[#003366] sm:text-5xl lg:text-6xl">
+            <h1 className="mt-2 font-serif text-4xl font-black tracking-tight text-[#1E4468] sm:text-5xl lg:text-6xl">
               {issueLabel(
                 issue.year,
                 issue.issue_number,
@@ -163,7 +163,7 @@ export default async function IssuePage({
           <div className="flex flex-col items-stretch gap-3 sm:flex-row lg:flex-col lg:items-end">
             {issue.original_pdf ? (
               <a
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 text-xs font-bold text-[#003366] transition hover:border-[#003366]"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 text-xs font-bold text-[#1E4468] transition hover:border-[#1E4468]"
                 href={issue.original_pdf}
                 rel="noreferrer"
                 target="_blank"
@@ -183,7 +183,7 @@ export default async function IssuePage({
             <span className="block text-[10px] text-slate-500">
               Nashr soni
             </span>
-            <strong className="mt-1 block text-[#003366]">
+            <strong className="mt-1 block text-[#1E4468]">
               {issue.issue_number}-son
             </strong>
           </div>
@@ -191,7 +191,7 @@ export default async function IssuePage({
             <span className="block text-[10px] text-slate-500">
               Gazeta betlari
             </span>
-            <strong className="mt-1 block text-[#003366]">
+            <strong className="mt-1 block text-[#1E4468]">
               {issue.page_count} bet
             </strong>
           </div>
@@ -199,7 +199,7 @@ export default async function IssuePage({
             <span className="block text-[10px] text-slate-500">
               Elektron maqolalar
             </span>
-            <strong className="mt-1 block text-[#003366]">
+            <strong className="mt-1 block text-[#1E4468]">
               {issue.article_count} ta
             </strong>
           </div>
@@ -223,10 +223,10 @@ export default async function IssuePage({
         <section className="mt-14 space-y-6">
           <div className="flex items-end justify-between gap-4 border-b border-slate-200 pb-3">
             <div>
-              <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#C59B27]">
+              <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#9C7826]">
                 Ushbu gazeta sonida
               </span>
-              <h2 className="mt-1 font-serif text-2xl font-black text-[#003366] sm:text-3xl">
+              <h2 className="mt-1 font-serif text-2xl font-black text-[#1E4468] sm:text-3xl">
                 Elektron maqolalar
               </h2>
             </div>
