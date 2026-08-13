@@ -134,7 +134,7 @@ export function IssueViewer({
       window.setTimeout(() => {
         selectPage(target);
         setFlipDirection(null);
-      }, 700);
+      }, 900);
       return;
     }
 
@@ -158,7 +158,7 @@ export function IssueViewer({
       window.setTimeout(() => {
         selectPage(target);
         setFlipDirection(null);
-      }, 700);
+      }, 900);
       return;
     }
 
@@ -396,8 +396,8 @@ export function IssueViewer({
         </div>
       </div>
 
-      <div className="grid min-h-[720px] lg:grid-cols-[150px_minmax(0,1fr)]">
-        <aside className="custom-scrollbar flex gap-2 overflow-x-auto border-b border-[#E7DCC3] bg-[#F7F1E3] p-3 lg:block lg:max-h-[850px] lg:space-y-3 lg:overflow-y-auto lg:border-b-0 lg:border-r">
+      <div className="issue-stage-grid grid lg:grid-cols-[150px_minmax(0,1fr)]">
+        <aside className="custom-scrollbar flex gap-2 overflow-x-auto border-b border-[#E7DCC3] bg-[#F7F1E3] p-3 lg:block lg:max-h-[780px] lg:space-y-3 lg:overflow-y-auto lg:border-b-0 lg:border-r">
           {pages.map((page, index) => (
             <button
               aria-current={
@@ -445,10 +445,10 @@ export function IssueViewer({
 
         <div className="min-w-0 bg-[#F7F1E3]">
           {mode === "image" ? (
-            <div className="relative flex h-[760px] items-center justify-center px-4 py-8 sm:px-10 lg:h-[850px] lg:py-12">
+            <div className="issue-stage-book relative flex items-center justify-center px-3 py-6 sm:px-8 sm:py-10 lg:h-[780px] lg:py-12">
               <button
                 aria-label="Oldingi varaq"
-                className="absolute left-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-[#E7DCC3] bg-white text-[#1E4468] shadow-md transition hover:scale-105 hover:bg-[#FBF8F2] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:grid lg:left-6"
+                className="absolute left-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-[#E7DCC3] bg-white text-[#1E4468] shadow-md transition hover:scale-105 hover:bg-[#FBF8F2] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:h-11 sm:w-11 lg:left-6"
                 disabled={prevDisabled}
                 onClick={goToPreviousPage}
                 type="button"
@@ -513,7 +513,7 @@ export function IssueViewer({
                             transformOrigin: "left center",
                             transform: "rotateY(-180deg)",
                             transition:
-                              "transform 0.7s cubic-bezier(0.4,0.1,0.2,1)",
+                              "transform 0.9s cubic-bezier(0.45,0.05,0.15,1)",
                           }
                         : {
                             left: 0,
@@ -521,7 +521,7 @@ export function IssueViewer({
                             transformOrigin: "right center",
                             transform: "rotateY(180deg)",
                             transition:
-                              "transform 0.7s cubic-bezier(0.4,0.1,0.2,1)",
+                              "transform 0.9s cubic-bezier(0.45,0.05,0.15,1)",
                           }
                     }
                   >
@@ -577,7 +577,7 @@ export function IssueViewer({
 
               <button
                 aria-label="Keyingi varaq"
-                className="absolute right-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-[#E7DCC3] bg-white text-[#1E4468] shadow-md transition hover:scale-105 hover:bg-[#FBF8F2] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:grid lg:right-6"
+                className="absolute right-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-[#E7DCC3] bg-white text-[#1E4468] shadow-md transition hover:scale-105 hover:bg-[#FBF8F2] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:h-11 sm:w-11 lg:right-6"
                 disabled={nextDisabled}
                 onClick={goToNextPage}
                 type="button"
@@ -586,7 +586,7 @@ export function IssueViewer({
               </button>
             </div>
           ) : (
-            <article className="custom-scrollbar h-[760px] overflow-y-auto bg-[#FFFCF5] px-5 py-8 sm:px-10 lg:h-[850px] lg:px-16 lg:py-14">
+            <article className="custom-scrollbar max-h-[80vh] overflow-y-auto bg-[#FFFCF5] px-5 py-8 sm:px-10 lg:h-[780px] lg:max-h-none lg:px-16 lg:py-14">
               <div className="mx-auto max-w-3xl">
                 <div className="mb-7 flex items-center justify-between border-b border-[#E7DCC3] pb-4">
                   <div>

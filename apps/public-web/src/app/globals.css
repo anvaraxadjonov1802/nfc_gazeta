@@ -123,11 +123,11 @@ html.theme-contrast a {
   background: #F7F1E3;
 }
 
-.issue-reader:fullscreen > div:nth-child(2) {
+.issue-reader:fullscreen .issue-stage-grid {
   min-height: calc(100vh - 118px);
 }
 
-.issue-reader:fullscreen > div:nth-child(2) > div:last-child > div {
+.issue-reader:fullscreen .issue-stage-book {
   height: calc(100vh - 118px) !important;
 }
 
