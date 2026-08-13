@@ -457,13 +457,13 @@ export function IssueViewer({
               </button>
 
               <div
-                className="relative w-full max-w-4xl overflow-hidden rounded-sm bg-white shadow-2xl"
+                className="relative w-full max-w-4xl"
                 style={{
                   aspectRatio: "16 / 10.2",
                   perspective: "2400px",
                 }}
               >
-                <div className="absolute inset-0 flex">
+                <div className="absolute inset-0 flex overflow-hidden rounded-sm bg-white shadow-2xl">
                   <div className="relative flex-1 border-r border-[#E7DCC3] bg-white">
                     {leftPage?.page_image ? (
                       <img
