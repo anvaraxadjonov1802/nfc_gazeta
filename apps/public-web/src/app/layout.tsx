@@ -34,25 +34,13 @@ interface RootLayoutProps {
 export default function RootLayout({
   children,
 }: RootLayoutProps) {
-  const currentDate = new Intl.DateTimeFormat(
-    "uz-UZ",
-    {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    },
-  ).format(new Date());
-
   return (
     <html
       className={`${fontSans.variable} ${fontSerif.variable}`}
       lang="uz"
     >
       <body>
-        <SiteShell currentDate={currentDate}>
-          {children}
-        </SiteShell>
+        <SiteShell>{children}</SiteShell>
       </body>
     </html>
   );

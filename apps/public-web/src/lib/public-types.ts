@@ -28,6 +28,11 @@ export interface PublicArticleCard {
   reading_order: number;
   is_featured: boolean;
   published_at: string | null;
+  /**
+   * Not yet returned by the backend. Reserved so the homepage media rows
+   * can show an embedded video (e.g. YouTube) once the API exposes it.
+   */
+  video_url?: string | null;
 }
 
 export interface PublicArticleDetail

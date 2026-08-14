@@ -1,129 +1,272 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 import { Icon } from "@/components/ui/icon";
+import { useLocale } from "@/context/locale-context";
+import { useProfile } from "@/context/profile-context";
+import {
+  type ReadingMode,
+  useReadingMode,
+} from "@/context/reading-mode-context";
+import { LOCALES } from "@/lib/i18n";
 
 interface SiteHeaderProps {
-  currentDate: string;
-  onOpenAccessibility: () => void;
+  onOpenProfile: () => void;
   onOpenSearch: () => void;
-  onOpenMobileNav: () => void;
 }
 
+const READING_MODES: {
+  value: ReadingMode;
+  labelKey: "mode.paper" | "mode.white" | "mode.night";
+  hintKey:
+    | "mode.paperHint"
+    | "mode.whiteHint"
+    | "mode.nightHint";
+  swatch: string;
+}[] = [
+  {
+    value: "paper",
+    labelKey: "mode.paper",
+    hintKey: "mode.paperHint",
+    swatch: "#F7F1E3",
+  },
+  {
+    value: "white",
+    labelKey: "mode.white",
+    hintKey: "mode.whiteHint",
+    swatch: "#FFFFFF",
+  },
+  {
+    value: "night",
+    labelKey: "mode.night",
+    hintKey: "mode.nightHint",
+    swatch: "#121821",
+  },
+];
+
+type OpenPanel = "lang" | "mode" | null;
+
 export function SiteHeader({
-  currentDate,
-  onOpenAccessibility,
+  onOpenProfile,
   onOpenSearch,
-  onOpenMobileNav,
 }: SiteHeaderProps) {
-  const pathname = usePathname();
+  const { locale, setLocale, t } = useLocale();
+  const { mode, setMode } = useReadingMode();
+  const { initial: profileInitial } = useProfile();
+  const [openPanel, setOpenPanel] =
+    useState<OpenPanel>(null);
+  const containerRef = useRef<HTMLDivElement | null>(
+    null,
+  );
+
+  useEffect(() => {
+    if (!openPanel) {
+      return;
+    }
+
+    function handlePointerDown(event: PointerEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(
+          event.target as Node,
+        )
+      ) {
+        setOpenPanel(null);
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpenPanel(null);
+      }
+    }
+
+    document.addEventListener(
+      "pointerdown",
+      handlePointerDown,
+    );
+    document.addEventListener(
+      "keydown",
+      handleKeyDown,
+    );
+
+    return () => {
+      document.removeEventListener(
+        "pointerdown",
+        handlePointerDown,
+      );
+      document.removeEventListener(
+        "keydown",
+        handleKeyDown,
+      );
+    };
+  }, [openPanel]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur-xl">
-      <div className="border-b-4 border-[#C79A3C] bg-[#1E4468] text-white">
-        <div className="mx-auto flex min-h-9 w-full max-w-7xl items-center justify-between gap-4 px-4 text-[11px] font-medium sm:px-6 lg:px-8">
-          <div className="flex min-w-0 items-center gap-4">
-            <span className="hidden truncate text-slate-200 sm:inline">
-              {currentDate}
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-950/70 px-2.5 py-1 text-[10px] font-bold text-emerald-300">
-              <Icon
-                className="text-emerald-400"
-                name="nfc"
-                size={13}
-              />
-              NFC tizimi faol
-            </span>
-          </div>
-
-          <div className="hidden items-center gap-2 sm:flex">
-            <button
-              className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 transition hover:bg-white/10 hover:text-[#C79A3C]"
-              onClick={onOpenAccessibility}
-              type="button"
-            >
-              <Icon
-                className="text-[#C79A3C]"
-                name="eye"
-                size={14}
-              />
-              Maxsus imkoniyatlar
-            </button>
-            <span className="h-3 w-px bg-white/20" />
-            <button
-              className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 transition hover:bg-white/10 hover:text-[#C79A3C]"
-              onClick={onOpenSearch}
-              type="button"
-            >
-              <Icon name="search" size={14} />
-              Qidiruv
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="mx-auto flex min-h-[76px] w-full max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
+    <header
+      className="sticky top-0 z-50 border-b border-[#E7DCC3] bg-[#FFFCF5]/95 shadow-sm backdrop-blur-xl"
+      ref={containerRef}
+    >
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <Link
           aria-label="Temiryo‘lchi bosh sahifasi"
-          className="flex min-w-0 items-center gap-3"
+          className="flex min-w-0 items-center gap-2.5"
           href="/"
         >
-          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[#1E4468] text-xl font-black text-[#C79A3C] shadow-md ring-1 ring-[#163552]">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#1E4468] font-serif text-lg font-black text-[#C79A3C] shadow-md ring-1 ring-[#163552]">
             T
           </span>
-          <span className="min-w-0">
-            <strong className="block truncate font-serif text-xl font-black tracking-tight text-[#1E4468] sm:text-2xl">
-              Temiryo‘lchi
-            </strong>
-            <small className="block text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500">
-              Rasmiy elektron gazeta
-            </small>
-          </span>
+          <strong className="truncate font-serif text-base font-black tracking-tight text-[#1E4468] sm:text-xl">
+            Temiryo‘lchi
+          </strong>
         </Link>
 
-        <nav
-          aria-label="Asosiy navigatsiya"
-          className="hidden items-center gap-1 lg:flex"
-        >
-          <Link
-            className={`rounded-lg px-4 py-2 text-sm font-bold transition ${
-              pathname === "/"
-                ? "bg-[#1E4468] text-white"
-                : "text-slate-600 hover:bg-slate-100 hover:text-[#1E4468]"
-            }`}
-            href="/"
-          >
-            Bosh sahifa
-          </Link>
-          <Link
-            className={`rounded-lg px-4 py-2 text-sm font-bold transition ${
-              pathname.startsWith("/arxiv")
-                ? "bg-[#1E4468] text-white"
-                : "text-slate-600 hover:bg-slate-100 hover:text-[#1E4468]"
-            }`}
-            href="/arxiv"
-          >
-            Gazeta arxivi
-          </Link>
+        <div className="flex items-center gap-1 sm:gap-1.5">
           <button
-            className="ml-2 grid h-10 w-10 place-items-center rounded-lg border border-slate-200 text-slate-600 transition hover:border-[#1E4468] hover:text-[#1E4468]"
+            aria-label={t("nav.search")}
+            className="grid h-10 w-10 place-items-center rounded-lg text-[#1E4468] transition hover:bg-[#F0EAD9]"
             onClick={onOpenSearch}
             type="button"
           >
             <Icon name="search" size={18} />
           </button>
-        </nav>
 
-        <button
-          aria-label="Mobil menyuni ochish"
-          className="grid h-11 w-11 place-items-center rounded-lg border border-slate-200 text-[#1E4468] lg:hidden"
-          onClick={onOpenMobileNav}
-          type="button"
-        >
-          <Icon name="menu" />
-        </button>
+          <div className="relative">
+            <button
+              aria-label={t("nav.language")}
+              className={`grid h-10 w-10 place-items-center rounded-lg text-[#1E4468] transition hover:bg-[#F0EAD9] ${
+                openPanel === "lang"
+                  ? "bg-[#F0EAD9]"
+                  : ""
+              }`}
+              onClick={() =>
+                setOpenPanel((current) =>
+                  current === "lang"
+                    ? null
+                    : "lang",
+                )
+              }
+              type="button"
+            >
+              <svg
+                fill="none"
+                height="18"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.8"
+                viewBox="0 0 24 24"
+                width="18"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
+              </svg>
+            </button>
+
+            {openPanel === "lang" ? (
+              <div className="absolute right-0 top-12 z-50 w-48 overflow-hidden rounded-xl border border-[#E7DCC3] bg-white py-1.5 shadow-xl">
+                {LOCALES.map((entry) => (
+                  <button
+                    className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-sm font-semibold transition ${
+                      entry.code === locale
+                        ? "bg-[#F7F1E3] text-[#1E4468]"
+                        : "text-slate-600 hover:bg-slate-50"
+                    }`}
+                    key={entry.code}
+                    onClick={() => {
+                      setLocale(entry.code);
+                      setOpenPanel(null);
+                    }}
+                    type="button"
+                  >
+                    {entry.label}
+                    {entry.code === locale ? (
+                      <Icon
+                        className="text-[#C79A3C]"
+                        name="check"
+                        size={15}
+                      />
+                    ) : null}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
+
+          <div className="relative">
+            <button
+              aria-label={t("nav.readingMode")}
+              className={`grid h-10 w-10 place-items-center rounded-lg text-[#1E4468] transition hover:bg-[#F0EAD9] ${
+                openPanel === "mode"
+                  ? "bg-[#F0EAD9]"
+                  : ""
+              }`}
+              onClick={() =>
+                setOpenPanel((current) =>
+                  current === "mode"
+                    ? null
+                    : "mode",
+                )
+              }
+              type="button"
+            >
+              <Icon name="eye" size={18} />
+            </button>
+
+            {openPanel === "mode" ? (
+              <div className="absolute right-0 top-12 z-50 w-64 overflow-hidden rounded-xl border border-[#E7DCC3] bg-white py-1.5 shadow-xl">
+                {READING_MODES.map((entry) => (
+                  <button
+                    className={`flex w-full items-center gap-3 px-4 py-2.5 text-left transition ${
+                      entry.value === mode
+                        ? "bg-[#F7F1E3]"
+                        : "hover:bg-slate-50"
+                    }`}
+                    key={entry.value}
+                    onClick={() => {
+                      setMode(entry.value);
+                      setOpenPanel(null);
+                    }}
+                    type="button"
+                  >
+                    <span
+                      className="h-6 w-6 shrink-0 rounded-full border border-black/10 shadow-inner"
+                      style={{
+                        background: entry.swatch,
+                      }}
+                    />
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-bold text-[#1E4468]">
+                        {t(entry.labelKey)}
+                      </span>
+                      <span className="block text-[11px] text-slate-500">
+                        {t(entry.hintKey)}
+                      </span>
+                    </span>
+                    {entry.value === mode ? (
+                      <Icon
+                        className="shrink-0 text-[#C79A3C]"
+                        name="check"
+                        size={15}
+                      />
+                    ) : null}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
+
+          <button
+            aria-label={t("nav.profile")}
+            className="ml-1 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#1E4468] text-sm font-black text-[#C79A3C] shadow-md ring-2 ring-transparent transition hover:ring-[#C79A3C]/40"
+            onClick={onOpenProfile}
+            type="button"
+          >
+            {profileInitial}
+          </button>
+        </div>
       </div>
     </header>
   );

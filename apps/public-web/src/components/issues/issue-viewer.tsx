@@ -22,6 +22,7 @@ import {
 import type {
   PublicIssueDetail,
 } from "@/lib/public-types";
+import { recordProgress } from "@/lib/reading-history";
 
 interface IssueViewerProps {
   issue: PublicIssueDetail;
@@ -112,13 +113,21 @@ export function IssueViewer({
   ]);
 
   useEffect(() => {
+    if (!currentPage) {
+      return;
+    }
+
+    recordProgress(issue, currentIndex, pages.length);
+  }, [currentIndex, currentPage, issue, pages.length]);
+
+  const resetAudioPlayback = useCallback(() => {
     setIsAudioPlaying(false);
 
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
-  }, [currentIndex]);
+  }, []);
 
   useEffect(() => {
     if (
@@ -128,12 +137,13 @@ export function IssueViewer({
       return;
     }
 
-    if (
-      window.matchMedia("(max-width: 767px)")
-        .matches
-    ) {
-      setIsImmersive(true);
-    }
+    // Detect the mobile breakpoint after mount only, so the server-rendered
+    // (non-immersive) markup matches the client's first paint and we avoid
+    // a hydration mismatch, then switch to immersive mode right after.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsImmersive(
+      window.matchMedia("(max-width: 767px)").matches,
+    );
   }, []);
 
   useEffect(() => {
@@ -151,6 +161,7 @@ export function IssueViewer({
 
   const selectPage = useCallback(
     (pageIndex: number) => {
+      resetAudioPlayback();
       setCurrentIndex(
         clamp(
           pageIndex,
@@ -159,7 +170,7 @@ export function IssueViewer({
         ),
       );
     },
-    [pages.length],
+    [pages.length, resetAudioPlayback],
   );
 
   const goToPreviousPage = useCallback(() => {
@@ -500,9 +511,10 @@ export function IssueViewer({
                 minHeight={420}
                 minWidth={280}
                 mobileScrollSupport={false}
-                onFlip={(event) =>
-                  setCurrentIndex(event.data)
-                }
+                onFlip={(event) => {
+                  resetAudioPlayback();
+                  setCurrentIndex(event.data);
+                }}
                 ref={flipBookRef}
                 showCover
                 size="stretch"

@@ -1,14 +1,13 @@
-import Link from "next/link";
-
-import { ArticleCard } from "@/components/article-card";
 import { CategoryFilter } from "@/components/category-filter";
-import { FeaturedArticle } from "@/components/featured-article";
-import { IssueCard } from "@/components/issue-card";
+import { AnimatedBanner } from "@/components/home/animated-banner";
+import { IssueCarousel } from "@/components/home/issue-carousel";
+import { MediaArticleRow } from "@/components/home/media-article-row";
 import { Icon } from "@/components/ui/icon";
 import {
   getPublicHome,
   getPublicIssues,
 } from "@/lib/public-api";
+import type { PublicArticleCard } from "@/lib/public-types";
 
 export default async function HomePage() {
   let data;
@@ -37,87 +36,29 @@ export default async function HomePage() {
     );
   }
 
-  const latestIssue = data.latest_issue;
-  const featuredArticle =
-    data.featured_articles[0] ?? null;
-  const additionalFeatured =
-    data.featured_articles.slice(1, 4);
-  const recentIssues = issues
-    .filter(
-      (issue) =>
-        issue.id !== latestIssue?.id,
-    )
-    .slice(0, 4);
+  const articlesById = new Map<
+    number,
+    PublicArticleCard
+  >();
+
+  for (const article of [
+    ...data.featured_articles,
+    ...data.latest_articles,
+  ]) {
+    if (!articlesById.has(article.id)) {
+      articlesById.set(article.id, article);
+    }
+  }
+
+  const mediaArticles = Array.from(
+    articlesById.values(),
+  ).slice(0, 6);
 
   return (
     <main className="mx-auto w-full max-w-7xl space-y-12 px-4 py-8 sm:px-6 lg:px-8">
-      {latestIssue ? (
-        <section>
-          <div className="mb-4 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <Icon
-                className="text-[#1E4468]"
-                name="newspaper"
-              />
-              <h2 className="font-serif text-xl font-black text-[#1E4468] sm:text-2xl">
-                Eng so‘nggi elektron nashr
-              </h2>
-            </div>
-            <Link
-              className="inline-flex items-center gap-1 text-xs font-bold text-[#1E4468] transition hover:text-[#C79A3C]"
-              href="/arxiv"
-            >
-              Arxivga o‘tish
-              <Icon name="arrow-right" size={15} />
-            </Link>
-          </div>
+      <AnimatedBanner />
 
-          <IssueCard
-            featured
-            issue={latestIssue}
-          />
-        </section>
-      ) : (
-        <section className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm">
-          <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-slate-100 text-slate-400">
-            <Icon name="newspaper" size={30} />
-          </div>
-          <h2 className="mt-4 font-serif text-xl font-bold text-[#1E4468]">
-            Hozircha ommaviy nashr mavjud emas
-          </h2>
-          <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-500">
-            Admin panel orqali birinchi gazeta sonini ommaga chiqaring.
-          </p>
-        </section>
-      )}
-
-      {featuredArticle ? (
-        <section className="space-y-5">
-          <div className="flex items-end justify-between gap-4 border-b border-slate-200 pb-3">
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#9C7826]">
-                Tahririyat tanlovi
-              </span>
-              <h2 className="mt-1 font-serif text-2xl font-black text-[#1E4468] sm:text-3xl">
-                Muhim maqola
-              </h2>
-            </div>
-          </div>
-
-          <FeaturedArticle article={featuredArticle} />
-
-          {additionalFeatured.length > 0 ? (
-            <div className="grid gap-5 md:grid-cols-3">
-              {additionalFeatured.map((article) => (
-                <ArticleCard
-                  article={article}
-                  key={article.id}
-                />
-              ))}
-            </div>
-          ) : null}
-        </section>
-      ) : null}
+      <IssueCarousel issues={issues} />
 
       {data.categories.length > 0 ? (
         <CategoryFilter categories={data.categories} />
@@ -135,10 +76,10 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {data.latest_articles.length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {data.latest_articles.map((article) => (
-              <ArticleCard
+        {mediaArticles.length > 0 ? (
+          <div className="space-y-4">
+            {mediaArticles.map((article) => (
+              <MediaArticleRow
                 article={article}
                 key={article.id}
               />
@@ -152,41 +93,6 @@ export default async function HomePage() {
           </div>
         )}
       </section>
-
-      {recentIssues.length > 0 ? (
-        <section className="space-y-6 rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm sm:p-8">
-          <div className="flex flex-col gap-3 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#9C7826]">
-                Elektron arxivdan
-              </span>
-              <h2 className="mt-1 font-serif text-2xl font-black text-[#1E4468]">
-                O‘tgan gazeta sonlari
-              </h2>
-            </div>
-            <Link
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#1E4468] px-5 text-xs font-bold text-white transition hover:bg-[#163552]"
-              href="/arxiv"
-            >
-              <Icon
-                className="text-[#C79A3C]"
-                name="archive"
-                size={17}
-              />
-              Barcha sonlarni ko‘rish
-            </Link>
-          </div>
-
-          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-            {recentIssues.map((issue) => (
-              <IssueCard
-                issue={issue}
-                key={issue.id}
-              />
-            ))}
-          </div>
-        </section>
-      ) : null}
 
       <section className="relative overflow-hidden rounded-2xl border-b-4 border-[#C79A3C] bg-[#1E4468] p-7 text-white shadow-xl sm:p-10">
         <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#C79A3C]/10 blur-3xl" />
