@@ -543,49 +543,73 @@ export function IssueViewer({
               </button>
             </div>
           ) : (
-            <article className="custom-scrollbar max-h-[80vh] overflow-y-auto bg-[#FFFCF5] px-5 py-8 sm:px-10 lg:h-[780px] lg:max-h-none lg:px-16 lg:py-14">
-              <div className="mx-auto max-w-3xl">
-                <div className="mb-7 flex items-center justify-between border-b border-[#E7DCC3] pb-4">
-                  <div>
-                    <span className="text-[10px] font-black uppercase tracking-wider text-[#9C7826]">
-                      Qulay o‘qish rejimi
-                    </span>
-                    <h2 className="mt-1 font-serif text-2xl font-black text-[#1E4468]">
-                      {currentPage.page_number}-bet
-                    </h2>
-                  </div>
-                  <Icon
-                    className="text-slate-300"
-                    name="text"
-                    size={28}
-                  />
-                </div>
-
-                <div className="space-y-5 font-serif text-[1.05rem] leading-8 text-slate-800">
-                  {currentPage.final_text ? (
-                    currentPage.final_text
-                      .split(/\n{2,}/)
-                      .map((paragraph) =>
-                        paragraph.trim(),
-                      )
-                      .filter(Boolean)
-                      .map((paragraph, index) => (
-                        <p key={index}>
-                          {paragraph}
-                        </p>
-                      ))
-                  ) : (
-                    <p className="text-slate-500">
-                      Ushbu bet uchun matn mavjud emas.
+            <article className="custom-scrollbar max-h-[80vh] overflow-y-auto bg-[#F7F1E3] px-3 py-6 sm:px-8 sm:py-10 lg:h-[780px] lg:max-h-none lg:px-10 lg:py-12">
+              <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-[#E7DCC3] bg-white shadow-sm">
+                <div className="flex items-center gap-3 border-b border-[#F0EAD9] px-5 py-4">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#1E4468] font-serif text-base font-bold text-[#C79A3C]">
+                    T
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-bold text-[#1E4468]">
+                      {issue.newspaper_name}
                     </p>
-                  )}
+                    <p className="text-[11px] text-slate-500">
+                      {issue.year}-yil, {issue.issue_number}-son
+                    </p>
+                  </div>
+                  <span className="shrink-0 rounded-full bg-[#F7F1E3] px-2.5 py-1 text-[10px] font-bold text-[#9C7826]">
+                    {currentPage.page_number}-bet
+                  </span>
                 </div>
 
-                {currentPage.audio ? (
-                  <p className="mt-8 text-xs font-semibold text-[#9C7826]">
-                    Bu betni yuqoridagi “Ovozda tinglash” tugmasi orqali tinglashingiz mumkin.
-                  </p>
+                {currentPage.page_image ? (
+                  <div className="relative aspect-[16/10] w-full bg-slate-100">
+                    <img
+                      alt={`${currentPage.page_number}-bet`}
+                      className="h-full w-full object-cover"
+                      src={currentPage.page_image}
+                    />
+                  </div>
                 ) : null}
+
+                <div className="px-5 py-6 sm:px-7">
+                  <h2 className="text-lg font-bold text-[#1E4468] sm:text-xl">
+                    {currentPage.page_number}-bet matni
+                  </h2>
+
+                  <div className="mt-4 space-y-4 text-[15px] leading-7 text-[#2B2620]">
+                    {currentPage.final_text ? (
+                      currentPage.final_text
+                        .split(/\n{2,}/)
+                        .map((paragraph) =>
+                          paragraph.trim(),
+                        )
+                        .filter(Boolean)
+                        .map((paragraph, index) => (
+                          <p key={index}>
+                            {paragraph}
+                          </p>
+                        ))
+                    ) : (
+                      <p className="text-slate-500">
+                        Ushbu bet uchun matn mavjud emas.
+                      </p>
+                    )}
+                  </div>
+
+                  {currentPage.audio ? (
+                    <p className="mt-6 text-xs font-semibold text-[#9C7826]">
+                      Bu betni yuqoridagi “Ovozda tinglash” tugmasi orqali tinglashingiz mumkin.
+                    </p>
+                  ) : null}
+                </div>
+
+                <div className="flex items-center justify-between border-t border-[#F0EAD9] px-5 py-3 text-[11px] text-slate-400">
+                  <span>{issue.newspaper_name}</span>
+                  <span>
+                    {currentPage.page_number} / {pages.length} bet
+                  </span>
+                </div>
               </div>
             </article>
           )}
