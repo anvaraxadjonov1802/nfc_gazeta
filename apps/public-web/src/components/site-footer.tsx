@@ -16,17 +16,17 @@ export function SiteFooter({
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-16 border-t-4 border-double border-[#8B6A2F] bg-[#0F0C09] text-slate-300">
+    <footer className="mt-16 border-t-4 border-double border-[#D9622B] bg-[#0F0C09] text-slate-300">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <div className="flex items-center gap-3">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/10 font-serif text-lg font-black text-[#8B6A2F]">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/10 font-serif text-lg font-black text-[#D9622B]">
             T
           </span>
           <div>
             <strong className="vintage-masthead block font-serif text-lg text-white">
               Temiryo‘lchi
             </strong>
-            <small className="vintage-caps text-[9px] font-bold text-[#8B6A2F]">
+            <small className="vintage-caps text-[9px] font-bold text-[#D9622B]">
               {t("footer.official")}
             </small>
           </div>
@@ -34,30 +34,30 @@ export function SiteFooter({
 
         <div className="vintage-caps flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold tracking-[0.1em]">
           <Link
-            className="transition hover:text-[#8B6A2F]"
+            className="transition hover:text-[#D9622B]"
             href="/"
           >
             {t("footer.home")}
           </Link>
-          <span className="text-[#8B6A2F]/40">✦</span>
+          <span className="text-[#D9622B]/40">✦</span>
           <Link
-            className="transition hover:text-[#8B6A2F]"
+            className="transition hover:text-[#D9622B]"
             href="/arxiv"
           >
             {t("footer.archive")}
           </Link>
-          <span className="text-[#8B6A2F]/40">✦</span>
+          <span className="text-[#D9622B]/40">✦</span>
           <button
-            className="transition hover:text-[#8B6A2F]"
+            className="transition hover:text-[#D9622B]"
             onClick={onOpenAccessibility}
             type="button"
           >
             {t("footer.accessibility")}
           </button>
-          <span className="text-[#8B6A2F]/40">✦</span>
+          <span className="text-[#D9622B]/40">✦</span>
           <span className="inline-flex items-center gap-1.5 normal-case tracking-normal text-slate-400">
             <Icon
-              className="text-[#8B6A2F]"
+              className="text-[#D9622B]"
               name="nfc"
               size={14}
             />

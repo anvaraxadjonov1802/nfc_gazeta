@@ -63,62 +63,65 @@ export function CategoryFilter({
   }
 
   return (
-    <section className="rounded-2xl border border-[#CBB98A] bg-[#F8F2E2] p-5 shadow-sm">
-      <div className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-[#1B1712]">
-        <Icon
-          className="text-[#8B6A2F]"
-          name="archive"
-          size={17}
-        />
-        Mavzular bo‘yicha ruknlar
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {categories.map((category) => (
-          <button
-            className={`rounded-lg px-4 py-2 text-xs font-bold transition ${
-              activeSlug === category.slug
-                ? "bg-[#1B1712] text-white"
-                : "bg-[#EFE6D2] text-slate-700 hover:bg-[#1B1712] hover:text-white"
-            }`}
-            key={category.id}
-            onClick={() =>
-              void handleSelect(category)
-            }
-            type="button"
-          >
-            {category.name}
-          </button>
-        ))}
-      </div>
-
-      {activeSlug ? (
-        <div className="animate-fade-in-up mt-5 border-t border-[#CBB98A] pt-5">
-          {isLoading ? (
-            <p className="text-sm text-slate-500">
-              Yuklanmoqda…
-            </p>
-          ) : hasError ? (
-            <p className="text-sm text-red-600">
-              Maqolalarni yuklab bo‘lmadi.
-            </p>
-          ) : articles.length > 0 ? (
-            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {articles.map((article) => (
-                <ArticleCard
-                  article={article}
-                  key={article.id}
-                  variant="compact"
-                />
-              ))}
-            </div>
-          ) : (
-            <p className="text-sm text-slate-500">
-              Ushbu rukn bo‘yicha maqolalar
-              topilmadi.
-            </p>
-          )}
+    <section className="w-full bg-[#EFE6D2] py-14">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-7 flex items-center gap-2.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#1B1712]">
+          <Icon
+            className="text-[#D9622B]"
+            name="archive"
+            size={17}
+          />
+          Mavzular bo‘yicha
         </div>
-      ) : null}
+
+        <div className="flex flex-wrap gap-3">
+          {categories.map((category) => (
+            <button
+              className={`rounded-full border px-5 py-2.5 text-sm font-bold transition ${
+                activeSlug === category.slug
+                  ? "border-[#1B1712] bg-[#1B1712] text-white"
+                  : "border-[#1B1712]/15 bg-white text-[#1B1712] hover:border-[#D9622B] hover:text-[#D9622B]"
+              }`}
+              key={category.id}
+              onClick={() =>
+                void handleSelect(category)
+              }
+              type="button"
+            >
+              {category.name}
+            </button>
+          ))}
+        </div>
+
+        {activeSlug ? (
+          <div className="animate-fade-in-up mt-8 border-t border-[#1B1712]/10 pt-8">
+            {isLoading ? (
+              <p className="text-sm text-slate-500">
+                Yuklanmoqda…
+              </p>
+            ) : hasError ? (
+              <p className="text-sm text-red-600">
+                Maqolalarni yuklab bo‘lmadi.
+              </p>
+            ) : articles.length > 0 ? (
+              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {articles.map((article) => (
+                  <ArticleCard
+                    article={article}
+                    key={article.id}
+                    variant="compact"
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-slate-500">
+                Ushbu rukn bo‘yicha maqolalar
+                topilmadi.
+              </p>
+            )}
+          </div>
+        ) : null}
+      </div>
     </section>
   );
 }

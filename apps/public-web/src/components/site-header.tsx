@@ -115,7 +115,7 @@ export function SiteHeader({
           className="flex min-w-0 items-center gap-2.5"
           href="/"
         >
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#1B1712] font-serif text-lg font-black text-[#8B6A2F] shadow-md ring-1 ring-[#0F0C09]">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#1B1712] font-serif text-lg font-black text-[#D9622B] shadow-md ring-1 ring-[#0F0C09]">
             T
           </span>
           <strong className="truncate font-serif text-base font-black tracking-tight text-[#1B1712] sm:text-xl">
@@ -184,7 +184,7 @@ export function SiteHeader({
                     {entry.label}
                     {entry.code === locale ? (
                       <Icon
-                        className="text-[#8B6A2F]"
+                        className="text-[#D9622B]"
                         name="check"
                         size={15}
                       />
@@ -247,7 +247,7 @@ export function SiteHeader({
                     </span>
                     {entry.value === mode ? (
                       <Icon
-                        className="shrink-0 text-[#8B6A2F]"
+                        className="shrink-0 text-[#D9622B]"
                         name="check"
                         size={15}
                       />
@@ -260,7 +260,7 @@ export function SiteHeader({
 
           <button
             aria-label={t("nav.profile")}
-            className="ml-1 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#1B1712] text-sm font-black text-[#8B6A2F] shadow-md ring-2 ring-transparent transition hover:ring-[#8B6A2F]/40"
+            className="ml-1 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#1B1712] text-sm font-black text-[#D9622B] shadow-md ring-2 ring-transparent transition hover:ring-[#D9622B]/40"
             onClick={onOpenProfile}
             type="button"
           >

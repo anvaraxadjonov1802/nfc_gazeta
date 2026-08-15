@@ -24,7 +24,7 @@ export function FeaturedArticle({
   );
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-slate-200 border-t-4 border-t-[#8B6A2F] bg-white shadow-lg">
+    <article className="overflow-hidden rounded-2xl border border-slate-200 border-t-4 border-t-[#D9622B] bg-white shadow-lg">
       <div className="grid lg:grid-cols-12">
         <Link
           aria-label={article.title}
@@ -45,10 +45,10 @@ export function FeaturedArticle({
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent lg:hidden" />
           <div className="absolute left-4 top-4 flex flex-wrap gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1B1712] px-3 py-1.5 text-[10px] font-bold text-white shadow-lg">
-              <span className="text-[#8B6A2F]">★</span>
+              <span className="text-[#D9622B]">★</span>
               Asosiy maqola
             </span>
-            <span className="rounded-full bg-[#8B6A2F] px-3 py-1.5 text-[10px] font-black text-[#1B1712] shadow-lg">
+            <span className="rounded-full bg-[#D9622B] px-3 py-1.5 text-[10px] font-black text-[#1B1712] shadow-lg">
               {article.category?.name ?? "Yangiliklar"}
             </span>
           </div>
@@ -60,7 +60,7 @@ export function FeaturedArticle({
               {date ? (
                 <span className="inline-flex items-center gap-1.5">
                   <Icon
-                    className="text-[#8B6A2F]"
+                    className="text-[#D9622B]"
                     name="calendar"
                     size={15}
                   />
@@ -102,7 +102,7 @@ export function FeaturedArticle({
             >
               Maqolani o‘qish
               <Icon
-                className="text-[#8B6A2F]"
+                className="text-[#D9622B]"
                 name="arrow-right"
                 size={17}
               />

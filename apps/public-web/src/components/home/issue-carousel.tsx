@@ -19,10 +19,10 @@ function IssueMini({
 }) {
   return (
     <Link
-      className="group w-32 shrink-0 sm:w-40"
+      className="group w-32 shrink-0 sm:w-44"
       href={`/n/${issue.nfc_slug}`}
     >
-      <span className="grid aspect-[0.72] w-full place-items-center overflow-hidden rounded-xl border border-[#CBB98A] bg-white shadow-sm transition group-hover:-translate-y-1 group-hover:shadow-lg">
+      <span className="grid aspect-[0.72] w-full place-items-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-lg transition group-hover:-translate-y-1 group-hover:border-[#D9622B]/60">
         {issue.cover_image ? (
           <img
             alt={issue.title}
@@ -32,16 +32,16 @@ function IssueMini({
           />
         ) : (
           <Icon
-            className="text-slate-300"
+            className="text-white/30"
             name="newspaper"
             size={28}
           />
         )}
       </span>
-      <strong className="mt-2 block truncate text-xs font-bold text-[#1B1712]">
+      <strong className="mt-2 block truncate text-xs font-bold text-white">
         {issue.issue_number}-son
       </strong>
-      <span className="block text-[10px] text-slate-500">
+      <span className="block text-[10px] text-white/50">
         {issue.year}-yil
       </span>
     </Link>
@@ -63,18 +63,18 @@ export function IssueCarousel({
     : issues;
 
   return (
-    <section className="space-y-5">
-      <div className="flex items-end justify-between gap-4 border-b-2 border-double border-[#1B1712] pb-3">
+    <section className="w-full bg-[#0F0C09] py-14">
+      <div className="mx-auto flex w-full max-w-7xl items-end justify-between gap-4 px-4 pb-8 sm:px-6 lg:px-8">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#6B4F1F]">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#D9622B]">
             {t("carousel.eyebrow")}
           </span>
-          <h2 className="mt-1 font-serif text-2xl font-black text-[#1B1712] sm:text-3xl">
+          <h2 className="mt-2 text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">
             {t("carousel.title")}
           </h2>
         </div>
         <Link
-          className="inline-flex shrink-0 items-center gap-1 text-xs font-bold text-[#1B1712] transition hover:text-[#8B6A2F]"
+          className="inline-flex shrink-0 items-center gap-1.5 text-xs font-bold text-white/70 transition hover:text-[#D9622B]"
           href="/arxiv"
         >
           {t("carousel.viewAll")}
@@ -82,9 +82,9 @@ export function IssueCarousel({
         </Link>
       </div>
 
-      <div className="carousel-track-wrap overflow-hidden">
+      <div className="carousel-track-wrap overflow-hidden pl-4 sm:pl-6 lg:pl-[max(2.5rem,calc((100vw-80rem)/2+2.5rem))]">
         <div
-          className="carousel-track flex w-max gap-4"
+          className="carousel-track flex w-max gap-5"
           style={
             shouldLoop
               ? undefined

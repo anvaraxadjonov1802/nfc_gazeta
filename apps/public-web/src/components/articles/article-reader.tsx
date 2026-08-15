@@ -103,7 +103,7 @@ export function ArticleReader({
     <article className="mx-auto max-w-5xl space-y-8">
       <div className="flex flex-col gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <Link
-          className="inline-flex items-center gap-2 text-xs font-bold text-[#1B1712] transition hover:text-[#8B6A2F]"
+          className="inline-flex items-center gap-2 text-xs font-bold text-[#1B1712] transition hover:text-[#D9622B]"
           href={`/n/${article.issue_nfc_slug}?src=web`}
         >
           <Icon name="arrow-left" size={16} />
@@ -167,14 +167,14 @@ export function ArticleReader({
         </h1>
 
         {article.summary ? (
-          <p className="max-w-4xl border-l-4 border-[#8B6A2F] pl-5 font-serif text-lg leading-8 text-slate-600 sm:text-xl">
+          <p className="max-w-4xl border-l-4 border-[#D9622B] pl-5 font-serif text-lg leading-8 text-slate-600 sm:text-xl">
             {article.summary}
           </p>
         ) : null}
 
         <div className="flex flex-col gap-4 border-y border-slate-200 py-4 text-xs sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-full bg-[#1B1712] text-[#8B6A2F]">
+            <span className="grid h-11 w-11 place-items-center rounded-full bg-[#1B1712] text-[#D9622B]">
               <Icon name="user" size={20} />
             </span>
             <div>
@@ -191,7 +191,7 @@ export function ArticleReader({
             {article.published_at ? (
               <span className="inline-flex items-center gap-1.5">
                 <Icon
-                  className="text-[#8B6A2F]"
+                  className="text-[#D9622B]"
                   name="calendar"
                   size={15}
                 />
@@ -206,7 +206,7 @@ export function ArticleReader({
       </header>
 
       {article.audio ? (
-        <section className="flex flex-col gap-4 rounded-2xl border border-[#4A3B26] border-t-4 border-t-[#8B6A2F] bg-[#1B1712] p-5 text-white shadow-xl sm:flex-row sm:items-center sm:justify-between">
+        <section className="flex flex-col gap-4 rounded-2xl border border-[#4A3B26] border-t-4 border-t-[#D9622B] bg-[#1B1712] p-5 text-white shadow-xl sm:flex-row sm:items-center sm:justify-between">
           <audio
             onEnded={() => setIsPlaying(false)}
             ref={audioRef}
@@ -219,7 +219,7 @@ export function ArticleReader({
                   ? "Audio pauza"
                   : "Audioni ijro etish"
               }
-              className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#8B6A2F] text-[#1B1712] shadow transition hover:scale-105"
+              className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#D9622B] text-[#1B1712] shadow transition hover:scale-105"
               onClick={() => {
                 void toggleAudio();
               }}
@@ -233,7 +233,7 @@ export function ArticleReader({
             <div>
               <strong className="flex items-center gap-2 text-sm">
                 <Icon
-                  className="text-[#8B6A2F]"
+                  className="text-[#D9622B]"
                   name="volume"
                   size={17}
                 />
@@ -253,7 +253,7 @@ export function ArticleReader({
               <button
                 className={`rounded-md px-2.5 py-1.5 font-bold transition ${
                   speed === value
-                    ? "bg-[#8B6A2F] text-[#1B1712]"
+                    ? "bg-[#D9622B] text-[#1B1712]"
                     : "text-white hover:bg-white/10"
                 }`}
                 key={value}
@@ -307,14 +307,14 @@ export function ArticleReader({
             href={`/n/${article.issue_nfc_slug}?src=web`}
           >
             <Icon
-              className="text-[#8B6A2F]"
+              className="text-[#D9622B]"
               name="book"
               size={17}
             />
             Gazeta soniga qaytish
           </Link>
           <button
-            className="inline-flex items-center justify-center gap-2 px-3 py-2 text-xs font-bold text-[#1B1712] transition hover:text-[#8B6A2F]"
+            className="inline-flex items-center justify-center gap-2 px-3 py-2 text-xs font-bold text-[#1B1712] transition hover:text-[#D9622B]"
             onClick={() => {
               void handleShare();
             }}

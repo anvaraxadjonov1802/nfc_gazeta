@@ -172,7 +172,7 @@ export function ArchiveBrowser({
             <section key={groupYear}>
               <div className="mb-5 flex items-end justify-between gap-4 border-b-2 border-double border-[#1B1712] pb-3">
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#6B4F1F]">
+                  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#B54D1E]">
                     Elektron arxiv
                   </span>
                   <h2 className="mt-1 font-serif text-3xl font-black text-[#1B1712]">

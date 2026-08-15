@@ -360,7 +360,7 @@ export function IssueViewer({
 
           <span className="hidden items-center gap-1.5 text-[10px] text-slate-300 sm:inline-flex">
             <Icon
-              className="text-[#8B6A2F]"
+              className="text-[#D9622B]"
               name="nfc"
               size={14}
             />
@@ -373,7 +373,7 @@ export function IssueViewer({
             <button
               className={`inline-flex min-h-9 items-center gap-1.5 rounded-md px-3 text-[10px] font-bold transition ${
                 mode === "image"
-                  ? "bg-[#8B6A2F] text-[#1B1712]"
+                  ? "bg-[#D9622B] text-[#1B1712]"
                   : "text-white hover:bg-white/10"
               }`}
               onClick={() => setMode("image")}
@@ -385,7 +385,7 @@ export function IssueViewer({
             <button
               className={`inline-flex min-h-9 items-center gap-1.5 rounded-md px-3 text-[10px] font-bold transition ${
                 mode === "text"
-                  ? "bg-[#8B6A2F] text-[#1B1712]"
+                  ? "bg-[#D9622B] text-[#1B1712]"
                   : "text-white hover:bg-white/10"
               }`}
               onClick={() => setMode("text")}
@@ -401,7 +401,7 @@ export function IssueViewer({
               className={`inline-flex min-h-10 items-center gap-1.5 rounded-full px-4 text-[10px] font-black transition ${
                 isAudioPlaying
                   ? "border border-white/20 bg-white/10 text-white"
-                  : "bg-[#8B6A2F] text-[#1B1712] hover:bg-[#D9B25E]"
+                  : "bg-[#D9622B] text-[#1B1712] hover:bg-[#D9B25E]"
               }`}
               onClick={() => {
                 void toggleAudio();
@@ -458,7 +458,7 @@ export function IssueViewer({
               }
               className={`w-24 shrink-0 rounded-xl border-2 bg-white p-1.5 text-left transition hover:-translate-y-0.5 lg:w-full ${
                 index === currentIndex
-                  ? "border-[#8B6A2F] shadow-md ring-2 ring-[#8B6A2F]/20"
+                  ? "border-[#D9622B] shadow-md ring-2 ring-[#D9622B]/20"
                   : "border-transparent hover:border-[#CBB98A] hover:shadow-md"
               }`}
               key={page.id}
@@ -558,7 +558,7 @@ export function IssueViewer({
             <article className="custom-scrollbar max-h-[80vh] overflow-y-auto bg-[#EFE6D2] px-3 py-6 sm:px-8 sm:py-10 lg:h-[780px] lg:max-h-none lg:px-10 lg:py-12">
               <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-[#CBB98A] bg-white shadow-sm">
                 <div className="flex items-center gap-3 border-b border-[#E6D9B4] px-5 py-4">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#1B1712] font-serif text-base font-bold text-[#8B6A2F]">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#1B1712] font-serif text-base font-bold text-[#D9622B]">
                     T
                   </span>
                   <div className="min-w-0 flex-1">
@@ -569,7 +569,7 @@ export function IssueViewer({
                       {issue.year}-yil, {issue.issue_number}-son
                     </p>
                   </div>
-                  <span className="shrink-0 rounded-full bg-[#EFE6D2] px-2.5 py-1 text-[10px] font-bold text-[#6B4F1F]">
+                  <span className="shrink-0 rounded-full bg-[#EFE6D2] px-2.5 py-1 text-[10px] font-bold text-[#B54D1E]">
                     {currentPage.page_number}-bet
                   </span>
                 </div>
@@ -617,7 +617,7 @@ export function IssueViewer({
                   </div>
 
                   {currentPage.audio ? (
-                    <p className="mt-6 text-xs font-semibold text-[#6B4F1F]">
+                    <p className="mt-6 text-xs font-semibold text-[#B54D1E]">
                       Bu betni yuqoridagi “Ovozda tinglash” tugmasi orqali tinglashingiz mumkin.
                     </p>
                   ) : null}

@@ -67,9 +67,9 @@ export function AccessibilityToolbar({
       />
 
       <section className="relative z-10 w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
-        <header className="flex items-center justify-between border-b-4 border-[#8B6A2F] bg-[#1B1712] px-5 py-4 text-white sm:px-6">
+        <header className="flex items-center justify-between border-b-4 border-[#D9622B] bg-[#1B1712] px-5 py-4 text-white sm:px-6">
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-[#8B6A2F]">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-[#D9622B]">
               <Icon name="eye" />
             </span>
             <div>
@@ -164,7 +164,7 @@ export function AccessibilityToolbar({
                 <button
                   className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition ${
                     settings.theme === value
-                      ? "border-[#8B6A2F] bg-amber-50 text-[#1B1712] ring-2 ring-[#8B6A2F]/20"
+                      ? "border-[#D9622B] bg-amber-50 text-[#1B1712] ring-2 ring-[#D9622B]/20"
                       : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300"
                   }`}
                   key={value}

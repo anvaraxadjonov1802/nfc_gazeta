@@ -6,7 +6,7 @@ export default function NotFoundPage() {
   return (
     <main className="mx-auto grid min-h-[65vh] w-full max-w-7xl place-items-center px-4 py-16 sm:px-6 lg:px-8">
       <section className="max-w-2xl text-center">
-        <span className="font-serif text-8xl font-black text-[#8B6A2F]">
+        <span className="font-serif text-8xl font-black text-[#D9622B]">
           404
         </span>
         <h1 className="mt-3 font-serif text-3xl font-black text-[#1B1712] sm:text-4xl">

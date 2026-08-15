@@ -36,7 +36,7 @@ export function ArticleCard({
   if (variant === "compact") {
     return (
       <article className="group border-b border-slate-100 py-4 last:border-0">
-        <div className="mb-1.5 flex flex-wrap items-center gap-2 text-[10px] font-black uppercase tracking-wider text-[#6B4F1F]">
+        <div className="mb-1.5 flex flex-wrap items-center gap-2 text-[10px] font-black uppercase tracking-wider text-[#B54D1E]">
           <span>{category}</span>
           <span className="text-slate-300">•</span>
           <span className="text-slate-500">
@@ -58,7 +58,7 @@ export function ArticleCard({
 
   if (variant === "horizontal") {
     return (
-      <article className="group overflow-hidden rounded-2xl border border-slate-200 border-t-4 border-t-[#8B6A2F] bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg sm:flex">
+      <article className="group overflow-hidden rounded-2xl border border-slate-200 border-t-4 border-t-[#D9622B] bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg sm:flex">
         <Link
           aria-label={article.title}
           className="relative block h-52 overflow-hidden bg-slate-100 sm:h-auto sm:w-2/5"
@@ -87,7 +87,7 @@ export function ArticleCard({
               {date ? (
                 <span className="inline-flex items-center gap-1">
                   <Icon
-                    className="text-[#8B6A2F]"
+                    className="text-[#D9622B]"
                     name="calendar"
                     size={14}
                   />
@@ -115,7 +115,7 @@ export function ArticleCard({
               {article.author || "Tahririyat"}
             </span>
             <Link
-              className="inline-flex shrink-0 items-center gap-1 font-bold text-[#1B1712] transition hover:text-[#8B6A2F]"
+              className="inline-flex shrink-0 items-center gap-1 font-bold text-[#1B1712] transition hover:text-[#D9622B]"
               href={`/maqola/${article.id}`}
             >
               O‘qish
@@ -156,7 +156,7 @@ export function ArticleCard({
           {date ? (
             <span className="inline-flex items-center gap-1">
               <Icon
-                className="text-[#8B6A2F]"
+                className="text-[#D9622B]"
                 name="calendar"
                 size={14}
               />
@@ -183,7 +183,7 @@ export function ArticleCard({
             {article.author || "Tahririyat"}
           </span>
           <Link
-            className="inline-flex shrink-0 items-center gap-1 font-bold text-[#1B1712] transition hover:text-[#8B6A2F]"
+            className="inline-flex shrink-0 items-center gap-1 font-bold text-[#1B1712] transition hover:text-[#D9622B]"
             href={`/maqola/${article.id}`}
           >
             Batafsil

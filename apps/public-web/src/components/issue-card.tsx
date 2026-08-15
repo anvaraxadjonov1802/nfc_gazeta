@@ -38,7 +38,7 @@ function IssueCover({
 
   return (
     <div className="grid h-full w-full place-content-center justify-items-center bg-gradient-to-br from-[#1B1712] to-[#004F84] text-white">
-      <strong className="font-serif text-6xl font-black text-[#8B6A2F]">
+      <strong className="font-serif text-6xl font-black text-[#D9622B]">
         {issue.issue_number}
       </strong>
       <span className="mt-1 text-xs font-black tracking-[0.2em]">
@@ -61,7 +61,7 @@ export function IssueCard({
 
   if (featured) {
     return (
-      <article className="overflow-hidden rounded-2xl border border-[#4A3B26] border-t-4 border-t-[#8B6A2F] bg-[#1B1712] text-white shadow-2xl">
+      <article className="overflow-hidden rounded-2xl border border-[#4A3B26] border-t-4 border-t-[#D9622B] bg-[#1B1712] text-white shadow-2xl">
         <div className="grid items-center gap-7 p-5 sm:p-8 md:grid-cols-12">
           <Link
             aria-label={`${label} nashrini ochish`}
@@ -79,7 +79,7 @@ export function IssueCard({
           </Link>
 
           <div className="md:col-span-7">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#8B6A2F]/40 bg-[#8B6A2F]/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-[#8B6A2F]">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#D9622B]/40 bg-[#D9622B]/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-[#D9622B]">
               <Icon name="newspaper" size={14} />
               Eng yangi gazeta soni
             </span>
@@ -91,7 +91,7 @@ export function IssueCard({
             <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-300">
               <span className="inline-flex items-center gap-1.5">
                 <Icon
-                  className="text-[#8B6A2F]"
+                  className="text-[#D9622B]"
                   name="calendar"
                   size={15}
                 />
@@ -109,7 +109,7 @@ export function IssueCard({
 
             <div className="mt-7 flex flex-wrap gap-3">
               <Link
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#8B6A2F] px-5 text-sm font-black text-[#1B1712] shadow transition hover:bg-[#D9B25E]"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#D9622B] px-5 text-sm font-black text-[#1B1712] shadow transition hover:bg-[#D9B25E]"
                 href={`/n/${issue.nfc_slug}?src=web`}
               >
                 <Icon name="book" size={18} />
@@ -139,7 +139,7 @@ export function IssueCard({
         <IssueCover issue={issue} />
         <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-[#1B1712]/90 px-2 py-1 text-[9px] font-bold text-white shadow">
           <Icon
-            className="text-[#8B6A2F]"
+            className="text-[#D9622B]"
             name="nfc"
             size={12}
           />
@@ -148,7 +148,7 @@ export function IssueCard({
       </Link>
 
       <div className="p-5">
-        <span className="text-[10px] font-black uppercase tracking-wider text-[#6B4F1F]">
+        <span className="text-[10px] font-black uppercase tracking-wider text-[#B54D1E]">
           {issue.newspaper_name}
         </span>
         <h3 className="mt-2 font-serif text-lg font-bold leading-snug text-[#1B1712] transition group-hover:text-[#4A3B26]">
@@ -160,7 +160,7 @@ export function IssueCard({
           {publicationDate} · {issue.page_count} bet · {issue.article_count} maqola
         </p>
         <Link
-          className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#1B1712] transition hover:text-[#8B6A2F]"
+          className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#1B1712] transition hover:text-[#D9622B]"
           href={`/n/${issue.nfc_slug}?src=web`}
         >
           Nashrni o‘qish

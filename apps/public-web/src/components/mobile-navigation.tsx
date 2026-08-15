@@ -39,12 +39,12 @@ export function MobileNavigation({
       />
 
       <aside className="relative ml-auto flex h-full w-[min(88vw,360px)] flex-col bg-white shadow-2xl">
-        <header className="flex items-center justify-between border-b-4 border-[#8B6A2F] bg-[#1B1712] px-5 py-5 text-white">
+        <header className="flex items-center justify-between border-b-4 border-[#D9622B] bg-[#1B1712] px-5 py-5 text-white">
           <div>
             <strong className="block font-serif text-xl">
               Temiryo‘lchi
             </strong>
-            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8B6A2F]">
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#D9622B]">
               Elektron gazeta
             </span>
           </div>
@@ -79,7 +79,7 @@ export function MobileNavigation({
                 <Icon
                   className={
                     isActive
-                      ? "text-[#8B6A2F]"
+                      ? "text-[#D9622B]"
                       : "text-[#1B1712]"
                   }
                   name={icon}

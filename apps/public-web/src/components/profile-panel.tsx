@@ -46,7 +46,7 @@ export function ProfilePanel({
       <aside className="custom-scrollbar relative ml-auto flex h-full w-[min(92vw,400px)] flex-col overflow-y-auto bg-[#F8F2E2] shadow-2xl">
         <div className="relative overflow-hidden bg-gradient-to-br from-[#1B1712] via-[#1B1712] to-[#0F0C09] px-5 pb-6 pt-5 text-white">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-black uppercase tracking-[0.18em] text-[#8B6A2F]">
+            <span className="text-xs font-black uppercase tracking-[0.18em] text-[#D9622B]">
               {t("profile.title")}
             </span>
             <button
@@ -60,12 +60,12 @@ export function ProfilePanel({
           </div>
 
           <div className="mt-4 flex items-center gap-4">
-            <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-[#8B6A2F] text-2xl font-black text-[#1B1712] shadow-lg">
+            <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-[#D9622B] text-2xl font-black text-[#1B1712] shadow-lg">
               {initial}
             </span>
             <div className="min-w-0 flex-1">
               <input
-                className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm font-bold text-white placeholder:text-white/50 focus:border-[#8B6A2F] focus:outline-none"
+                className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm font-bold text-white placeholder:text-white/50 focus:border-[#D9622B] focus:outline-none"
                 maxLength={40}
                 onChange={(event) =>
                   setName(event.target.value)
@@ -84,7 +84,7 @@ export function ProfilePanel({
 
           <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-white/10 p-3 text-center">
             <div>
-              <strong className="block text-lg font-black text-[#8B6A2F]">
+              <strong className="block text-lg font-black text-[#D9622B]">
                 {stats.issuesRead}
               </strong>
               <span className="text-[9px] font-semibold uppercase tracking-wide text-white/70">
@@ -92,7 +92,7 @@ export function ProfilePanel({
               </span>
             </div>
             <div className="border-x border-white/15">
-              <strong className="block text-lg font-black text-[#8B6A2F]">
+              <strong className="block text-lg font-black text-[#D9622B]">
                 {stats.pagesRead}
               </strong>
               <span className="text-[9px] font-semibold uppercase tracking-wide text-white/70">
@@ -100,7 +100,7 @@ export function ProfilePanel({
               </span>
             </div>
             <div>
-              <strong className="block text-lg font-black text-[#8B6A2F]">
+              <strong className="block text-lg font-black text-[#D9622B]">
                 {stats.streak}
               </strong>
               <span className="text-[9px] font-semibold uppercase tracking-wide text-white/70">
@@ -111,7 +111,7 @@ export function ProfilePanel({
         </div>
 
         <div className="space-y-3 px-5 py-5">
-          <h2 className="text-xs font-black uppercase tracking-[0.14em] text-[#6B4F1F]">
+          <h2 className="text-xs font-black uppercase tracking-[0.14em] text-[#B54D1E]">
             {t("profile.continueReading")}
           </h2>
 
@@ -157,7 +157,7 @@ export function ProfilePanel({
                       </strong>
                       <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
                         <div
-                          className="h-full rounded-full bg-[#8B6A2F]"
+                          className="h-full rounded-full bg-[#D9622B]"
                           style={{
                             width: `${progress}%`,
                           }}

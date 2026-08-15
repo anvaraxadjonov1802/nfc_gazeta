@@ -51,7 +51,7 @@ export default async function SearchPage({
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
       <header className="mb-9 max-w-3xl">
-        <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-[#6B4F1F]">
+        <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-[#B54D1E]">
           <Icon name="search" size={16} />
           Sayt bo‘yicha qidiruv
         </span>

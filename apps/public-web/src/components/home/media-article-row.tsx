@@ -23,12 +23,12 @@ export function MediaArticleRow({
     <article className="grid gap-5 rounded-2xl border border-[#CBB98A] bg-white p-4 shadow-sm transition hover:shadow-md sm:p-5 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:gap-8">
       <div className="min-w-0">
         {article.category ? (
-          <span className="inline-flex rounded-full bg-[#EFE6D2] px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-[#6B4F1F]">
+          <span className="inline-flex rounded-full bg-[#EFE6D2] px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-[#B54D1E]">
             {article.category.name}
           </span>
         ) : null}
         <Link href={href}>
-          <h3 className="mt-2 font-serif text-lg font-black leading-snug text-[#1B1712] transition hover:text-[#8B6A2F] sm:text-xl">
+          <h3 className="mt-2 font-serif text-lg font-black leading-snug text-[#1B1712] transition hover:text-[#D9622B] sm:text-xl">
             {article.title}
           </h3>
         </Link>

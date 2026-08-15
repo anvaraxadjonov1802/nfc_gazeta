@@ -122,7 +122,7 @@ export default async function IssuePage({
       />
       <div className="animate-fade-in-up mb-5 flex flex-wrap items-center justify-between gap-3">
         <Link
-          className="inline-flex items-center gap-2 text-xs font-bold text-[#1B1712] transition hover:text-[#8B6A2F]"
+          className="inline-flex items-center gap-2 text-xs font-bold text-[#1B1712] transition hover:text-[#D9622B]"
           href="/arxiv"
         >
           <Icon name="arrow-left" size={16} />
@@ -153,12 +153,12 @@ export default async function IssuePage({
       </div>
 
       <header
-        className="animate-fade-in-up mt-8 rounded-2xl border border-[#CBB98A] border-t-4 border-t-[#8B6A2F] bg-[#F8F2E2] p-5 shadow-sm sm:p-7"
+        className="animate-fade-in-up mt-8 rounded-2xl border border-[#CBB98A] border-t-4 border-t-[#D9622B] bg-[#F8F2E2] p-5 shadow-sm sm:p-7"
         style={{ animationDelay: "0.16s" }}
       >
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-4xl">
-            <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-[#6B4F1F]">
+            <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-[#B54D1E]">
               {issue.newspaper_name}
             </span>
             <h1 className="mt-2 font-serif text-4xl font-black tracking-tight text-[#1B1712] sm:text-5xl lg:text-6xl">
@@ -234,7 +234,7 @@ export default async function IssuePage({
         >
           <div className="flex items-end justify-between gap-4 border-b border-[#CBB98A] pb-3">
             <div>
-              <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#6B4F1F]">
+              <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#B54D1E]">
                 Ushbu gazeta sonida
               </span>
               <h2 className="mt-1 font-serif text-2xl font-black text-[#1B1712] sm:text-3xl">
