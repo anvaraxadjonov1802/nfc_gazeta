@@ -2,6 +2,7 @@ import { CategoryFilter } from "@/components/category-filter";
 import { AnimatedBanner } from "@/components/home/animated-banner";
 import { IssueCarousel } from "@/components/home/issue-carousel";
 import { MediaArticleRow } from "@/components/home/media-article-row";
+import { VideoSection } from "@/components/home/video-section";
 import { Icon } from "@/components/ui/icon";
 import {
   getPublicHome,
@@ -93,6 +94,8 @@ export default async function HomePage() {
           </div>
         )}
       </section>
+
+      <VideoSection />
 
       <section className="relative overflow-hidden rounded-2xl border-b-4 border-[#C79A3C] bg-[#1E4468] p-7 text-white shadow-xl sm:p-10">
         <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#C79A3C]/10 blur-3xl" />
