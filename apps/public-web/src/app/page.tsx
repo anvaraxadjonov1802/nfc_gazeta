@@ -9,6 +9,7 @@ import {
   getPublicIssues,
 } from "@/lib/public-api";
 import type { PublicArticleCard } from "@/lib/public-types";
+import { featuredVideos } from "@/lib/videos-data";
 
 export default async function HomePage() {
   let data;
@@ -21,7 +22,7 @@ export default async function HomePage() {
     ]);
   } catch {
     return (
-      <main className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full max-w-[1500px] px-4 py-16 sm:px-6 lg:px-8">
         <section className="rounded-2xl border border-red-200 bg-red-50 p-10 text-center">
           <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-red-100 text-red-700">
             <Icon name="close" size={28} />
@@ -55,9 +56,18 @@ export default async function HomePage() {
     articlesById.values(),
   ).slice(0, 6);
 
+  const latestIssueHref = data.latest_issue
+    ? `/n/${data.latest_issue.nfc_slug}`
+    : "/arxiv";
+
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-12 px-4 py-8 sm:px-6 lg:px-8">
-      <AnimatedBanner />
+    <main className="mx-auto w-full max-w-[1500px] space-y-12 px-4 py-6 sm:px-6 lg:px-8">
+      <AnimatedBanner
+        latestIssueHref={latestIssueHref}
+        issueCount={issues.length}
+        articleCount={articlesById.size}
+        videoCount={featuredVideos.length}
+      />
 
       <IssueCarousel issues={issues} />
 
@@ -95,7 +105,9 @@ export default async function HomePage() {
         )}
       </section>
 
-      <VideoSection />
+      <div id="videolar" className="scroll-mt-24">
+        <VideoSection />
+      </div>
 
       <section className="relative overflow-hidden rounded-2xl border-b-4 border-[#C79A3C] bg-[#1E4468] p-7 text-white shadow-xl sm:p-10">
         <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#C79A3C]/10 blur-3xl" />
