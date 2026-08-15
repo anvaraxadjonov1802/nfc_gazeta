@@ -1,0 +1,195 @@
+.heroViewport {
+  width: 100%;
+  min-height: calc(100svh - 4rem);
+  overflow: hidden;
+  background: #082847;
+}
+
+.heroViewport :global(.cinema-hero) {
+  width: 100% !important;
+  min-height: calc(100svh - 4rem) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.heroViewport :global(.cinema-hero__inner) {
+  min-height: calc(100svh - 4rem) !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: clamp(3rem, 7vh, 6.5rem) clamp(2rem, 5vw, 6rem) 8rem !important;
+}
+
+.heroViewport :global(.cinema-hero__content) {
+  width: min(720px, 52%) !important;
+  max-width: 720px !important;
+}
+
+.heroViewport :global(.cinema-hero__pill),
+.heroViewport :global(.cinema-hero__stats) {
+  display: none !important;
+}
+
+.heroViewport :global(.cinema-hero__floating-label) {
+  top: 1.5rem !important;
+  right: clamp(1.5rem, 4vw, 4rem) !important;
+  opacity: 0.86 !important;
+}
+
+.heroViewport :global(.cinema-hero__headline) {
+  margin-top: 0 !important;
+  line-height: 0.94 !important;
+  letter-spacing: -0.05em !important;
+}
+
+.heroViewport :global(.cinema-hero__headline) span {
+  font-size: clamp(4rem, 6.6vw, 7.2rem) !important;
+}
+
+.heroViewport :global(.cinema-hero__headline) strong {
+  margin-top: 0.65rem !important;
+  font-size: clamp(3.1rem, 5.25vw, 5.8rem) !important;
+  color: #31b5ff !important;
+}
+
+.heroViewport :global(.cinema-hero__lead) {
+  max-width: 620px !important;
+  margin-top: 1.75rem !important;
+  font-size: clamp(1rem, 1.3vw, 1.2rem) !important;
+  line-height: 1.7 !important;
+}
+
+.heroViewport :global(.cinema-hero__actions) {
+  margin-top: 2rem !important;
+  gap: 0.85rem !important;
+}
+
+.heroViewport :global(.cinema-hero__primary),
+.heroViewport :global(.cinema-hero__secondary) {
+  min-height: 58px !important;
+  border-radius: 17px !important;
+  padding-inline: 1.5rem !important;
+  font-size: 0.95rem !important;
+}
+
+.heroViewport :global(.cinema-hero__photo) {
+  inset: -2.5% !important;
+  width: 105% !important;
+  height: 105% !important;
+  object-position: 61% center !important;
+  filter: saturate(1.08) contrast(1.04) brightness(1.03) !important;
+}
+
+.heroViewport :global(.cinema-hero__wash) {
+  background:
+    linear-gradient(90deg, rgba(2, 20, 40, 0.91) 0%, rgba(3, 30, 58, 0.77) 31%, rgba(4, 36, 67, 0.38) 49%, rgba(3, 28, 52, 0.04) 72%),
+    linear-gradient(180deg, rgba(5, 25, 46, 0.01) 42%, rgba(3, 22, 42, 0.42) 100%) !important;
+}
+
+.heroViewport :global(.cinema-hero__speed) {
+  bottom: 2rem !important;
+  height: 23vh !important;
+  opacity: 0.5 !important;
+}
+
+.heroViewport :global(.cinema-hero__rail-light--one) {
+  bottom: 7.2rem !important;
+}
+
+.heroViewport :global(.cinema-hero__rail-light--two) {
+  bottom: 5.2rem !important;
+}
+
+.heroViewport :global(.cinema-hero__ribbon) {
+  left: clamp(1.5rem, 4vw, 4rem) !important;
+  right: clamp(1.5rem, 4vw, 4rem) !important;
+  bottom: 1.2rem !important;
+  min-height: 58px !important;
+  border-radius: 18px !important;
+}
+
+@media (max-width: 900px) {
+  .heroViewport :global(.cinema-hero__inner) {
+    align-items: flex-end !important;
+    padding: 2rem 1.5rem 7.5rem !important;
+  }
+
+  .heroViewport :global(.cinema-hero__content) {
+    width: min(640px, 92%) !important;
+  }
+
+  .heroViewport :global(.cinema-hero__headline) span {
+    font-size: clamp(3.2rem, 10vw, 5rem) !important;
+  }
+
+  .heroViewport :global(.cinema-hero__headline) strong {
+    font-size: clamp(2.5rem, 8vw, 4rem) !important;
+  }
+
+  .heroViewport :global(.cinema-hero__photo) {
+    object-position: 67% center !important;
+  }
+
+  .heroViewport :global(.cinema-hero__wash) {
+    background:
+      linear-gradient(180deg, rgba(2, 22, 42, 0.08) 0%, rgba(2, 22, 42, 0.24) 35%, rgba(2, 20, 40, 0.9) 76%, rgba(2, 20, 40, 0.98) 100%),
+      linear-gradient(90deg, rgba(2, 20, 40, 0.42), transparent 75%) !important;
+  }
+
+  .heroViewport :global(.cinema-hero__floating-label) {
+    display: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .heroViewport,
+  .heroViewport :global(.cinema-hero) {
+    min-height: calc(100svh - 4rem) !important;
+  }
+
+  .heroViewport :global(.cinema-hero__inner) {
+    min-height: calc(100svh - 4rem) !important;
+    padding: 1.5rem 1.1rem 6.8rem !important;
+  }
+
+  .heroViewport :global(.cinema-hero__content) {
+    width: 100% !important;
+  }
+
+  .heroViewport :global(.cinema-hero__headline) span {
+    font-size: clamp(2.75rem, 13vw, 4rem) !important;
+  }
+
+  .heroViewport :global(.cinema-hero__headline) strong {
+    font-size: clamp(2.15rem, 10vw, 3.2rem) !important;
+  }
+
+  .heroViewport :global(.cinema-hero__lead) {
+    max-width: 95% !important;
+    margin-top: 1.15rem !important;
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+  }
+
+  .heroViewport :global(.cinema-hero__actions) {
+    margin-top: 1.4rem !important;
+  }
+
+  .heroViewport :global(.cinema-hero__primary),
+  .heroViewport :global(.cinema-hero__secondary) {
+    min-height: 52px !important;
+    padding-inline: 1rem !important;
+    font-size: 0.83rem !important;
+  }
+
+  .heroViewport :global(.cinema-hero__ribbon) {
+    left: 0.8rem !important;
+    right: 0.8rem !important;
+    bottom: 0.75rem !important;
+    min-height: 48px !important;
+    padding: 0.7rem 0.9rem !important;
+  }
+
+  .heroViewport :global(.cinema-hero__ribbon) > span {
+    display: none !important;
+  }
+}
