@@ -225,17 +225,250 @@ html.mode-night .shadow-2xl {
   animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@keyframes bannerTrain {
-  from {
-    transform: translateX(0);
+.hero-train-banner {
+  position: relative;
+  min-height: 360px;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 1.25rem;
+  border-bottom: 4px solid #C79A3C;
+  background: #102f4b;
+  box-shadow: 0 24px 55px rgba(13, 39, 62, 0.26);
+}
+
+.hero-train-banner__photo {
+  position: absolute;
+  inset: -4%;
+  z-index: -5;
+  width: 108%;
+  height: 108%;
+  object-fit: cover;
+  object-position: 60% center;
+  filter: saturate(1.08) contrast(1.04);
+  transform-origin: 62% 64%;
+  will-change: transform;
+  animation: heroTrainCamera 5.6s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+}
+
+.hero-train-banner__shade {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  background:
+    linear-gradient(90deg, rgba(7, 25, 42, 0.93) 0%, rgba(10, 35, 58, 0.79) 34%, rgba(14, 47, 75, 0.32) 58%, rgba(10, 33, 54, 0.06) 78%),
+    linear-gradient(180deg, rgba(9, 29, 48, 0.08) 48%, rgba(7, 23, 39, 0.56) 100%);
+}
+
+.hero-train-banner__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  box-shadow: inset 0 0 90px rgba(3, 18, 31, 0.35);
+  pointer-events: none;
+}
+
+.hero-train-banner__speed-lines {
+  position: absolute;
+  right: -12%;
+  bottom: -8%;
+  z-index: -1;
+  width: 78%;
+  height: 48%;
+  opacity: 0.36;
+  background: repeating-linear-gradient(
+    102deg,
+    transparent 0 52px,
+    rgba(224, 243, 255, 0.15) 53px 55px,
+    transparent 56px 102px,
+    rgba(108, 191, 255, 0.3) 103px 106px
+  );
+  filter: blur(1.2px);
+  transform: skewX(-18deg);
+  will-change: transform;
+  animation: heroSpeedLines 0.72s linear infinite;
+}
+
+.hero-train-banner__rail-glow {
+  position: absolute;
+  right: -18%;
+  bottom: 7%;
+  z-index: -1;
+  width: 78%;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(89, 183, 255, 0.2), rgba(233, 248, 255, 0.95), rgba(89, 183, 255, 0.28), transparent);
+  box-shadow: 0 0 18px rgba(96, 189, 255, 0.72), 0 0 42px rgba(96, 189, 255, 0.36);
+  transform: rotate(-4deg);
+  will-change: transform, opacity;
+  animation: heroRailGlow 1.8s ease-in-out infinite;
+}
+
+.hero-train-banner__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-height: 360px;
+  max-width: 650px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 2rem 2.25rem;
+  color: #fff;
+}
+
+.hero-train-banner__tag {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  background: rgba(199, 154, 60, 0.94);
+  padding: 0.42rem 0.78rem;
+  color: #173b5d;
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+  backdrop-filter: blur(10px);
+}
+
+.hero-train-banner__title {
+  margin-top: 1.2rem;
+  max-width: 610px;
+  font-family: var(--font-serif, var(--font-serif-fallback));
+  font-size: clamp(2rem, 4vw, 3.35rem);
+  font-weight: 900;
+  line-height: 1.04;
+  text-shadow: 0 4px 22px rgba(0, 0, 0, 0.34);
+}
+
+.hero-train-banner__subtitle {
+  margin-top: 0.9rem;
+  max-width: 560px;
+  color: rgba(241, 245, 249, 0.9);
+  font-size: clamp(0.92rem, 1.4vw, 1.06rem);
+  line-height: 1.65;
+  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.34);
+}
+
+.hero-train-banner__train-label {
+  position: absolute;
+  right: 1.2rem;
+  top: 1.2rem;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(10, 34, 56, 0.58);
+  padding: 0.48rem 0.75rem;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(10px);
+}
+
+.hero-train-banner__train-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #65c7ff;
+  box-shadow: 0 0 0 4px rgba(101, 199, 255, 0.16), 0 0 14px rgba(101, 199, 255, 0.85);
+  animation: heroTrainPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes heroTrainCamera {
+  0% {
+    transform: translate3d(-1.8%, 0, 0) scale(1.075);
   }
-  to {
-    transform: translateX(-33.333%);
+  50% {
+    transform: translate3d(0.2%, -0.25%, 0) scale(1.095);
+  }
+  100% {
+    transform: translate3d(1.8%, 0.2%, 0) scale(1.085);
   }
 }
 
-.banner-train {
-  animation: bannerTrain 9s linear infinite;
+@keyframes heroSpeedLines {
+  from {
+    transform: translate3d(0, 0, 0) skewX(-18deg);
+  }
+  to {
+    transform: translate3d(-116px, 0, 0) skewX(-18deg);
+  }
+}
+
+@keyframes heroRailGlow {
+  0%, 100% {
+    opacity: 0.35;
+    transform: translateX(5%) rotate(-4deg) scaleX(0.86);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-7%) rotate(-4deg) scaleX(1.08);
+  }
+}
+
+@keyframes heroTrainPulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: scale(0.88);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@media (max-width: 760px) {
+  .hero-train-banner {
+    min-height: 430px;
+  }
+
+  .hero-train-banner__photo {
+    inset: -3%;
+    width: 106%;
+    height: 106%;
+    object-position: 66% center;
+  }
+
+  .hero-train-banner__shade {
+    background:
+      linear-gradient(180deg, rgba(8, 29, 48, 0.23) 0%, rgba(8, 29, 48, 0.42) 38%, rgba(6, 24, 41, 0.93) 100%),
+      linear-gradient(90deg, rgba(6, 24, 41, 0.44), transparent 72%);
+  }
+
+  .hero-train-banner__content {
+    min-height: 430px;
+    justify-content: flex-end;
+    padding: 1.25rem 1.25rem 1.6rem;
+  }
+
+  .hero-train-banner__title {
+    max-width: 95%;
+    font-size: clamp(1.8rem, 9vw, 2.65rem);
+  }
+
+  .hero-train-banner__subtitle {
+    max-width: 95%;
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .hero-train-banner__train-label {
+    right: 0.85rem;
+    top: 0.85rem;
+    font-size: 0.64rem;
+  }
+
+  .hero-train-banner__speed-lines {
+    width: 105%;
+    height: 38%;
+  }
 }
 
 @keyframes carouselScroll {
