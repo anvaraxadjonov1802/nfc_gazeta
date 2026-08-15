@@ -4,6 +4,7 @@ import { type ReactNode, useState } from "react";
 
 import { AccessibilityToolbar } from "@/components/accessibility-toolbar";
 import { ProfilePanel } from "@/components/profile-panel";
+import { ScrollProgress } from "@/components/scroll-progress";
 import { SearchDialog } from "@/components/search-dialog";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -30,6 +31,7 @@ export function SiteShell({ children }: SiteShellProps) {
         <ProfileProvider>
           <AccessibilityProvider>
             <div className="flex min-h-screen flex-col bg-[#EFE6D2] text-slate-900 selection:bg-[#D9622B] selection:text-[#0F0C09]">
+              <ScrollProgress />
               <SiteHeader
                 onOpenProfile={() =>
                   setIsProfileOpen(true)

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { Icon } from "@/components/ui/icon";
@@ -52,14 +53,38 @@ export function SiteHeader({
   onOpenProfile,
   onOpenSearch,
 }: SiteHeaderProps) {
+  const pathname = usePathname();
   const { locale, setLocale, t } = useLocale();
   const { mode, setMode } = useReadingMode();
   const { initial: profileInitial } = useProfile();
   const [openPanel, setOpenPanel] =
     useState<OpenPanel>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(
     null,
   );
+
+  const isHome = pathname === "/";
+  const isTransparent = isHome && !isScrolled;
+
+  useEffect(() => {
+    if (!isHome) {
+      return;
+    }
+
+    function handleScroll() {
+      setIsScrolled(window.scrollY > 40);
+    }
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isHome]);
 
   useEffect(() => {
     if (!openPanel) {
@@ -106,7 +131,11 @@ export function SiteHeader({
 
   return (
     <header
-      className="sticky top-0 z-50 border-b-4 border-double border-[#1B1712] bg-[#F8F2E2]/95 shadow-sm backdrop-blur-xl"
+      className={`sticky top-0 z-50 transition-all duration-500 ${
+        isTransparent
+          ? "border-b border-transparent bg-transparent"
+          : "glass-panel border-b border-white/10 shadow-[0_10px_40px_-15px_rgba(2,10,25,0.6)]"
+      }`}
       ref={containerRef}
     >
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
@@ -115,10 +144,10 @@ export function SiteHeader({
           className="flex min-w-0 items-center gap-2.5"
           href="/"
         >
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#1B1712] font-serif text-lg font-black text-[#D9622B] shadow-md ring-1 ring-[#0F0C09]">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[var(--canvas-electric)] to-[var(--canvas-royal)] text-lg font-black text-white shadow-md">
             T
           </span>
-          <strong className="truncate font-serif text-base font-black tracking-tight text-[#1B1712] sm:text-xl">
+          <strong className="truncate text-base font-black tracking-tight text-white sm:text-xl">
             Temiryo‘lchi
           </strong>
         </Link>
@@ -126,7 +155,7 @@ export function SiteHeader({
         <div className="flex items-center gap-1 sm:gap-1.5">
           <button
             aria-label={t("nav.search")}
-            className="grid h-10 w-10 place-items-center rounded-lg text-[#1B1712] transition hover:bg-[#E6D9B4]"
+            className="grid h-10 w-10 place-items-center rounded-full text-white transition hover:bg-white/10"
             onClick={onOpenSearch}
             type="button"
           >
@@ -136,9 +165,9 @@ export function SiteHeader({
           <div className="relative">
             <button
               aria-label={t("nav.language")}
-              className={`grid h-10 w-10 place-items-center rounded-lg text-[#1B1712] transition hover:bg-[#E6D9B4] ${
+              className={`grid h-10 w-10 place-items-center rounded-full text-white transition hover:bg-white/10 ${
                 openPanel === "lang"
-                  ? "bg-[#E6D9B4]"
+                  ? "bg-white/10"
                   : ""
               }`}
               onClick={() =>
@@ -166,13 +195,13 @@ export function SiteHeader({
             </button>
 
             {openPanel === "lang" ? (
-              <div className="absolute right-0 top-12 z-50 w-48 overflow-hidden rounded-xl border border-[#CBB98A] bg-white py-1.5 shadow-xl">
+              <div className="glass-panel absolute right-0 top-12 z-50 w-48 overflow-hidden rounded-xl py-1.5 shadow-2xl">
                 {LOCALES.map((entry) => (
                   <button
                     className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-sm font-semibold transition ${
                       entry.code === locale
-                        ? "bg-[#EFE6D2] text-[#1B1712]"
-                        : "text-slate-600 hover:bg-slate-50"
+                        ? "bg-white/10 text-white"
+                        : "text-white/70 hover:bg-white/5"
                     }`}
                     key={entry.code}
                     onClick={() => {
@@ -184,7 +213,7 @@ export function SiteHeader({
                     {entry.label}
                     {entry.code === locale ? (
                       <Icon
-                        className="text-[#D9622B]"
+                        className="text-[var(--canvas-electric)]"
                         name="check"
                         size={15}
                       />
@@ -198,9 +227,9 @@ export function SiteHeader({
           <div className="relative">
             <button
               aria-label={t("nav.readingMode")}
-              className={`grid h-10 w-10 place-items-center rounded-lg text-[#1B1712] transition hover:bg-[#E6D9B4] ${
+              className={`grid h-10 w-10 place-items-center rounded-full text-white transition hover:bg-white/10 ${
                 openPanel === "mode"
-                  ? "bg-[#E6D9B4]"
+                  ? "bg-white/10"
                   : ""
               }`}
               onClick={() =>
@@ -216,13 +245,13 @@ export function SiteHeader({
             </button>
 
             {openPanel === "mode" ? (
-              <div className="absolute right-0 top-12 z-50 w-64 overflow-hidden rounded-xl border border-[#CBB98A] bg-white py-1.5 shadow-xl">
+              <div className="glass-panel absolute right-0 top-12 z-50 w-64 overflow-hidden rounded-xl py-1.5 shadow-2xl">
                 {READING_MODES.map((entry) => (
                   <button
                     className={`flex w-full items-center gap-3 px-4 py-2.5 text-left transition ${
                       entry.value === mode
-                        ? "bg-[#EFE6D2]"
-                        : "hover:bg-slate-50"
+                        ? "bg-white/10"
+                        : "hover:bg-white/5"
                     }`}
                     key={entry.value}
                     onClick={() => {
@@ -232,22 +261,22 @@ export function SiteHeader({
                     type="button"
                   >
                     <span
-                      className="h-6 w-6 shrink-0 rounded-full border border-black/10 shadow-inner"
+                      className="h-6 w-6 shrink-0 rounded-full border border-white/20 shadow-inner"
                       style={{
                         background: entry.swatch,
                       }}
                     />
                     <span className="min-w-0 flex-1">
-                      <span className="block text-sm font-bold text-[#1B1712]">
+                      <span className="block text-sm font-bold text-white">
                         {t(entry.labelKey)}
                       </span>
-                      <span className="block text-[11px] text-slate-500">
+                      <span className="block text-[11px] text-white/50">
                         {t(entry.hintKey)}
                       </span>
                     </span>
                     {entry.value === mode ? (
                       <Icon
-                        className="shrink-0 text-[#D9622B]"
+                        className="shrink-0 text-[var(--canvas-electric)]"
                         name="check"
                         size={15}
                       />
@@ -260,7 +289,7 @@ export function SiteHeader({
 
           <button
             aria-label={t("nav.profile")}
-            className="ml-1 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#1B1712] text-sm font-black text-[#D9622B] shadow-md ring-2 ring-transparent transition hover:ring-[#D9622B]/40"
+            className="ml-1 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[var(--canvas-electric)] to-[var(--canvas-royal)] text-sm font-black text-white shadow-md ring-2 ring-transparent transition hover:ring-white/30"
             onClick={onOpenProfile}
             type="button"
           >

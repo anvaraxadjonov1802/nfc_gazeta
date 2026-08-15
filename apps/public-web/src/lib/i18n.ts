@@ -52,6 +52,20 @@ type TranslationKey =
   | "media.title"
   | "media.watch"
   | "media.videoBadge"
+  | "articles.eyebrow"
+  | "articles.title"
+  | "howItWorks.eyebrow"
+  | "howItWorks.title"
+  | "howItWorks.step1Title"
+  | "howItWorks.step1Text"
+  | "howItWorks.step2Title"
+  | "howItWorks.step2Text"
+  | "howItWorks.step3Title"
+  | "howItWorks.step3Text"
+  | "partners.eyebrow"
+  | "partners.title"
+  | "testimonials.eyebrow"
+  | "testimonials.title"
   | "footer.sections"
   | "footer.home"
   | "footer.archive"
@@ -103,6 +117,20 @@ const uz: Dictionary = {
   "media.title": "Maqolalar va videolar",
   "media.watch": "Videoni ko‘rish",
   "media.videoBadge": "Video",
+  "articles.eyebrow": "So‘nggi materiallar",
+  "articles.title": "Maqolalar va tahlillar",
+  "howItWorks.eyebrow": "Qanday ishlaydi",
+  "howItWorks.title": "NFC orqali 3 qadamda",
+  "howItWorks.step1Title": "NFC belgisini toping",
+  "howItWorks.step1Text": "Bosma gazeta muqovasidagi NFC stikerini toping — u har bir sonda bor.",
+  "howItWorks.step2Title": "Telefon bilan teging",
+  "howItWorks.step2Text": "Telefoningizni stikerga yaqinlashtiring, ilova shart emas — brauzer avtomatik ochiladi.",
+  "howItWorks.step3Title": "O‘qing va tinglang",
+  "howItWorks.step3Text": "Gazetani varaqlab o‘qing, matn rejimiga o‘ting yoki audio shaklda tinglang.",
+  "partners.eyebrow": "Hamkorlar",
+  "partners.title": "Biz bilan ishlaydiganlar",
+  "testimonials.eyebrow": "Fikr-mulohazalar",
+  "testimonials.title": "O‘quvchilar bizni shunday baholaydi",
   "footer.sections": "Asosiy bo‘limlar",
   "footer.home": "Bosh sahifa",
   "footer.archive": "Gazeta arxivi",
@@ -153,6 +181,20 @@ const ru: Dictionary = {
   "media.title": "Статьи и видео",
   "media.watch": "Смотреть видео",
   "media.videoBadge": "Видео",
+  "articles.eyebrow": "Последние материалы",
+  "articles.title": "Статьи и аналитика",
+  "howItWorks.eyebrow": "Как это работает",
+  "howItWorks.title": "NFC за 3 шага",
+  "howItWorks.step1Title": "Найдите метку NFC",
+  "howItWorks.step1Text": "Найдите NFC-стикер на обложке печатной газеты — он есть в каждом номере.",
+  "howItWorks.step2Title": "Поднесите телефон",
+  "howItWorks.step2Text": "Поднесите телефон к стикеру, приложение не требуется — браузер откроется автоматически.",
+  "howItWorks.step3Title": "Читайте и слушайте",
+  "howItWorks.step3Text": "Листайте газету, переключитесь в текстовый режим или слушайте аудиоверсию.",
+  "partners.eyebrow": "Партнёры",
+  "partners.title": "С нами работают",
+  "testimonials.eyebrow": "Отзывы",
+  "testimonials.title": "Читатели оценивают нас так",
   "footer.sections": "Основные разделы",
   "footer.home": "Главная",
   "footer.archive": "Архив газеты",
@@ -203,6 +245,20 @@ const en: Dictionary = {
   "media.title": "Articles and videos",
   "media.watch": "Watch video",
   "media.videoBadge": "Video",
+  "articles.eyebrow": "Latest material",
+  "articles.title": "Articles & analysis",
+  "howItWorks.eyebrow": "How it works",
+  "howItWorks.title": "NFC in 3 steps",
+  "howItWorks.step1Title": "Find the NFC tag",
+  "howItWorks.step1Text": "Find the NFC sticker on the printed issue's cover — every issue has one.",
+  "howItWorks.step2Title": "Tap your phone",
+  "howItWorks.step2Text": "Tap your phone on the sticker, no app needed — your browser opens automatically.",
+  "howItWorks.step3Title": "Read and listen",
+  "howItWorks.step3Text": "Flip through the issue, switch to text mode, or listen to the audio version.",
+  "partners.eyebrow": "Partners",
+  "partners.title": "Who we work with",
+  "testimonials.eyebrow": "Feedback",
+  "testimonials.title": "What readers say",
   "footer.sections": "Main sections",
   "footer.home": "Home",
   "footer.archive": "Newspaper archive",

@@ -16,48 +16,56 @@ export function SiteFooter({
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-16 border-t-4 border-double border-[#D9622B] bg-[#0F0C09] text-slate-300">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+    <footer className="relative w-full overflow-hidden bg-[var(--canvas-navy-deep)] text-white/70">
+      <div
+        aria-hidden="true"
+        className="flex h-[3px] w-full"
+      >
+        <span className="h-full flex-1 bg-[var(--uz-blue)]/70" />
+        <span className="h-full flex-1 bg-white/70" />
+        <span className="h-full flex-1 bg-[var(--uz-green)]/70" />
+      </div>
+
+      <div className="rail-lines pointer-events-none absolute inset-0 opacity-30" />
+
+      <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <div className="flex items-center gap-3">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/10 font-serif text-lg font-black text-[#D9622B]">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[var(--canvas-electric)] to-[var(--canvas-royal)] text-lg font-black text-white">
             T
           </span>
           <div>
-            <strong className="vintage-masthead block font-serif text-lg text-white">
+            <strong className="block text-lg font-black text-white">
               Temiryo‘lchi
             </strong>
-            <small className="vintage-caps text-[9px] font-bold text-[#D9622B]">
+            <small className="text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--canvas-electric-soft)]">
               {t("footer.official")}
             </small>
           </div>
         </div>
 
-        <div className="vintage-caps flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold tracking-[0.1em]">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold uppercase tracking-[0.1em]">
           <Link
-            className="transition hover:text-[#D9622B]"
+            className="transition hover:text-[var(--canvas-electric-soft)]"
             href="/"
           >
             {t("footer.home")}
           </Link>
-          <span className="text-[#D9622B]/40">✦</span>
           <Link
-            className="transition hover:text-[#D9622B]"
+            className="transition hover:text-[var(--canvas-electric-soft)]"
             href="/arxiv"
           >
             {t("footer.archive")}
           </Link>
-          <span className="text-[#D9622B]/40">✦</span>
           <button
-            className="transition hover:text-[#D9622B]"
+            className="transition hover:text-[var(--canvas-electric-soft)]"
             onClick={onOpenAccessibility}
             type="button"
           >
             {t("footer.accessibility")}
           </button>
-          <span className="text-[#D9622B]/40">✦</span>
-          <span className="inline-flex items-center gap-1.5 normal-case tracking-normal text-slate-400">
+          <span className="inline-flex items-center gap-1.5 normal-case tracking-normal text-white/50">
             <Icon
-              className="text-[#D9622B]"
+              className="text-[var(--canvas-electric-soft)]"
               name="nfc"
               size={14}
             />
@@ -66,9 +74,9 @@ export function SiteFooter({
         </div>
       </div>
 
-      <div className="border-t border-white/10">
-        <div className="vintage-caps mx-auto flex min-h-12 w-full max-w-7xl flex-col justify-center gap-1.5 px-4 py-3 text-[9px] tracking-[0.1em] text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-          <span className="normal-case tracking-normal">
+      <div className="relative border-t border-white/10">
+        <div className="mx-auto flex min-h-12 w-full max-w-7xl flex-col justify-center gap-1.5 px-4 py-4 text-[10px] text-white/40 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <span>
             © {year} Temiryo‘lchi. {t("footer.rights")}
           </span>
           <span className="inline-flex items-center gap-1.5">
