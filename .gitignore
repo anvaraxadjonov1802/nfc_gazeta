@@ -1,6 +1,6 @@
-@"
 # Python
 .venv/
+venv/
 __pycache__/
 *.py[cod]
 *.sqlite3
@@ -22,9 +22,9 @@ npm-debug.log*
 # System
 .DS_Store
 Thumbs.db
-"@ | Set-Content .gitignore
 
 # OCR language models
 backend/tessdata/*.traineddata
 
-
+# Local backups
+.analytics-backup/
