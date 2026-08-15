@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --railway-navy: #1E4468;
-  --railway-navy-dark: #163552;
-  --railway-blue: #2A5C8A;
-  --railway-gold: #C79A3C;
-  --railway-gold-deep: #9C7826;
-  --railway-bg: #F7F1E3;
-  --railway-card: #FFFCF5;
-  --railway-line: #E7DCC3;
+  --railway-navy: #1B1712;
+  --railway-navy-dark: #0F0C09;
+  --railway-blue: #4A3B26;
+  --railway-gold: #8B6A2F;
+  --railway-gold-deep: #6B4F1F;
+  --railway-bg: #EFE6D2;
+  --railway-card: #F8F2E2;
+  --railway-line: #CBB98A;
   --font-sans-fallback: Inter, Arial, Helvetica, sans-serif;
   --font-serif-fallback: Georgia, "Times New Roman", serif;
 }
@@ -25,10 +25,27 @@ html {
 body {
   min-height: 100vh;
   margin: 0;
-  background: var(--railway-bg);
-  color: #2B2620;
-  font-family: var(--font-sans, var(--font-sans-fallback));
+  background:
+    repeating-radial-gradient(circle at 0 0, rgba(27, 23, 18, 0.035) 0, rgba(27, 23, 18, 0.035) 1px, transparent 1px, transparent 3px),
+    var(--railway-bg);
+  color: #201A14;
+  font-family: var(--font-serif, var(--font-serif-fallback));
   -webkit-font-smoothing: antialiased;
+}
+
+/* Vintage newspaper flourishes */
+.rule-double {
+  border-top: 3px double var(--railway-navy);
+}
+
+.vintage-caps {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.vintage-masthead {
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
 }
 
 button,
@@ -76,8 +93,8 @@ html.theme-contrast body {
 html.theme-contrast .bg-white,
 html.theme-contrast .bg-slate-50,
 html.theme-contrast .bg-slate-100,
-html.theme-contrast .bg-\[\#F7F1E3\],
-html.theme-contrast .bg-\[\#FFFCF5\] {
+html.theme-contrast .bg-\[\#EFE6D2\],
+html.theme-contrast .bg-\[\#F8F2E2\] {
   background-color: #101010 !important;
   color: #fff !important;
 }
@@ -111,15 +128,15 @@ html.mode-white body {
   background: #ffffff;
 }
 
-html.mode-white .bg-\[\#F7F1E3\] {
+html.mode-white .bg-\[\#EFE6D2\] {
   background-color: #ffffff !important;
 }
 
-html.mode-white .bg-\[\#FFFCF5\] {
+html.mode-white .bg-\[\#F8F2E2\] {
   background-color: #ffffff !important;
 }
 
-html.mode-white .border-\[\#E7DCC3\] {
+html.mode-white .border-\[\#CBB98A\] {
   border-color: #e2e8f0 !important;
 }
 
@@ -135,25 +152,25 @@ html.mode-night body {
   color: #E6E9F0;
 }
 
-html.mode-night .bg-\[\#F7F1E3\],
+html.mode-night .bg-\[\#EFE6D2\],
 html.mode-night .bg-slate-50,
 html.mode-night .bg-slate-100 {
   background-color: #121821 !important;
 }
 
-html.mode-night .bg-\[\#FFFCF5\],
+html.mode-night .bg-\[\#F8F2E2\],
 html.mode-night .bg-white {
   background-color: #1a2230 !important;
   color: #E6E9F0;
 }
 
-html.mode-night .border-\[\#E7DCC3\],
+html.mode-night .border-\[\#CBB98A\],
 html.mode-night .border-slate-200,
 html.mode-night .border-slate-100 {
   border-color: #2b3446 !important;
 }
 
-html.mode-night .text-\[\#1E4468\] {
+html.mode-night .text-\[\#1B1712\] {
   color: #E9C46A !important;
 }
 
@@ -180,7 +197,7 @@ html.mode-night .shadow-2xl {
 }
 
 .custom-scrollbar {
-  scrollbar-color: #1E4468 #E7DCC3;
+  scrollbar-color: #1B1712 #CBB98A;
   scrollbar-width: thin;
 }
 
@@ -190,16 +207,16 @@ html.mode-night .shadow-2xl {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #E7DCC3;
+  background: #CBB98A;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: #1E4468;
+  background: #1B1712;
 }
 
 .issue-reader:fullscreen {
-  background: #F7F1E3;
+  background: #EFE6D2;
 }
 
 .issue-reader:fullscreen .issue-stage-grid {

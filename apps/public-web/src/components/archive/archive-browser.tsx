@@ -91,7 +91,7 @@ export function ArchiveBrowser({
               size={18}
             />
             <input
-              className="h-12 w-full rounded-xl border border-slate-300 bg-slate-50 pl-11 pr-4 text-sm outline-none transition focus:border-[#1E4468] focus:bg-white focus:ring-4 focus:ring-[#1E4468]/10"
+              className="h-12 w-full rounded-xl border border-slate-300 bg-slate-50 pl-11 pr-4 text-sm outline-none transition focus:border-[#1B1712] focus:bg-white focus:ring-4 focus:ring-[#1B1712]/10"
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 setQuery(event.target.value)
               }
@@ -108,7 +108,7 @@ export function ArchiveBrowser({
               size={18}
             />
             <select
-              className="h-12 w-full appearance-none rounded-xl border border-slate-300 bg-slate-50 pl-11 pr-4 text-sm font-semibold text-slate-700 outline-none transition focus:border-[#1E4468] focus:bg-white focus:ring-4 focus:ring-[#1E4468]/10"
+              className="h-12 w-full appearance-none rounded-xl border border-slate-300 bg-slate-50 pl-11 pr-4 text-sm font-semibold text-slate-700 outline-none transition focus:border-[#1B1712] focus:bg-white focus:ring-4 focus:ring-[#1B1712]/10"
               onChange={(event: ChangeEvent<HTMLSelectElement>) =>
                 setYear(event.target.value)
               }
@@ -126,7 +126,7 @@ export function ArchiveBrowser({
           </label>
 
           <button
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-xs font-bold text-slate-600 transition hover:border-[#1E4468] hover:text-[#1E4468] disabled:opacity-40"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-xs font-bold text-slate-600 transition hover:border-[#1B1712] hover:text-[#1B1712] disabled:opacity-40"
             disabled={!query && year === "all"}
             onClick={resetFilters}
             type="button"
@@ -151,14 +151,14 @@ export function ArchiveBrowser({
           <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-slate-100 text-slate-400">
             <Icon name="search" size={29} />
           </div>
-          <h2 className="mt-4 font-serif text-xl font-bold text-[#1E4468]">
+          <h2 className="mt-4 font-serif text-xl font-bold text-[#1B1712]">
             Nashr topilmadi
           </h2>
           <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-500">
             Qidiruv so‘zi yoki yil filtrini o‘zgartirib ko‘ring.
           </p>
           <button
-            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#1E4468] px-5 py-3 text-xs font-bold text-white"
+            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#1B1712] px-5 py-3 text-xs font-bold text-white"
             onClick={resetFilters}
             type="button"
           >
@@ -170,12 +170,12 @@ export function ArchiveBrowser({
         <div className="space-y-12">
           {groupedYears.map((groupYear) => (
             <section key={groupYear}>
-              <div className="mb-5 flex items-end justify-between gap-4 border-b border-slate-200 pb-3">
+              <div className="mb-5 flex items-end justify-between gap-4 border-b-2 border-double border-[#1B1712] pb-3">
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#9C7826]">
+                  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#6B4F1F]">
                     Elektron arxiv
                   </span>
-                  <h2 className="mt-1 font-serif text-3xl font-black text-[#1E4468]">
+                  <h2 className="mt-1 font-serif text-3xl font-black text-[#1B1712]">
                     {groupYear}-yil
                   </h2>
                 </div>

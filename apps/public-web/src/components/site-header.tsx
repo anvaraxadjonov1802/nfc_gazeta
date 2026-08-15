@@ -30,7 +30,7 @@ const READING_MODES: {
     value: "paper",
     labelKey: "mode.paper",
     hintKey: "mode.paperHint",
-    swatch: "#F7F1E3",
+    swatch: "#EFE6D2",
   },
   {
     value: "white",
@@ -106,7 +106,7 @@ export function SiteHeader({
 
   return (
     <header
-      className="sticky top-0 z-50 border-b border-[#E7DCC3] bg-[#FFFCF5]/95 shadow-sm backdrop-blur-xl"
+      className="sticky top-0 z-50 border-b-4 border-double border-[#1B1712] bg-[#F8F2E2]/95 shadow-sm backdrop-blur-xl"
       ref={containerRef}
     >
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
@@ -115,10 +115,10 @@ export function SiteHeader({
           className="flex min-w-0 items-center gap-2.5"
           href="/"
         >
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#1E4468] font-serif text-lg font-black text-[#C79A3C] shadow-md ring-1 ring-[#163552]">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#1B1712] font-serif text-lg font-black text-[#8B6A2F] shadow-md ring-1 ring-[#0F0C09]">
             T
           </span>
-          <strong className="truncate font-serif text-base font-black tracking-tight text-[#1E4468] sm:text-xl">
+          <strong className="truncate font-serif text-base font-black tracking-tight text-[#1B1712] sm:text-xl">
             Temiryo‘lchi
           </strong>
         </Link>
@@ -126,7 +126,7 @@ export function SiteHeader({
         <div className="flex items-center gap-1 sm:gap-1.5">
           <button
             aria-label={t("nav.search")}
-            className="grid h-10 w-10 place-items-center rounded-lg text-[#1E4468] transition hover:bg-[#F0EAD9]"
+            className="grid h-10 w-10 place-items-center rounded-lg text-[#1B1712] transition hover:bg-[#E6D9B4]"
             onClick={onOpenSearch}
             type="button"
           >
@@ -136,9 +136,9 @@ export function SiteHeader({
           <div className="relative">
             <button
               aria-label={t("nav.language")}
-              className={`grid h-10 w-10 place-items-center rounded-lg text-[#1E4468] transition hover:bg-[#F0EAD9] ${
+              className={`grid h-10 w-10 place-items-center rounded-lg text-[#1B1712] transition hover:bg-[#E6D9B4] ${
                 openPanel === "lang"
-                  ? "bg-[#F0EAD9]"
+                  ? "bg-[#E6D9B4]"
                   : ""
               }`}
               onClick={() =>
@@ -166,12 +166,12 @@ export function SiteHeader({
             </button>
 
             {openPanel === "lang" ? (
-              <div className="absolute right-0 top-12 z-50 w-48 overflow-hidden rounded-xl border border-[#E7DCC3] bg-white py-1.5 shadow-xl">
+              <div className="absolute right-0 top-12 z-50 w-48 overflow-hidden rounded-xl border border-[#CBB98A] bg-white py-1.5 shadow-xl">
                 {LOCALES.map((entry) => (
                   <button
                     className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-sm font-semibold transition ${
                       entry.code === locale
-                        ? "bg-[#F7F1E3] text-[#1E4468]"
+                        ? "bg-[#EFE6D2] text-[#1B1712]"
                         : "text-slate-600 hover:bg-slate-50"
                     }`}
                     key={entry.code}
@@ -184,7 +184,7 @@ export function SiteHeader({
                     {entry.label}
                     {entry.code === locale ? (
                       <Icon
-                        className="text-[#C79A3C]"
+                        className="text-[#8B6A2F]"
                         name="check"
                         size={15}
                       />
@@ -198,9 +198,9 @@ export function SiteHeader({
           <div className="relative">
             <button
               aria-label={t("nav.readingMode")}
-              className={`grid h-10 w-10 place-items-center rounded-lg text-[#1E4468] transition hover:bg-[#F0EAD9] ${
+              className={`grid h-10 w-10 place-items-center rounded-lg text-[#1B1712] transition hover:bg-[#E6D9B4] ${
                 openPanel === "mode"
-                  ? "bg-[#F0EAD9]"
+                  ? "bg-[#E6D9B4]"
                   : ""
               }`}
               onClick={() =>
@@ -216,12 +216,12 @@ export function SiteHeader({
             </button>
 
             {openPanel === "mode" ? (
-              <div className="absolute right-0 top-12 z-50 w-64 overflow-hidden rounded-xl border border-[#E7DCC3] bg-white py-1.5 shadow-xl">
+              <div className="absolute right-0 top-12 z-50 w-64 overflow-hidden rounded-xl border border-[#CBB98A] bg-white py-1.5 shadow-xl">
                 {READING_MODES.map((entry) => (
                   <button
                     className={`flex w-full items-center gap-3 px-4 py-2.5 text-left transition ${
                       entry.value === mode
-                        ? "bg-[#F7F1E3]"
+                        ? "bg-[#EFE6D2]"
                         : "hover:bg-slate-50"
                     }`}
                     key={entry.value}
@@ -238,7 +238,7 @@ export function SiteHeader({
                       }}
                     />
                     <span className="min-w-0 flex-1">
-                      <span className="block text-sm font-bold text-[#1E4468]">
+                      <span className="block text-sm font-bold text-[#1B1712]">
                         {t(entry.labelKey)}
                       </span>
                       <span className="block text-[11px] text-slate-500">
@@ -247,7 +247,7 @@ export function SiteHeader({
                     </span>
                     {entry.value === mode ? (
                       <Icon
-                        className="shrink-0 text-[#C79A3C]"
+                        className="shrink-0 text-[#8B6A2F]"
                         name="check"
                         size={15}
                       />
@@ -260,7 +260,7 @@ export function SiteHeader({
 
           <button
             aria-label={t("nav.profile")}
-            className="ml-1 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#1E4468] text-sm font-black text-[#C79A3C] shadow-md ring-2 ring-transparent transition hover:ring-[#C79A3C]/40"
+            className="ml-1 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#1B1712] text-sm font-black text-[#8B6A2F] shadow-md ring-2 ring-transparent transition hover:ring-[#8B6A2F]/40"
             onClick={onOpenProfile}
             type="button"
           >

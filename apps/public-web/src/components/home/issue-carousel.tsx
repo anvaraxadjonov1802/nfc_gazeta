@@ -22,7 +22,7 @@ function IssueMini({
       className="group w-32 shrink-0 sm:w-40"
       href={`/n/${issue.nfc_slug}`}
     >
-      <span className="grid aspect-[0.72] w-full place-items-center overflow-hidden rounded-xl border border-[#E7DCC3] bg-white shadow-sm transition group-hover:-translate-y-1 group-hover:shadow-lg">
+      <span className="grid aspect-[0.72] w-full place-items-center overflow-hidden rounded-xl border border-[#CBB98A] bg-white shadow-sm transition group-hover:-translate-y-1 group-hover:shadow-lg">
         {issue.cover_image ? (
           <img
             alt={issue.title}
@@ -38,7 +38,7 @@ function IssueMini({
           />
         )}
       </span>
-      <strong className="mt-2 block truncate text-xs font-bold text-[#1E4468]">
+      <strong className="mt-2 block truncate text-xs font-bold text-[#1B1712]">
         {issue.issue_number}-son
       </strong>
       <span className="block text-[10px] text-slate-500">
@@ -64,17 +64,17 @@ export function IssueCarousel({
 
   return (
     <section className="space-y-5">
-      <div className="flex items-end justify-between gap-4 border-b border-slate-200 pb-3">
+      <div className="flex items-end justify-between gap-4 border-b-2 border-double border-[#1B1712] pb-3">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#9C7826]">
+          <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#6B4F1F]">
             {t("carousel.eyebrow")}
           </span>
-          <h2 className="mt-1 font-serif text-2xl font-black text-[#1E4468] sm:text-3xl">
+          <h2 className="mt-1 font-serif text-2xl font-black text-[#1B1712] sm:text-3xl">
             {t("carousel.title")}
           </h2>
         </div>
         <Link
-          className="inline-flex shrink-0 items-center gap-1 text-xs font-bold text-[#1E4468] transition hover:text-[#C79A3C]"
+          className="inline-flex shrink-0 items-center gap-1 text-xs font-bold text-[#1B1712] transition hover:text-[#8B6A2F]"
           href="/arxiv"
         >
           {t("carousel.viewAll")}

@@ -67,9 +67,9 @@ export function AccessibilityToolbar({
       />
 
       <section className="relative z-10 w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
-        <header className="flex items-center justify-between border-b-4 border-[#C79A3C] bg-[#1E4468] px-5 py-4 text-white sm:px-6">
+        <header className="flex items-center justify-between border-b-4 border-[#8B6A2F] bg-[#1B1712] px-5 py-4 text-white sm:px-6">
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-[#C79A3C]">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-[#8B6A2F]">
               <Icon name="eye" />
             </span>
             <div>
@@ -94,7 +94,7 @@ export function AccessibilityToolbar({
 
         <div className="space-y-6 p-5 sm:p-6">
           <div>
-            <h3 className="mb-3 text-sm font-bold text-[#1E4468]">
+            <h3 className="mb-3 text-sm font-bold text-[#1B1712]">
               Shrift o‘lchami
             </h3>
 
@@ -109,7 +109,7 @@ export function AccessibilityToolbar({
                 <button
                   className={`rounded-xl border px-4 py-3 text-left transition ${
                     settings.fontSize === value
-                      ? "border-[#1E4468] bg-[#1E4468] text-white shadow-md"
+                      ? "border-[#1B1712] bg-[#1B1712] text-white shadow-md"
                       : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300"
                   }`}
                   key={value}
@@ -149,7 +149,7 @@ export function AccessibilityToolbar({
           </div>
 
           <div>
-            <h3 className="mb-3 text-sm font-bold text-[#1E4468]">
+            <h3 className="mb-3 text-sm font-bold text-[#1B1712]">
               Ko‘rish rejimi
             </h3>
 
@@ -164,7 +164,7 @@ export function AccessibilityToolbar({
                 <button
                   className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition ${
                     settings.theme === value
-                      ? "border-[#C79A3C] bg-amber-50 text-[#1E4468] ring-2 ring-[#C79A3C]/20"
+                      ? "border-[#8B6A2F] bg-amber-50 text-[#1B1712] ring-2 ring-[#8B6A2F]/20"
                       : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300"
                   }`}
                   key={value}

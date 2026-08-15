@@ -66,12 +66,12 @@ export default async function HomePage() {
       ) : null}
 
       <section className="space-y-5">
-        <div className="flex items-end justify-between gap-4 border-b border-slate-200 pb-3">
+        <div className="flex items-end justify-between gap-4 border-b-2 border-double border-[#1B1712] pb-3">
           <div>
-            <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#9C7826]">
+            <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#6B4F1F]">
               So‘nggi materiallar
             </span>
-            <h2 className="mt-1 font-serif text-2xl font-black text-[#1E4468] sm:text-3xl">
+            <h2 className="mt-1 font-serif text-2xl font-black text-[#1B1712] sm:text-3xl">
               Yangi maqolalar va tahlillar
             </h2>
           </div>
@@ -97,10 +97,10 @@ export default async function HomePage() {
 
       <VideoSection />
 
-      <section className="relative overflow-hidden rounded-2xl border-b-4 border-[#C79A3C] bg-[#1E4468] p-7 text-white shadow-xl sm:p-10">
-        <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#C79A3C]/10 blur-3xl" />
+      <section className="relative overflow-hidden rounded-2xl border-b-4 border-[#8B6A2F] bg-[#1B1712] p-7 text-white shadow-xl sm:p-10">
+        <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#8B6A2F]/10 blur-3xl" />
         <div className="relative max-w-4xl">
-          <span className="inline-flex items-center gap-2 rounded-full bg-[#C79A3C] px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-[#1E4468]">
+          <span className="inline-flex items-center gap-2 rounded-full bg-[#8B6A2F] px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-[#1B1712]">
             <Icon name="nfc" size={14} />
             Rasmiy NFC integratsiya
           </span>
@@ -110,7 +110,7 @@ export default async function HomePage() {
           <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-200 sm:text-base">
             Har bir bosma sonning muqovasidagi NFC stiker foydalanuvchini aynan o‘sha gazetaning elektron nusxasiga olib boradi. Betlarni asl ko‘rinishda ko‘rish, matnni qulay o‘qish va audio shaklini tinglash mumkin.
           </p>
-          <div className="mt-5 flex flex-wrap gap-4 text-xs font-bold text-[#C79A3C]">
+          <div className="mt-5 flex flex-wrap gap-4 text-xs font-bold text-[#8B6A2F]">
             <span className="inline-flex items-center gap-1.5">
               <Icon name="shield" size={16} />
               Rasmiy elektron nusxa

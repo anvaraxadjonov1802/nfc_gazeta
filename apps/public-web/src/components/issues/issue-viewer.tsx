@@ -301,11 +301,11 @@ export function IssueViewer({
 
   if (!currentPage || pages.length === 0) {
     return (
-      <section className="rounded-2xl border border-[#E7DCC3] bg-[#FFFCF5] p-10 text-center shadow-sm">
+      <section className="rounded-2xl border border-[#CBB98A] bg-[#F8F2E2] p-10 text-center shadow-sm">
         <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-slate-100 text-slate-400">
           <Icon name="file-text" size={30} />
         </div>
-        <h2 className="mt-4 font-serif text-xl font-bold text-[#1E4468]">
+        <h2 className="mt-4 font-serif text-xl font-bold text-[#1B1712]">
           Gazeta betlari topilmadi
         </h2>
         <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-500">
@@ -317,7 +317,7 @@ export function IssueViewer({
 
   const content = (
     <section
-      className={`issue-reader overflow-hidden border border-[#E7DCC3] bg-[#FFFCF5] shadow-2xl ${
+      className={`issue-reader overflow-hidden border border-[#CBB98A] bg-[#F8F2E2] shadow-2xl ${
         isFullscreen
           ? "h-screen w-screen rounded-none border-0"
           : isImmersive
@@ -332,7 +332,7 @@ export function IssueViewer({
         src={currentPage.audio ?? undefined}
       />
 
-      <div className="flex flex-col border-b border-[#163552] bg-[#1E4468] text-white xl:flex-row xl:items-center xl:justify-between">
+      <div className="flex flex-col border-b border-[#0F0C09] bg-[#1B1712] text-white xl:flex-row xl:items-center xl:justify-between">
         <div className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-3 xl:border-b-0 xl:px-4">
           <div className="flex items-center gap-2">
             <button
@@ -360,7 +360,7 @@ export function IssueViewer({
 
           <span className="hidden items-center gap-1.5 text-[10px] text-slate-300 sm:inline-flex">
             <Icon
-              className="text-[#C79A3C]"
+              className="text-[#8B6A2F]"
               name="nfc"
               size={14}
             />
@@ -373,7 +373,7 @@ export function IssueViewer({
             <button
               className={`inline-flex min-h-9 items-center gap-1.5 rounded-md px-3 text-[10px] font-bold transition ${
                 mode === "image"
-                  ? "bg-[#C79A3C] text-[#1E4468]"
+                  ? "bg-[#8B6A2F] text-[#1B1712]"
                   : "text-white hover:bg-white/10"
               }`}
               onClick={() => setMode("image")}
@@ -385,7 +385,7 @@ export function IssueViewer({
             <button
               className={`inline-flex min-h-9 items-center gap-1.5 rounded-md px-3 text-[10px] font-bold transition ${
                 mode === "text"
-                  ? "bg-[#C79A3C] text-[#1E4468]"
+                  ? "bg-[#8B6A2F] text-[#1B1712]"
                   : "text-white hover:bg-white/10"
               }`}
               onClick={() => setMode("text")}
@@ -401,7 +401,7 @@ export function IssueViewer({
               className={`inline-flex min-h-10 items-center gap-1.5 rounded-full px-4 text-[10px] font-black transition ${
                 isAudioPlaying
                   ? "border border-white/20 bg-white/10 text-white"
-                  : "bg-[#C79A3C] text-[#1E4468] hover:bg-[#D9B25E]"
+                  : "bg-[#8B6A2F] text-[#1B1712] hover:bg-[#D9B25E]"
               }`}
               onClick={() => {
                 void toggleAudio();
@@ -448,7 +448,7 @@ export function IssueViewer({
       </div>
 
       <div className="issue-stage-grid grid lg:grid-cols-[150px_minmax(0,1fr)]">
-        <aside className="custom-scrollbar flex gap-2 overflow-x-auto border-b border-[#E7DCC3] bg-[#F7F1E3] p-3 lg:block lg:max-h-[780px] lg:space-y-3 lg:overflow-y-auto lg:border-b-0 lg:border-r">
+        <aside className="custom-scrollbar flex gap-2 overflow-x-auto border-b border-[#CBB98A] bg-[#EFE6D2] p-3 lg:block lg:max-h-[780px] lg:space-y-3 lg:overflow-y-auto lg:border-b-0 lg:border-r">
           {pages.map((page, index) => (
             <button
               aria-current={
@@ -458,8 +458,8 @@ export function IssueViewer({
               }
               className={`w-24 shrink-0 rounded-xl border-2 bg-white p-1.5 text-left transition hover:-translate-y-0.5 lg:w-full ${
                 index === currentIndex
-                  ? "border-[#C79A3C] shadow-md ring-2 ring-[#C79A3C]/20"
-                  : "border-transparent hover:border-[#E7DCC3] hover:shadow-md"
+                  ? "border-[#8B6A2F] shadow-md ring-2 ring-[#8B6A2F]/20"
+                  : "border-transparent hover:border-[#CBB98A] hover:shadow-md"
               }`}
               key={page.id}
               onClick={() => goToPage(index)}
@@ -480,19 +480,19 @@ export function IssueViewer({
                   />
                 )}
               </span>
-              <strong className="mt-1.5 block text-center text-[10px] text-[#1E4468]">
+              <strong className="mt-1.5 block text-center text-[10px] text-[#1B1712]">
                 {page.page_number}-bet
               </strong>
             </button>
           ))}
         </aside>
 
-        <div className="min-w-0 bg-[#F7F1E3]">
+        <div className="min-w-0 bg-[#EFE6D2]">
           {mode === "image" ? (
             <div className="issue-stage-book relative flex items-center justify-center px-3 py-6 sm:px-8 sm:py-10 lg:h-[780px] lg:py-12">
               <button
                 aria-label="Oldingi varaq"
-                className="absolute left-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-[#E7DCC3] bg-white text-[#1E4468] shadow-md transition hover:scale-105 hover:bg-[#FBF8F2] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:h-11 sm:w-11 lg:left-6"
+                className="absolute left-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-[#CBB98A] bg-white text-[#1B1712] shadow-md transition hover:scale-105 hover:bg-[#FBF8F2] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:h-11 sm:w-11 lg:left-6"
                 disabled={prevDisabled}
                 onClick={goToPreviousPage}
                 type="button"
@@ -546,7 +546,7 @@ export function IssueViewer({
 
               <button
                 aria-label="Keyingi varaq"
-                className="absolute right-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-[#E7DCC3] bg-white text-[#1E4468] shadow-md transition hover:scale-105 hover:bg-[#FBF8F2] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:h-11 sm:w-11 lg:right-6"
+                className="absolute right-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-[#CBB98A] bg-white text-[#1B1712] shadow-md transition hover:scale-105 hover:bg-[#FBF8F2] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:h-11 sm:w-11 lg:right-6"
                 disabled={nextDisabled}
                 onClick={goToNextPage}
                 type="button"
@@ -555,21 +555,21 @@ export function IssueViewer({
               </button>
             </div>
           ) : (
-            <article className="custom-scrollbar max-h-[80vh] overflow-y-auto bg-[#F7F1E3] px-3 py-6 sm:px-8 sm:py-10 lg:h-[780px] lg:max-h-none lg:px-10 lg:py-12">
-              <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-[#E7DCC3] bg-white shadow-sm">
-                <div className="flex items-center gap-3 border-b border-[#F0EAD9] px-5 py-4">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#1E4468] font-serif text-base font-bold text-[#C79A3C]">
+            <article className="custom-scrollbar max-h-[80vh] overflow-y-auto bg-[#EFE6D2] px-3 py-6 sm:px-8 sm:py-10 lg:h-[780px] lg:max-h-none lg:px-10 lg:py-12">
+              <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-[#CBB98A] bg-white shadow-sm">
+                <div className="flex items-center gap-3 border-b border-[#E6D9B4] px-5 py-4">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#1B1712] font-serif text-base font-bold text-[#8B6A2F]">
                     T
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-[#1E4468]">
+                    <p className="truncate text-sm font-bold text-[#1B1712]">
                       {issue.newspaper_name}
                     </p>
                     <p className="text-[11px] text-slate-500">
                       {issue.year}-yil, {issue.issue_number}-son
                     </p>
                   </div>
-                  <span className="shrink-0 rounded-full bg-[#F7F1E3] px-2.5 py-1 text-[10px] font-bold text-[#9C7826]">
+                  <span className="shrink-0 rounded-full bg-[#EFE6D2] px-2.5 py-1 text-[10px] font-bold text-[#6B4F1F]">
                     {currentPage.page_number}-bet
                   </span>
                 </div>
@@ -585,7 +585,7 @@ export function IssueViewer({
                 ) : null}
 
                 <div className="px-5 py-6 sm:px-7">
-                  <h2 className="text-lg font-bold text-[#1E4468] sm:text-xl">
+                  <h2 className="text-lg font-bold text-[#1B1712] sm:text-xl">
                     {currentPage.page_number}-bet matni
                   </h2>
 
@@ -598,7 +598,14 @@ export function IssueViewer({
                         )
                         .filter(Boolean)
                         .map((paragraph, index) => (
-                          <p key={index}>
+                          <p
+                            className={
+                              index === 0
+                                ? "first-letter:float-left first-letter:mr-2 first-letter:font-serif first-letter:text-4xl first-letter:font-black first-letter:leading-none first-letter:text-[#1B1712]"
+                                : undefined
+                            }
+                            key={index}
+                          >
                             {paragraph}
                           </p>
                         ))
@@ -610,13 +617,13 @@ export function IssueViewer({
                   </div>
 
                   {currentPage.audio ? (
-                    <p className="mt-6 text-xs font-semibold text-[#9C7826]">
+                    <p className="mt-6 text-xs font-semibold text-[#6B4F1F]">
                       Bu betni yuqoridagi “Ovozda tinglash” tugmasi orqali tinglashingiz mumkin.
                     </p>
                   ) : null}
                 </div>
 
-                <div className="flex items-center justify-between border-t border-[#F0EAD9] px-5 py-3 text-[11px] text-slate-400">
+                <div className="flex items-center justify-between border-t border-[#E6D9B4] px-5 py-3 text-[11px] text-slate-400">
                   <span>{issue.newspaper_name}</span>
                   <span>
                     {currentPage.page_number} / {pages.length} bet
@@ -628,7 +635,7 @@ export function IssueViewer({
         </div>
       </div>
 
-      <footer className="flex flex-col gap-2 border-t border-[#E7DCC3] bg-[#FFFCF5] px-4 py-3 text-[10px] text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+      <footer className="flex flex-col gap-2 border-t border-[#CBB98A] bg-[#F8F2E2] px-4 py-3 text-[10px] text-slate-500 sm:flex-row sm:items-center sm:justify-between">
         <span>
           Klaviatura: ← → varaq almashtirish
         </span>

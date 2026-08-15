@@ -12,10 +12,10 @@ export function AnimatedBanner() {
   const { t } = useLocale();
 
   return (
-    <section className="relative overflow-hidden rounded-2xl border-b-4 border-[#C79A3C] bg-[#1E4468] p-7 text-white shadow-xl sm:p-10">
-      <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#C79A3C]/10 blur-3xl" />
+    <section className="relative overflow-hidden rounded-2xl border-b-4 border-[#8B6A2F] bg-[#1B1712] p-7 text-white shadow-xl sm:p-10">
+      <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#8B6A2F]/10 blur-3xl" />
       <div className="pointer-events-none absolute inset-x-0 bottom-6 h-10 overflow-hidden opacity-70">
-        <div className="banner-train flex w-max items-center gap-16 text-[#C79A3C]">
+        <div className="banner-train flex w-max items-center gap-16 text-[#8B6A2F]">
           {[0, 1, 2].map((index) => (
             <Icon
               key={index}
@@ -27,7 +27,7 @@ export function AnimatedBanner() {
       </div>
 
       <div className="relative max-w-4xl">
-        <span className="inline-flex items-center gap-2 rounded-full bg-[#C79A3C] px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-[#1E4468]">
+        <span className="inline-flex items-center gap-2 rounded-full bg-[#8B6A2F] px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-[#1B1712]">
           {t("banner.tag")}
         </span>
         <h2 className="mt-5 font-serif text-2xl font-black leading-tight sm:text-4xl">

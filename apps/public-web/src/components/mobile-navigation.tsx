@@ -39,12 +39,12 @@ export function MobileNavigation({
       />
 
       <aside className="relative ml-auto flex h-full w-[min(88vw,360px)] flex-col bg-white shadow-2xl">
-        <header className="flex items-center justify-between border-b-4 border-[#C79A3C] bg-[#1E4468] px-5 py-5 text-white">
+        <header className="flex items-center justify-between border-b-4 border-[#8B6A2F] bg-[#1B1712] px-5 py-5 text-white">
           <div>
             <strong className="block font-serif text-xl">
               Temiryo‘lchi
             </strong>
-            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C79A3C]">
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8B6A2F]">
               Elektron gazeta
             </span>
           </div>
@@ -69,7 +69,7 @@ export function MobileNavigation({
               <Link
                 className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold transition ${
                   isActive
-                    ? "bg-[#1E4468] text-white"
+                    ? "bg-[#1B1712] text-white"
                     : "text-slate-700 hover:bg-slate-100"
                 }`}
                 href={href}
@@ -79,8 +79,8 @@ export function MobileNavigation({
                 <Icon
                   className={
                     isActive
-                      ? "text-[#C79A3C]"
-                      : "text-[#1E4468]"
+                      ? "text-[#8B6A2F]"
+                      : "text-[#1B1712]"
                   }
                   name={icon}
                   size={19}
@@ -99,7 +99,7 @@ export function MobileNavigation({
             type="button"
           >
             <Icon
-              className="text-[#1E4468]"
+              className="text-[#1B1712]"
               name="search"
               size={19}
             />
@@ -115,7 +115,7 @@ export function MobileNavigation({
             type="button"
           >
             <Icon
-              className="text-[#1E4468]"
+              className="text-[#1B1712]"
               name="eye"
               size={19}
             />

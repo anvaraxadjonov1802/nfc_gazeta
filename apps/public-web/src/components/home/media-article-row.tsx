@@ -20,15 +20,15 @@ export function MediaArticleRow({
   const hasVideo = Boolean(article.video_url);
 
   return (
-    <article className="grid gap-5 rounded-2xl border border-[#E7DCC3] bg-white p-4 shadow-sm transition hover:shadow-md sm:p-5 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:gap-8">
+    <article className="grid gap-5 rounded-2xl border border-[#CBB98A] bg-white p-4 shadow-sm transition hover:shadow-md sm:p-5 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:gap-8">
       <div className="min-w-0">
         {article.category ? (
-          <span className="inline-flex rounded-full bg-[#F7F1E3] px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-[#9C7826]">
+          <span className="inline-flex rounded-full bg-[#EFE6D2] px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-[#6B4F1F]">
             {article.category.name}
           </span>
         ) : null}
         <Link href={href}>
-          <h3 className="mt-2 font-serif text-lg font-black leading-snug text-[#1E4468] transition hover:text-[#C79A3C] sm:text-xl">
+          <h3 className="mt-2 font-serif text-lg font-black leading-snug text-[#1B1712] transition hover:text-[#8B6A2F] sm:text-xl">
             {article.title}
           </h3>
         </Link>
@@ -73,7 +73,7 @@ export function MediaArticleRow({
         {hasVideo ? (
           <>
             <span className="absolute inset-0 bg-black/25 transition group-hover:bg-black/35" />
-            <span className="absolute left-1/2 top-1/2 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[#1E4468] shadow-lg transition group-hover:scale-110">
+            <span className="absolute left-1/2 top-1/2 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[#1B1712] shadow-lg transition group-hover:scale-110">
               <Icon name="play" size={20} />
             </span>
             <span className="absolute bottom-2 right-2 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold text-white">

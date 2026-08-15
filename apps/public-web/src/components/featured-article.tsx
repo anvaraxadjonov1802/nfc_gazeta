@@ -24,7 +24,7 @@ export function FeaturedArticle({
   );
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-slate-200 border-t-4 border-t-[#C79A3C] bg-white shadow-lg">
+    <article className="overflow-hidden rounded-2xl border border-slate-200 border-t-4 border-t-[#8B6A2F] bg-white shadow-lg">
       <div className="grid lg:grid-cols-12">
         <Link
           aria-label={article.title}
@@ -38,17 +38,17 @@ export function FeaturedArticle({
               src={article.main_image}
             />
           ) : (
-            <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-[#E4EAF0] to-[#F8FAFC] font-serif text-lg font-black tracking-[0.2em] text-[#1E4468]/40">
+            <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-[#E4EAF0] to-[#F8FAFC] font-serif text-lg font-black tracking-[0.2em] text-[#1B1712]/40">
               TEMIRYO‘LCHI
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent lg:hidden" />
           <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1E4468] px-3 py-1.5 text-[10px] font-bold text-white shadow-lg">
-              <span className="text-[#C79A3C]">★</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1B1712] px-3 py-1.5 text-[10px] font-bold text-white shadow-lg">
+              <span className="text-[#8B6A2F]">★</span>
               Asosiy maqola
             </span>
-            <span className="rounded-full bg-[#C79A3C] px-3 py-1.5 text-[10px] font-black text-[#1E4468] shadow-lg">
+            <span className="rounded-full bg-[#8B6A2F] px-3 py-1.5 text-[10px] font-black text-[#1B1712] shadow-lg">
               {article.category?.name ?? "Yangiliklar"}
             </span>
           </div>
@@ -60,7 +60,7 @@ export function FeaturedArticle({
               {date ? (
                 <span className="inline-flex items-center gap-1.5">
                   <Icon
-                    className="text-[#C79A3C]"
+                    className="text-[#8B6A2F]"
                     name="calendar"
                     size={15}
                   />
@@ -70,9 +70,9 @@ export function FeaturedArticle({
               <span>{minutes} daqiqa mutolaa</span>
             </div>
 
-            <h2 className="font-serif text-2xl font-black leading-tight text-[#1E4468] sm:text-3xl lg:text-4xl">
+            <h2 className="font-serif text-2xl font-black leading-tight text-[#1B1712] sm:text-3xl lg:text-4xl">
               <Link
-                className="transition hover:text-[#2A5C8A]"
+                className="transition hover:text-[#4A3B26]"
                 href={`/maqola/${article.id}`}
               >
                 {article.title}
@@ -88,7 +88,7 @@ export function FeaturedArticle({
 
           <div className="mt-8 flex flex-col gap-4 border-t border-slate-100 pt-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="text-xs">
-              <strong className="block text-[#1E4468]">
+              <strong className="block text-[#1B1712]">
                 {article.author || "Temiryo‘lchi tahririyati"}
               </strong>
               <span className="text-slate-500">
@@ -97,12 +97,12 @@ export function FeaturedArticle({
             </div>
 
             <Link
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#1E4468] px-5 text-xs font-bold text-white shadow transition hover:bg-[#163552]"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#1B1712] px-5 text-xs font-bold text-white shadow transition hover:bg-[#0F0C09]"
               href={`/maqola/${article.id}`}
             >
               Maqolani o‘qish
               <Icon
-                className="text-[#C79A3C]"
+                className="text-[#8B6A2F]"
                 name="arrow-right"
                 size={17}
               />

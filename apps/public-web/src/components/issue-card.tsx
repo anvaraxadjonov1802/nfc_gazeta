@@ -37,8 +37,8 @@ function IssueCover({
   }
 
   return (
-    <div className="grid h-full w-full place-content-center justify-items-center bg-gradient-to-br from-[#1E4468] to-[#004F84] text-white">
-      <strong className="font-serif text-6xl font-black text-[#C79A3C]">
+    <div className="grid h-full w-full place-content-center justify-items-center bg-gradient-to-br from-[#1B1712] to-[#004F84] text-white">
+      <strong className="font-serif text-6xl font-black text-[#8B6A2F]">
         {issue.issue_number}
       </strong>
       <span className="mt-1 text-xs font-black tracking-[0.2em]">
@@ -61,7 +61,7 @@ export function IssueCard({
 
   if (featured) {
     return (
-      <article className="overflow-hidden rounded-2xl border border-[#2A5C8A] border-t-4 border-t-[#C79A3C] bg-[#1E4468] text-white shadow-2xl">
+      <article className="overflow-hidden rounded-2xl border border-[#4A3B26] border-t-4 border-t-[#8B6A2F] bg-[#1B1712] text-white shadow-2xl">
         <div className="grid items-center gap-7 p-5 sm:p-8 md:grid-cols-12">
           <Link
             aria-label={`${label} nashrini ochish`}
@@ -79,7 +79,7 @@ export function IssueCard({
           </Link>
 
           <div className="md:col-span-7">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#C79A3C]/40 bg-[#C79A3C]/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-[#C79A3C]">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#8B6A2F]/40 bg-[#8B6A2F]/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-[#8B6A2F]">
               <Icon name="newspaper" size={14} />
               Eng yangi gazeta soni
             </span>
@@ -91,7 +91,7 @@ export function IssueCard({
             <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-300">
               <span className="inline-flex items-center gap-1.5">
                 <Icon
-                  className="text-[#C79A3C]"
+                  className="text-[#8B6A2F]"
                   name="calendar"
                   size={15}
                 />
@@ -109,7 +109,7 @@ export function IssueCard({
 
             <div className="mt-7 flex flex-wrap gap-3">
               <Link
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#C79A3C] px-5 text-sm font-black text-[#1E4468] shadow transition hover:bg-[#D9B25E]"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#8B6A2F] px-5 text-sm font-black text-[#1B1712] shadow transition hover:bg-[#D9B25E]"
                 href={`/n/${issue.nfc_slug}?src=web`}
               >
                 <Icon name="book" size={18} />
@@ -137,9 +137,9 @@ export function IssueCard({
         href={`/n/${issue.nfc_slug}?src=web`}
       >
         <IssueCover issue={issue} />
-        <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-[#1E4468]/90 px-2 py-1 text-[9px] font-bold text-white shadow">
+        <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-[#1B1712]/90 px-2 py-1 text-[9px] font-bold text-white shadow">
           <Icon
-            className="text-[#C79A3C]"
+            className="text-[#8B6A2F]"
             name="nfc"
             size={12}
           />
@@ -148,10 +148,10 @@ export function IssueCard({
       </Link>
 
       <div className="p-5">
-        <span className="text-[10px] font-black uppercase tracking-wider text-[#9C7826]">
+        <span className="text-[10px] font-black uppercase tracking-wider text-[#6B4F1F]">
           {issue.newspaper_name}
         </span>
-        <h3 className="mt-2 font-serif text-lg font-bold leading-snug text-[#1E4468] transition group-hover:text-[#2A5C8A]">
+        <h3 className="mt-2 font-serif text-lg font-bold leading-snug text-[#1B1712] transition group-hover:text-[#4A3B26]">
           <Link href={`/n/${issue.nfc_slug}?src=web`}>
             {label}
           </Link>
@@ -160,7 +160,7 @@ export function IssueCard({
           {publicationDate} · {issue.page_count} bet · {issue.article_count} maqola
         </p>
         <Link
-          className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#1E4468] transition hover:text-[#C79A3C]"
+          className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#1B1712] transition hover:text-[#8B6A2F]"
           href={`/n/${issue.nfc_slug}?src=web`}
         >
           Nashrni o‘qish

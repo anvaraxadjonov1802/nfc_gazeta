@@ -1,7 +1,5 @@
 "use client";
 
-"use client";
-
 import Link from "next/link";
 
 import { Icon } from "@/components/ui/icon";
@@ -18,45 +16,48 @@ export function SiteFooter({
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-16 border-t-4 border-[#C79A3C] bg-[#163552] text-slate-300">
+    <footer className="mt-16 border-t-4 border-double border-[#8B6A2F] bg-[#0F0C09] text-slate-300">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <div className="flex items-center gap-3">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/10 font-serif text-lg font-black text-[#C79A3C]">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/10 font-serif text-lg font-black text-[#8B6A2F]">
             T
           </span>
           <div>
-            <strong className="block font-serif text-lg text-white">
+            <strong className="vintage-masthead block font-serif text-lg text-white">
               Temiryo‘lchi
             </strong>
-            <small className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#C79A3C]">
+            <small className="vintage-caps text-[9px] font-bold text-[#8B6A2F]">
               {t("footer.official")}
             </small>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-semibold">
+        <div className="vintage-caps flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold tracking-[0.1em]">
           <Link
-            className="transition hover:text-[#C79A3C]"
+            className="transition hover:text-[#8B6A2F]"
             href="/"
           >
             {t("footer.home")}
           </Link>
+          <span className="text-[#8B6A2F]/40">✦</span>
           <Link
-            className="transition hover:text-[#C79A3C]"
+            className="transition hover:text-[#8B6A2F]"
             href="/arxiv"
           >
             {t("footer.archive")}
           </Link>
+          <span className="text-[#8B6A2F]/40">✦</span>
           <button
-            className="transition hover:text-[#C79A3C]"
+            className="transition hover:text-[#8B6A2F]"
             onClick={onOpenAccessibility}
             type="button"
           >
             {t("footer.accessibility")}
           </button>
-          <span className="inline-flex items-center gap-1.5 text-slate-400">
+          <span className="text-[#8B6A2F]/40">✦</span>
+          <span className="inline-flex items-center gap-1.5 normal-case tracking-normal text-slate-400">
             <Icon
-              className="text-[#C79A3C]"
+              className="text-[#8B6A2F]"
               name="nfc"
               size={14}
             />
@@ -66,8 +67,8 @@ export function SiteFooter({
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex min-h-12 w-full max-w-7xl flex-col justify-center gap-1.5 px-4 py-3 text-[10px] text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-          <span>
+        <div className="vintage-caps mx-auto flex min-h-12 w-full max-w-7xl flex-col justify-center gap-1.5 px-4 py-3 text-[9px] tracking-[0.1em] text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <span className="normal-case tracking-normal">
             © {year} Temiryo‘lchi. {t("footer.rights")}
           </span>
           <span className="inline-flex items-center gap-1.5">

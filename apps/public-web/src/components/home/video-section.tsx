@@ -15,12 +15,12 @@ export function VideoSection() {
 
   return (
     <section className="space-y-5">
-      <div className="flex items-end justify-between gap-4 border-b border-slate-200 pb-3">
+      <div className="flex items-end justify-between gap-4 border-b-2 border-double border-[#1B1712] pb-3">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#9C7826]">
+          <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#6B4F1F]">
             {t("media.eyebrow")}
           </span>
-          <h2 className="mt-1 font-serif text-2xl font-black text-[#1E4468] sm:text-3xl">
+          <h2 className="mt-1 font-serif text-2xl font-black text-[#1B1712] sm:text-3xl">
             {t("media.title")}
           </h2>
         </div>
@@ -29,7 +29,7 @@ export function VideoSection() {
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {featuredVideos.map((video) => (
           <a
-            className="group overflow-hidden rounded-2xl border border-[#E7DCC3] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+            className="group overflow-hidden rounded-2xl border border-[#CBB98A] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
             href={video.watchUrl}
             key={video.id}
             rel="noopener noreferrer"
@@ -43,7 +43,7 @@ export function VideoSection() {
                 src={video.thumbnailUrl}
               />
               <span className="absolute inset-0 bg-black/20 transition group-hover:bg-black/30" />
-              <span className="absolute left-1/2 top-1/2 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[#1E4468] shadow-lg transition group-hover:scale-110">
+              <span className="absolute left-1/2 top-1/2 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[#1B1712] shadow-lg transition group-hover:scale-110">
                 <Icon name="play" size={20} />
               </span>
               <span className="absolute bottom-2 right-2 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold text-white">
@@ -52,12 +52,12 @@ export function VideoSection() {
             </span>
 
             <div className="p-4">
-              <h3 className="line-clamp-2 font-serif text-sm font-bold leading-snug text-[#1E4468] transition group-hover:text-[#2A5C8A]">
+              <h3 className="line-clamp-2 font-serif text-sm font-bold leading-snug text-[#1B1712] transition group-hover:text-[#4A3B26]">
                 {video.title}
               </h3>
               <span className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500">
                 <Icon
-                  className="text-[#C79A3C]"
+                  className="text-[#8B6A2F]"
                   name="play"
                   size={12}
                 />

@@ -43,10 +43,10 @@ export function ProfilePanel({
         type="button"
       />
 
-      <aside className="custom-scrollbar relative ml-auto flex h-full w-[min(92vw,400px)] flex-col overflow-y-auto bg-[#FFFCF5] shadow-2xl">
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#1E4468] via-[#1E4468] to-[#163552] px-5 pb-6 pt-5 text-white">
+      <aside className="custom-scrollbar relative ml-auto flex h-full w-[min(92vw,400px)] flex-col overflow-y-auto bg-[#F8F2E2] shadow-2xl">
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#1B1712] via-[#1B1712] to-[#0F0C09] px-5 pb-6 pt-5 text-white">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-black uppercase tracking-[0.18em] text-[#C79A3C]">
+            <span className="text-xs font-black uppercase tracking-[0.18em] text-[#8B6A2F]">
               {t("profile.title")}
             </span>
             <button
@@ -60,12 +60,12 @@ export function ProfilePanel({
           </div>
 
           <div className="mt-4 flex items-center gap-4">
-            <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-[#C79A3C] text-2xl font-black text-[#1E4468] shadow-lg">
+            <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-[#8B6A2F] text-2xl font-black text-[#1B1712] shadow-lg">
               {initial}
             </span>
             <div className="min-w-0 flex-1">
               <input
-                className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm font-bold text-white placeholder:text-white/50 focus:border-[#C79A3C] focus:outline-none"
+                className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm font-bold text-white placeholder:text-white/50 focus:border-[#8B6A2F] focus:outline-none"
                 maxLength={40}
                 onChange={(event) =>
                   setName(event.target.value)
@@ -84,7 +84,7 @@ export function ProfilePanel({
 
           <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-white/10 p-3 text-center">
             <div>
-              <strong className="block text-lg font-black text-[#C79A3C]">
+              <strong className="block text-lg font-black text-[#8B6A2F]">
                 {stats.issuesRead}
               </strong>
               <span className="text-[9px] font-semibold uppercase tracking-wide text-white/70">
@@ -92,7 +92,7 @@ export function ProfilePanel({
               </span>
             </div>
             <div className="border-x border-white/15">
-              <strong className="block text-lg font-black text-[#C79A3C]">
+              <strong className="block text-lg font-black text-[#8B6A2F]">
                 {stats.pagesRead}
               </strong>
               <span className="text-[9px] font-semibold uppercase tracking-wide text-white/70">
@@ -100,7 +100,7 @@ export function ProfilePanel({
               </span>
             </div>
             <div>
-              <strong className="block text-lg font-black text-[#C79A3C]">
+              <strong className="block text-lg font-black text-[#8B6A2F]">
                 {stats.streak}
               </strong>
               <span className="text-[9px] font-semibold uppercase tracking-wide text-white/70">
@@ -111,12 +111,12 @@ export function ProfilePanel({
         </div>
 
         <div className="space-y-3 px-5 py-5">
-          <h2 className="text-xs font-black uppercase tracking-[0.14em] text-[#9C7826]">
+          <h2 className="text-xs font-black uppercase tracking-[0.14em] text-[#6B4F1F]">
             {t("profile.continueReading")}
           </h2>
 
           {continueReading.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-[#E7DCC3] bg-white p-4 text-center text-xs text-slate-500">
+            <p className="rounded-xl border border-dashed border-[#CBB98A] bg-white p-4 text-center text-xs text-slate-500">
               {t("profile.continueReadingEmpty")}
             </p>
           ) : (
@@ -130,7 +130,7 @@ export function ProfilePanel({
 
                 return (
                   <Link
-                    className="flex items-center gap-3 rounded-xl border border-[#E7DCC3] bg-white p-2.5 transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="flex items-center gap-3 rounded-xl border border-[#CBB98A] bg-white p-2.5 transition hover:-translate-y-0.5 hover:shadow-md"
                     href={`/n/${entry.nfcSlug}`}
                     key={entry.issueId}
                     onClick={onClose}
@@ -152,12 +152,12 @@ export function ProfilePanel({
                       )}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <strong className="block truncate text-xs font-bold text-[#1E4468]">
+                      <strong className="block truncate text-xs font-bold text-[#1B1712]">
                         {entry.newspaperName} · {entry.issueNumber}-son
                       </strong>
                       <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
                         <div
-                          className="h-full rounded-full bg-[#C79A3C]"
+                          className="h-full rounded-full bg-[#8B6A2F]"
                           style={{
                             width: `${progress}%`,
                           }}
@@ -175,14 +175,14 @@ export function ProfilePanel({
           )}
         </div>
 
-        <div className="mt-auto space-y-1 border-t border-[#E7DCC3] px-5 py-5">
+        <div className="mt-auto space-y-1 border-t border-[#CBB98A] px-5 py-5">
           <Link
             className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-white"
             href="/arxiv"
             onClick={onClose}
           >
             <Icon
-              className="text-[#1E4468]"
+              className="text-[#1B1712]"
               name="archive"
               size={18}
             />
@@ -197,7 +197,7 @@ export function ProfilePanel({
             type="button"
           >
             <Icon
-              className="text-[#1E4468]"
+              className="text-[#1B1712]"
               name="eye"
               size={18}
             />

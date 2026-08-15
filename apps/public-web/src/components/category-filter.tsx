@@ -63,10 +63,10 @@ export function CategoryFilter({
   }
 
   return (
-    <section className="rounded-2xl border border-[#E7DCC3] bg-[#FFFCF5] p-5 shadow-sm">
-      <div className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-[#1E4468]">
+    <section className="rounded-2xl border border-[#CBB98A] bg-[#F8F2E2] p-5 shadow-sm">
+      <div className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-[#1B1712]">
         <Icon
-          className="text-[#C79A3C]"
+          className="text-[#8B6A2F]"
           name="archive"
           size={17}
         />
@@ -77,8 +77,8 @@ export function CategoryFilter({
           <button
             className={`rounded-lg px-4 py-2 text-xs font-bold transition ${
               activeSlug === category.slug
-                ? "bg-[#1E4468] text-white"
-                : "bg-[#F7F1E3] text-slate-700 hover:bg-[#1E4468] hover:text-white"
+                ? "bg-[#1B1712] text-white"
+                : "bg-[#EFE6D2] text-slate-700 hover:bg-[#1B1712] hover:text-white"
             }`}
             key={category.id}
             onClick={() =>
@@ -92,7 +92,7 @@ export function CategoryFilter({
       </div>
 
       {activeSlug ? (
-        <div className="animate-fade-in-up mt-5 border-t border-[#E7DCC3] pt-5">
+        <div className="animate-fade-in-up mt-5 border-t border-[#CBB98A] pt-5">
           {isLoading ? (
             <p className="text-sm text-slate-500">
               Yuklanmoqda…

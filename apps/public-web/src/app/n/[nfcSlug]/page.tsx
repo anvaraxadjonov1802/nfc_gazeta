@@ -122,7 +122,7 @@ export default async function IssuePage({
       />
       <div className="animate-fade-in-up mb-5 flex flex-wrap items-center justify-between gap-3">
         <Link
-          className="inline-flex items-center gap-2 text-xs font-bold text-[#1E4468] transition hover:text-[#C79A3C]"
+          className="inline-flex items-center gap-2 text-xs font-bold text-[#1B1712] transition hover:text-[#8B6A2F]"
           href="/arxiv"
         >
           <Icon name="arrow-left" size={16} />
@@ -136,7 +136,7 @@ export default async function IssuePage({
               ? "NFC orqali ochilgan nashr"
               : "Elektron gazeta nashri"}
           </span>
-          <span className="rounded-full bg-[#FFFCF5] px-3 py-1.5 text-[10px] font-bold text-[#5C6673]">
+          <span className="rounded-full bg-[#F8F2E2] px-3 py-1.5 text-[10px] font-bold text-[#5C6673]">
             {formatUzbekDate(issue.publication_date)}
           </span>
         </div>
@@ -153,15 +153,15 @@ export default async function IssuePage({
       </div>
 
       <header
-        className="animate-fade-in-up mt-8 rounded-2xl border border-[#E7DCC3] border-t-4 border-t-[#C79A3C] bg-[#FFFCF5] p-5 shadow-sm sm:p-7"
+        className="animate-fade-in-up mt-8 rounded-2xl border border-[#CBB98A] border-t-4 border-t-[#8B6A2F] bg-[#F8F2E2] p-5 shadow-sm sm:p-7"
         style={{ animationDelay: "0.16s" }}
       >
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-4xl">
-            <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-[#9C7826]">
+            <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-[#6B4F1F]">
               {issue.newspaper_name}
             </span>
-            <h1 className="mt-2 font-serif text-4xl font-black tracking-tight text-[#1E4468] sm:text-5xl lg:text-6xl">
+            <h1 className="mt-2 font-serif text-4xl font-black tracking-tight text-[#1B1712] sm:text-5xl lg:text-6xl">
               {issueLabel(
                 issue.year,
                 issue.issue_number,
@@ -176,7 +176,7 @@ export default async function IssuePage({
           <div className="flex flex-col items-stretch gap-3 sm:flex-row lg:flex-col lg:items-end">
             {issue.original_pdf ? (
               <a
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#E7DCC3] bg-white px-5 text-xs font-bold text-[#1E4468] transition hover:border-[#1E4468]"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#CBB98A] bg-white px-5 text-xs font-bold text-[#1B1712] transition hover:border-[#1B1712]"
                 href={issue.original_pdf}
                 rel="noreferrer"
                 target="_blank"
@@ -185,38 +185,38 @@ export default async function IssuePage({
                 Original PDF
               </a>
             ) : null}
-            <code className="rounded-lg bg-[#F7F1E3] px-3 py-2 text-[10px] text-slate-500">
+            <code className="rounded-lg bg-[#EFE6D2] px-3 py-2 text-[10px] text-slate-500">
               /n/{issue.nfc_slug}
             </code>
           </div>
         </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-3 border-t border-[#E7DCC3] pt-5 text-xs sm:grid-cols-4">
-          <div className="rounded-xl bg-[#F7F1E3] p-3">
+        <div className="mt-6 grid grid-cols-2 gap-3 border-t border-[#CBB98A] pt-5 text-xs sm:grid-cols-4">
+          <div className="rounded-xl bg-[#EFE6D2] p-3">
             <span className="block text-[10px] text-slate-500">
               Nashr soni
             </span>
-            <strong className="mt-1 block text-[#1E4468]">
+            <strong className="mt-1 block text-[#1B1712]">
               {issue.issue_number}-son
             </strong>
           </div>
-          <div className="rounded-xl bg-[#F7F1E3] p-3">
+          <div className="rounded-xl bg-[#EFE6D2] p-3">
             <span className="block text-[10px] text-slate-500">
               Gazeta betlari
             </span>
-            <strong className="mt-1 block text-[#1E4468]">
+            <strong className="mt-1 block text-[#1B1712]">
               {issue.page_count} bet
             </strong>
           </div>
-          <div className="rounded-xl bg-[#F7F1E3] p-3">
+          <div className="rounded-xl bg-[#EFE6D2] p-3">
             <span className="block text-[10px] text-slate-500">
               Elektron maqolalar
             </span>
-            <strong className="mt-1 block text-[#1E4468]">
+            <strong className="mt-1 block text-[#1B1712]">
               {issue.article_count} ta
             </strong>
           </div>
-          <div className="rounded-xl bg-[#F7F1E3] p-3">
+          <div className="rounded-xl bg-[#EFE6D2] p-3">
             <span className="block text-[10px] text-slate-500">
               Holati
             </span>
@@ -232,12 +232,12 @@ export default async function IssuePage({
           className="animate-fade-in-up mt-10 space-y-6"
           style={{ animationDelay: "0.24s" }}
         >
-          <div className="flex items-end justify-between gap-4 border-b border-[#E7DCC3] pb-3">
+          <div className="flex items-end justify-between gap-4 border-b border-[#CBB98A] pb-3">
             <div>
-              <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#9C7826]">
+              <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#6B4F1F]">
                 Ushbu gazeta sonida
               </span>
-              <h2 className="mt-1 font-serif text-2xl font-black text-[#1E4468] sm:text-3xl">
+              <h2 className="mt-1 font-serif text-2xl font-black text-[#1B1712] sm:text-3xl">
                 Elektron maqolalar
               </h2>
             </div>
