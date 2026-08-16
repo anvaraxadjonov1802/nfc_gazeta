@@ -1,5 +1,7 @@
 import { AnimatedBanner } from "@/components/home/animated-banner";
 import { ArticlesSection } from "@/components/home/articles-section";
+import { FeaturedStorySection } from "@/components/home/featured-story-section";
+import { HomeIntro } from "@/components/home/home-intro";
 import { HowItWorksSection } from "@/components/home/how-it-works-section";
 import { IssueCarousel } from "@/components/home/issue-carousel";
 import { PartnersMarquee } from "@/components/home/partners-marquee";
@@ -58,18 +60,27 @@ export default async function HomePage() {
     articlesById.values(),
   ).slice(0, 6);
 
+  const latestIssueSlug =
+    data.latest_issue?.nfc_slug ?? null;
+
   return (
     <main className="w-full">
+      <HomeIntro />
+
       <AnimatedBanner
         articlesCount={articlesById.size}
         issuesCount={issues.length}
-        latestIssueSlug={data.latest_issue?.nfc_slug ?? null}
+        latestIssueSlug={latestIssueSlug}
         videosCount={featuredVideos.length}
       />
 
-      <IssueCarousel issues={issues} />
+      <FeaturedStorySection
+        latestIssueSlug={latestIssueSlug}
+      />
 
       <ArticlesSection articles={articles} />
+
+      <IssueCarousel issues={issues} />
 
       <VideoSection />
 

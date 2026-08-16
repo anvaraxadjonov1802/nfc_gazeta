@@ -37,15 +37,16 @@ export function HowItWorksSection() {
   const { t } = useLocale();
 
   return (
-    <section className="relative w-full overflow-hidden bg-canvas py-16">
+    <section className="relative w-full overflow-hidden bg-paper py-16 sm:py-20">
+      <div className="paper-texture pointer-events-none absolute inset-0 opacity-50" />
       <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <span className="nfc-wave absolute h-40 w-40 rounded-full border border-[var(--canvas-electric)]/40" />
+        <span className="nfc-wave absolute h-40 w-40 rounded-full border border-[var(--gz-navy)]/25" />
         <span
-          className="nfc-wave absolute h-40 w-40 rounded-full border border-[var(--canvas-electric)]/40"
+          className="nfc-wave absolute h-40 w-40 rounded-full border border-[var(--gz-navy)]/25"
           style={{ animationDelay: "0.9s" }}
         />
         <span
-          className="nfc-wave absolute h-40 w-40 rounded-full border border-[var(--canvas-electric)]/40"
+          className="nfc-wave absolute h-40 w-40 rounded-full border border-[var(--gz-navy)]/25"
           style={{ animationDelay: "1.8s" }}
         />
       </div>
@@ -58,20 +59,20 @@ export function HowItWorksSection() {
           viewport={{ once: true, margin: "-80px" }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--canvas-electric-soft)]">
+          <span className="editorial-label justify-center">
             {t("howItWorks.eyebrow")}
           </span>
-          <h2 className="mt-2 text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">
+          <h2 className="font-display mt-3 text-3xl font-black leading-tight text-[var(--gz-ink)] sm:text-4xl lg:text-5xl">
             {t("howItWorks.title")}
           </h2>
         </motion.div>
 
         <div className="relative mt-14 grid gap-6 sm:grid-cols-3">
-          <div className="pointer-events-none absolute left-0 right-0 top-9 hidden h-px bg-gradient-to-r from-transparent via-white/15 to-transparent sm:block" />
+          <div className="pointer-events-none absolute left-0 right-0 top-9 hidden h-px bg-gradient-to-r from-transparent via-[var(--gz-ink)]/12 to-transparent sm:block" />
 
           {STEPS.map((step, index) => (
             <motion.div
-              className="glass-card relative rounded-3xl p-6 text-center"
+              className="paper-card relative rounded-2xl p-6 text-center"
               initial={{ opacity: 0, y: 30 }}
               key={step.titleKey}
               transition={{
@@ -82,16 +83,16 @@ export function HowItWorksSection() {
               viewport={{ once: true, margin: "-60px" }}
               whileInView={{ opacity: 1, y: 0 }}
             >
-              <span className="relative mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-[var(--canvas-electric)] to-[var(--canvas-royal)] text-white shadow-[0_15px_35px_-10px_rgba(34,185,255,0.5)]">
+              <span className="relative mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-[var(--gz-navy)] to-[var(--gz-navy-deep)] text-white shadow-[0_15px_35px_-10px_rgba(22,58,99,0.5)]">
                 <Icon name={step.icon} size={26} />
-                <span className="absolute -right-2 -top-2 grid h-6 w-6 place-items-center rounded-full bg-white text-[11px] font-black text-[var(--canvas-navy)]">
+                <span className="absolute -right-2 -top-2 grid h-6 w-6 place-items-center rounded-full bg-[var(--gz-bronze)] text-[11px] font-black text-white">
                   {index + 1}
                 </span>
               </span>
-              <h3 className="mt-5 text-lg font-black text-white">
+              <h3 className="font-display mt-5 text-lg font-black text-[var(--gz-ink)]">
                 {t(step.titleKey)}
               </h3>
-              <p className="mt-2 text-sm leading-6 text-white/60">
+              <p className="mt-2 text-sm leading-6 text-[var(--gz-ink-soft)]">
                 {t(step.textKey)}
               </p>
             </motion.div>

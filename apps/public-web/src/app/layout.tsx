@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Inter, Newsreader } from "next/font/google";
+import {
+  Cormorant_Garamond,
+  Inter,
+  Newsreader,
+  Playfair_Display,
+  Source_Serif_4,
+} from "next/font/google";
 
 import { SiteShell } from "@/components/site-shell";
 
@@ -15,6 +21,27 @@ const fontSans = Inter({
 const fontSerif = Newsreader({
   subsets: ["latin"],
   variable: "--font-serif",
+  display: "swap",
+});
+
+const fontPlayfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["600", "700", "800", "900"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+
+const fontCormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+
+const fontSourceSerif = Source_Serif_4({
+  subsets: ["latin"],
+  variable: "--font-source-serif",
   display: "swap",
 });
 
@@ -36,7 +63,7 @@ export default function RootLayout({
 }: RootLayoutProps) {
   return (
     <html
-      className={`${fontSans.variable} ${fontSerif.variable}`}
+      className={`${fontSans.variable} ${fontSerif.variable} ${fontPlayfair.variable} ${fontCormorant.variable} ${fontSourceSerif.variable}`}
       lang="uz"
     >
       <body>

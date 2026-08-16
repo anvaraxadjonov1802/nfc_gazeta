@@ -23,7 +23,7 @@ function IssueMini({
       className="group w-32 shrink-0 sm:w-44"
       href={`/n/${issue.nfc_slug}`}
     >
-      <span className="glass-card grid aspect-[0.72] w-full place-items-center overflow-hidden rounded-2xl transition group-hover:-translate-y-1.5">
+      <span className="paper-card grid aspect-[0.72] w-full place-items-center overflow-hidden rounded-lg transition group-hover:-translate-y-2">
         {issue.cover_image ? (
           <img
             alt={issue.title}
@@ -33,16 +33,16 @@ function IssueMini({
           />
         ) : (
           <Icon
-            className="text-white/30"
+            className="text-[var(--gz-ink)]/20"
             name="newspaper"
             size={28}
           />
         )}
       </span>
-      <strong className="mt-2 block truncate text-xs font-bold text-white">
+      <strong className="mt-2 block truncate text-xs font-bold text-[var(--gz-ink)]">
         {issue.issue_number}-son
       </strong>
-      <span className="block text-[10px] text-white/50">
+      <span className="block text-[10px] text-[var(--gz-ink-soft)]">
         {issue.year}-yil
       </span>
     </Link>
@@ -64,9 +64,15 @@ export function IssueCarousel({
     : issues;
 
   return (
-    <section className="relative w-full overflow-hidden bg-canvas py-16">
-      <div className="rail-lines pointer-events-none absolute inset-0 opacity-60" />
-      <div className="glow-pulse pointer-events-none absolute -right-24 top-10 h-72 w-72 rounded-full bg-[var(--canvas-electric)]/10 blur-3xl" />
+    <section
+      className="relative w-full overflow-hidden bg-paper-warm py-16 sm:py-20"
+      id="nashrlar"
+    >
+      <div className="paper-texture pointer-events-none absolute inset-0 opacity-50" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-8 h-4 bg-gradient-to-b from-[var(--gz-bronze)]/25 to-transparent"
+      />
 
       <motion.div
         className="relative mx-auto flex w-full max-w-7xl items-end justify-between gap-4 px-4 pb-9 sm:px-6 lg:px-8"
@@ -76,15 +82,15 @@ export function IssueCarousel({
         whileInView={{ opacity: 1, y: 0 }}
       >
         <div>
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--canvas-electric-soft)]">
+          <span className="editorial-label">
             {t("carousel.eyebrow")}
           </span>
-          <h2 className="mt-2 text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">
+          <h2 className="font-display mt-3 text-3xl font-black leading-tight text-[var(--gz-ink)] sm:text-4xl lg:text-5xl">
             {t("carousel.title")}
           </h2>
         </div>
         <Link
-          className="inline-flex shrink-0 items-center gap-1.5 text-xs font-bold text-white/70 transition hover:text-[var(--canvas-electric-soft)]"
+          className="inline-flex shrink-0 items-center gap-1.5 text-xs font-bold text-[var(--gz-ink-soft)] transition hover:text-[var(--gz-bronze)]"
           href="/arxiv"
         >
           {t("carousel.viewAll")}
@@ -94,7 +100,7 @@ export function IssueCarousel({
 
       <div className="carousel-track-wrap relative overflow-hidden pl-4 sm:pl-6 lg:pl-[max(2.5rem,calc((100vw-80rem)/2+2.5rem))]">
         <div
-          className="carousel-track flex w-max gap-5"
+          className="carousel-track flex w-max gap-5 pb-2"
           style={
             shouldLoop
               ? undefined

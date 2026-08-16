@@ -35,8 +35,8 @@ export function TestimonialsSection() {
   const { t } = useLocale();
 
   return (
-    <section className="relative w-full overflow-hidden bg-canvas py-16">
-      <div className="wire-pattern pointer-events-none absolute inset-0 opacity-20" />
+    <section className="relative w-full overflow-hidden bg-paper py-16 sm:py-20">
+      <div className="paper-texture pointer-events-none absolute inset-0 opacity-50" />
 
       <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -46,10 +46,10 @@ export function TestimonialsSection() {
           viewport={{ once: true, margin: "-80px" }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--canvas-electric-soft)]">
+          <span className="editorial-label justify-center">
             {t("testimonials.eyebrow")}
           </span>
-          <h2 className="mt-2 text-3xl font-black leading-tight text-white sm:text-4xl">
+          <h2 className="font-display mt-3 text-3xl font-black leading-tight text-[var(--gz-ink)] sm:text-4xl">
             {t("testimonials.title")}
           </h2>
         </motion.div>
@@ -57,7 +57,7 @@ export function TestimonialsSection() {
         <div className="mt-12 grid gap-5 sm:grid-cols-3">
           {PLACEHOLDER_TESTIMONIALS.map((item, index) => (
             <motion.div
-              className="glass-card rounded-3xl p-6"
+              className="paper-card rounded-2xl p-6"
               initial={{ opacity: 0, y: 30 }}
               key={item.name + index}
               transition={{
@@ -68,7 +68,7 @@ export function TestimonialsSection() {
               viewport={{ once: true, margin: "-60px" }}
               whileInView={{ opacity: 1, y: 0 }}
             >
-              <div className="flex gap-1 text-[var(--canvas-electric-soft)]">
+              <div className="flex gap-1 text-[var(--gz-bronze)]">
                 {Array.from({ length: 5 }).map((_, starIndex) => (
                   <Icon
                     key={starIndex}
@@ -77,14 +77,14 @@ export function TestimonialsSection() {
                   />
                 ))}
               </div>
-              <p className="mt-4 text-sm leading-6 text-white/75">
+              <p className="font-body-serif mt-4 text-sm leading-6 text-[var(--gz-ink-soft)]">
                 “{item.quote}”
               </p>
               <div className="mt-5 flex items-center gap-3">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[var(--canvas-electric)] to-[var(--canvas-royal)] text-sm font-black text-white">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[var(--gz-bronze)] to-[var(--gz-navy)] text-sm font-black text-white">
                   {item.initial}
                 </span>
-                <strong className="text-sm font-bold text-white">
+                <strong className="text-sm font-bold text-[var(--gz-ink)]">
                   {item.name}
                 </strong>
               </div>

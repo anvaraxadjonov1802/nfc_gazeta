@@ -9,11 +9,12 @@ import {
   useState,
 } from "react";
 
-export type ReadingMode = "paper" | "white" | "night";
+export type ReadingMode = "paper" | "warm";
 
 interface ReadingModeContextValue {
   mode: ReadingMode;
   setMode: (mode: ReadingMode) => void;
+  toggle: () => void;
 }
 
 const STORAGE_KEY = "temiryolchi_reading_mode";
@@ -24,11 +25,7 @@ const ReadingModeContext =
 function isReadingMode(
   value: unknown,
 ): value is ReadingMode {
-  return (
-    value === "paper" ||
-    value === "white" ||
-    value === "night"
-  );
+  return value === "paper" || value === "warm";
 }
 
 export function ReadingModeProvider({
@@ -60,14 +57,10 @@ export function ReadingModeProvider({
   useEffect(() => {
     const root = document.documentElement;
 
-    root.classList.remove(
-      "mode-white",
-      "mode-night",
+    root.classList.toggle(
+      "reading-warm",
+      mode === "warm",
     );
-
-    if (mode !== "paper") {
-      root.classList.add(`mode-${mode}`);
-    }
 
     try {
       window.localStorage.setItem(
@@ -83,6 +76,10 @@ export function ReadingModeProvider({
     () => ({
       mode,
       setMode: (next) => setModeState(next),
+      toggle: () =>
+        setModeState((current) =>
+          current === "paper" ? "warm" : "paper",
+        ),
     }),
     [mode],
   );

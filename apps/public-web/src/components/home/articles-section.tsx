@@ -13,27 +13,27 @@ interface ArticlesSectionProps {
   articles: PublicArticleCard[];
 }
 
-function ArticleRow({
+function ArticleCard({
   article,
   index,
 }: {
   article: PublicArticleCard;
   index: number;
 }) {
-  const isReversed = index % 2 === 1;
-
   return (
     <motion.div
-      className={`glass-card grid gap-6 overflow-hidden rounded-3xl p-5 sm:p-6 lg:grid-cols-2 lg:items-center lg:gap-10 lg:p-8 ${
-        isReversed ? "lg:[direction:rtl]" : ""
-      }`}
-      initial={{ opacity: 0, x: isReversed ? 40 : -40 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      viewport={{ once: true, margin: "-100px" }}
-      whileInView={{ opacity: 1, x: 0 }}
+      className="paper-card group flex flex-col overflow-hidden rounded-2xl"
+      initial={{ opacity: 0, y: 30 }}
+      transition={{
+        duration: 0.55,
+        delay: (index % 3) * 0.1,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      viewport={{ once: true, margin: "-80px" }}
+      whileInView={{ opacity: 1, y: 0 }}
     >
       <Link
-        className="group relative block aspect-[16/10] overflow-hidden rounded-2xl bg-white/5 lg:[direction:ltr]"
+        className="relative block aspect-[16/10] overflow-hidden bg-[var(--gz-paper-warm)]"
         href={`/maqola/${article.id}`}
       >
         {article.main_image ? (
@@ -44,46 +44,46 @@ function ArticleRow({
             src={article.main_image}
           />
         ) : (
-          <span className="grid h-full w-full place-items-center text-white/20">
+          <span className="grid h-full w-full place-items-center text-[var(--gz-ink)]/15">
             <Icon name="newspaper" size={36} />
           </span>
         )}
-        <span className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
       </Link>
 
-      <div className="min-w-0 lg:[direction:ltr]">
+      <div className="flex flex-1 flex-col p-5">
         {article.category ? (
-          <span className="glass-chip inline-flex rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-wide text-[var(--canvas-electric-soft)]">
+          <span className="editorial-label">
             {article.category.name}
           </span>
         ) : null}
 
         <Link href={`/maqola/${article.id}`}>
-          <h3 className="mt-3 text-xl font-black leading-snug text-white transition hover:text-[var(--canvas-electric-soft)] sm:text-2xl">
+          <h3 className="font-display mt-3 text-lg font-black leading-snug text-[var(--gz-ink)] transition group-hover:text-[var(--gz-bronze)]">
             {article.title}
           </h3>
         </Link>
 
         {article.summary ? (
-          <p className="mt-3 line-clamp-3 text-sm leading-6 text-white/65">
+          <p className="font-body-serif mt-2.5 line-clamp-3 text-sm leading-6 text-[var(--gz-ink-soft)]">
             {article.summary}
           </p>
         ) : null}
 
-        <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-semibold text-white/45">
-          {article.author ? <span>{article.author}</span> : null}
-          <span>
-            {article.newspaper_name} · {article.issue_number}-son
-          </span>
+        <div className="mt-auto pt-4">
+          <div className="editorial-rule mb-3" />
+          <div className="flex items-center justify-between gap-3">
+            <span className="truncate text-[11px] font-semibold text-[var(--gz-ink-soft)]/80">
+              {article.newspaper_name} · {article.issue_number}-son
+            </span>
+            <Link
+              className="inline-flex shrink-0 items-center gap-1 text-xs font-bold text-[var(--gz-bronze)] transition group-hover:gap-1.5"
+              href={`/maqola/${article.id}`}
+            >
+              O‘qish
+              <Icon name="arrow-right" size={13} />
+            </Link>
+          </div>
         </div>
-
-        <Link
-          className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-white transition hover:text-[var(--canvas-electric-soft)]"
-          href={`/maqola/${article.id}`}
-        >
-          Batafsil o‘qish
-          <Icon name="arrow-right" size={14} />
-        </Link>
       </div>
     </motion.div>
   );
@@ -99,27 +99,30 @@ export function ArticlesSection({
   }
 
   return (
-    <section className="relative w-full overflow-hidden bg-canvas py-16">
-      <div className="wire-pattern pointer-events-none absolute inset-0 opacity-25" />
+    <section
+      className="relative w-full overflow-hidden bg-paper-warm py-16 sm:py-20"
+      id="maqolalar"
+    >
+      <div className="paper-texture pointer-events-none absolute inset-0 opacity-50" />
 
-      <div className="relative mx-auto w-full max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto w-full max-w-7xl space-y-10 px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true, margin: "-80px" }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--canvas-electric-soft)]">
+          <span className="editorial-label">
             {t("articles.eyebrow")}
           </span>
-          <h2 className="mt-2 text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">
+          <h2 className="font-display mt-3 text-3xl font-black leading-tight text-[var(--gz-ink)] sm:text-4xl lg:text-5xl">
             {t("articles.title")}
           </h2>
         </motion.div>
 
-        <div className="space-y-6">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {articles.map((article, index) => (
-            <ArticleRow
+            <ArticleCard
               article={article}
               index={index}
               key={article.id}

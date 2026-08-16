@@ -274,6 +274,8 @@ html.mode-night .shadow-2xl {
 
 /* ---------------------------------------------------------------- */
 /* Premium homepage "continuous canvas" system (navy/blue/electric)  */
+/* kept for the hero + footer, where blue is used sparingly as the   */
+/* Temiryo‘lchi brand-identity colour.                                */
 /* ---------------------------------------------------------------- */
 
 :root {
@@ -286,6 +288,146 @@ html.mode-night .shadow-2xl {
   --uz-blue: #0099b5;
   --uz-green: #1eb53a;
   --uz-red: #ce1126;
+}
+
+/* ---------------------------------------------------------------- */
+/* "Living newspaper" warm-paper system — the dominant palette for   */
+/* every section outside the hero. Blue (--gz-navy) is reserved for  */
+/* Temiryo‘lchi identity accents only (logo, badges, nav underline). */
+/* ---------------------------------------------------------------- */
+
+:root {
+  --gz-paper: #f8f3ea;
+  --gz-paper-warm: #efe7d8;
+  --gz-ink: #1a1a1a;
+  --gz-ink-soft: #4a453c;
+  --gz-bronze: #9a6b35;
+  --gz-bronze-soft: #c9a468;
+  --gz-navy: #163a63;
+  --gz-navy-deep: #0f2847;
+  --gz-red: #8e2b2b;
+  --font-display: var(--font-playfair, Georgia, serif);
+  --font-editorial: var(--font-cormorant, Georgia, serif);
+  --font-body-serif: var(--font-source-serif, Georgia, serif);
+}
+
+html.reading-warm {
+  --gz-paper: #efe7d8;
+}
+
+html.reading-warm body {
+  background-color: var(--gz-paper);
+}
+
+body {
+  transition: background-color 0.5s ease;
+}
+
+.bg-paper {
+  background-color: var(--gz-paper);
+}
+
+.bg-paper-warm {
+  background-color: var(--gz-paper-warm);
+}
+
+.text-ink {
+  color: var(--gz-ink);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-editorial {
+  font-family: var(--font-editorial);
+}
+
+.font-body-serif {
+  font-family: var(--font-body-serif);
+}
+
+.paper-card {
+  position: relative;
+  background: linear-gradient(180deg, #fffdf8 0%, var(--gz-paper) 100%);
+  border: 1px solid rgba(26, 26, 26, 0.09);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 18px 40px -24px rgba(26, 18, 8, 0.35);
+  transition: box-shadow 0.35s ease, transform 0.35s ease, border-color 0.35s ease;
+}
+
+.paper-card:hover {
+  border-color: rgba(154, 107, 53, 0.45);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 26px 50px -22px rgba(26, 18, 8, 0.4);
+}
+
+.paper-panel {
+  background: rgba(248, 243, 234, 0.94);
+  border: 1px solid rgba(26, 26, 26, 0.08);
+  box-shadow: 0 12px 30px -18px rgba(26, 18, 8, 0.35);
+}
+
+.paper-chip {
+  background: rgba(154, 107, 53, 0.1);
+  border: 1px solid rgba(154, 107, 53, 0.3);
+  color: var(--gz-bronze);
+}
+
+.editorial-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans, var(--font-sans-fallback));
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gz-bronze);
+}
+
+.editorial-label::before {
+  content: "";
+  display: inline-block;
+  width: 22px;
+  height: 2px;
+  background: var(--gz-bronze);
+}
+
+.editorial-rule {
+  border-top: 1px solid rgba(26, 26, 26, 0.12);
+}
+
+.editorial-rule-bronze {
+  border-top: 2px double var(--gz-bronze);
+}
+
+.paper-texture {
+  background-image: repeating-radial-gradient(
+    circle at 0 0,
+    rgba(26, 26, 26, 0.035) 0,
+    rgba(26, 26, 26, 0.035) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+@keyframes typeIn {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes caretBlink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
 }
 
 .bg-canvas {

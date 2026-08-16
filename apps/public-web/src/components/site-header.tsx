@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -20,31 +21,33 @@ interface SiteHeaderProps {
 
 const READING_MODES: {
   value: ReadingMode;
-  labelKey: "mode.paper" | "mode.white" | "mode.night";
-  hintKey:
-    | "mode.paperHint"
-    | "mode.whiteHint"
-    | "mode.nightHint";
+  labelKey: "mode.paper" | "mode.warm";
+  hintKey: "mode.paperHint" | "mode.warmHint";
   swatch: string;
 }[] = [
   {
     value: "paper",
     labelKey: "mode.paper",
     hintKey: "mode.paperHint",
-    swatch: "#EFE6D2",
+    swatch: "#F8F3EA",
   },
   {
-    value: "white",
-    labelKey: "mode.white",
-    hintKey: "mode.whiteHint",
-    swatch: "#FFFFFF",
+    value: "warm",
+    labelKey: "mode.warm",
+    hintKey: "mode.warmHint",
+    swatch: "#EFE7D8",
   },
-  {
-    value: "night",
-    labelKey: "mode.night",
-    hintKey: "mode.nightHint",
-    swatch: "#121821",
-  },
+];
+
+const NAV_LINKS: {
+  href: string;
+  labelKey: "nav.home" | "nav.issues" | "nav.articles" | "nav.videos" | "nav.about";
+}[] = [
+  { href: "/", labelKey: "nav.home" },
+  { href: "/arxiv", labelKey: "nav.issues" },
+  { href: "/#maqolalar", labelKey: "nav.articles" },
+  { href: "/#videolar", labelKey: "nav.videos" },
+  { href: "/#masthead", labelKey: "nav.about" },
 ];
 
 type OpenPanel = "lang" | "mode" | null;
@@ -129,33 +132,71 @@ export function SiteHeader({
     };
   }, [openPanel]);
 
+  const chromeText = isTransparent
+    ? "text-white"
+    : "text-[var(--gz-ink)]";
+  const chromeHover = isTransparent
+    ? "hover:bg-white/10"
+    : "hover:bg-[var(--gz-bronze)]/10";
+
   return (
     <header
       className={`sticky top-0 z-50 transition-all duration-500 ${
         isTransparent
           ? "border-b border-transparent bg-transparent"
-          : "glass-panel border-b border-white/10 shadow-[0_10px_40px_-15px_rgba(2,10,25,0.6)]"
+          : "paper-panel border-b border-[var(--gz-bronze)]/15 backdrop-blur-sm"
       }`}
       ref={containerRef}
     >
-      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+      <div
+        className={`mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 transition-all duration-500 sm:px-6 lg:px-8 ${
+          isScrolled ? "h-14" : "h-16"
+        }`}
+      >
         <Link
           aria-label="Temiryo‘lchi bosh sahifasi"
           className="flex min-w-0 items-center gap-2.5"
           href="/"
         >
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[var(--canvas-electric)] to-[var(--canvas-royal)] text-lg font-black text-white shadow-md">
-            T
+          <span className="relative h-9 w-9 shrink-0 drop-shadow-[0_2px_6px_rgba(0,0,0,0.25)]">
+            <Image
+              alt="Temiryo‘lchi logotipi"
+              className="object-contain"
+              fill
+              priority
+              src="/images/temiryolchi-logo.png"
+            />
           </span>
-          <strong className="truncate text-base font-black tracking-tight text-white sm:text-xl">
+          <strong
+            className={`truncate font-display text-base font-black tracking-tight sm:text-xl ${chromeText}`}
+          >
             Temiryo‘lchi
           </strong>
         </Link>
 
+        <nav className="hidden items-center gap-1 md:flex">
+          {NAV_LINKS.map((link) => (
+            <Link
+              className={`group relative px-3 py-2 text-[13px] font-bold uppercase tracking-[0.04em] transition ${chromeText}`}
+              href={link.href}
+              key={link.href}
+            >
+              {t(link.labelKey)}
+              <span
+                className={`absolute inset-x-3 -bottom-0.5 h-[2px] origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100 ${
+                  isTransparent
+                    ? "bg-white"
+                    : "bg-[var(--gz-bronze)]"
+                }`}
+              />
+            </Link>
+          ))}
+        </nav>
+
         <div className="flex items-center gap-1 sm:gap-1.5">
           <button
             aria-label={t("nav.search")}
-            className="grid h-10 w-10 place-items-center rounded-full text-white transition hover:bg-white/10"
+            className={`grid h-10 w-10 place-items-center rounded-full transition ${chromeText} ${chromeHover}`}
             onClick={onOpenSearch}
             type="button"
           >
@@ -165,9 +206,11 @@ export function SiteHeader({
           <div className="relative">
             <button
               aria-label={t("nav.language")}
-              className={`grid h-10 w-10 place-items-center rounded-full text-white transition hover:bg-white/10 ${
+              className={`grid h-10 w-10 place-items-center rounded-full transition ${chromeText} ${chromeHover} ${
                 openPanel === "lang"
-                  ? "bg-white/10"
+                  ? isTransparent
+                    ? "bg-white/10"
+                    : "bg-[var(--gz-bronze)]/10"
                   : ""
               }`}
               onClick={() =>
@@ -195,13 +238,13 @@ export function SiteHeader({
             </button>
 
             {openPanel === "lang" ? (
-              <div className="glass-panel absolute right-0 top-12 z-50 w-48 overflow-hidden rounded-xl py-1.5 shadow-2xl">
+              <div className="paper-panel absolute right-0 top-12 z-50 w-48 overflow-hidden rounded-xl py-1.5 shadow-2xl">
                 {LOCALES.map((entry) => (
                   <button
                     className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-sm font-semibold transition ${
                       entry.code === locale
-                        ? "bg-white/10 text-white"
-                        : "text-white/70 hover:bg-white/5"
+                        ? "bg-[var(--gz-bronze)]/10 text-[var(--gz-ink)]"
+                        : "text-[var(--gz-ink-soft)] hover:bg-[var(--gz-bronze)]/5"
                     }`}
                     key={entry.code}
                     onClick={() => {
@@ -213,7 +256,7 @@ export function SiteHeader({
                     {entry.label}
                     {entry.code === locale ? (
                       <Icon
-                        className="text-[var(--canvas-electric)]"
+                        className="text-[var(--gz-bronze)]"
                         name="check"
                         size={15}
                       />
@@ -227,9 +270,11 @@ export function SiteHeader({
           <div className="relative">
             <button
               aria-label={t("nav.readingMode")}
-              className={`grid h-10 w-10 place-items-center rounded-full text-white transition hover:bg-white/10 ${
+              className={`grid h-10 w-10 place-items-center rounded-full transition ${chromeText} ${chromeHover} ${
                 openPanel === "mode"
-                  ? "bg-white/10"
+                  ? isTransparent
+                    ? "bg-white/10"
+                    : "bg-[var(--gz-bronze)]/10"
                   : ""
               }`}
               onClick={() =>
@@ -245,13 +290,13 @@ export function SiteHeader({
             </button>
 
             {openPanel === "mode" ? (
-              <div className="glass-panel absolute right-0 top-12 z-50 w-64 overflow-hidden rounded-xl py-1.5 shadow-2xl">
+              <div className="paper-panel absolute right-0 top-12 z-50 w-64 overflow-hidden rounded-xl py-1.5 shadow-2xl">
                 {READING_MODES.map((entry) => (
                   <button
                     className={`flex w-full items-center gap-3 px-4 py-2.5 text-left transition ${
                       entry.value === mode
-                        ? "bg-white/10"
-                        : "hover:bg-white/5"
+                        ? "bg-[var(--gz-bronze)]/10"
+                        : "hover:bg-[var(--gz-bronze)]/5"
                     }`}
                     key={entry.value}
                     onClick={() => {
@@ -261,22 +306,22 @@ export function SiteHeader({
                     type="button"
                   >
                     <span
-                      className="h-6 w-6 shrink-0 rounded-full border border-white/20 shadow-inner"
+                      className="h-6 w-6 shrink-0 rounded-full border border-[var(--gz-ink)]/15 shadow-inner"
                       style={{
                         background: entry.swatch,
                       }}
                     />
                     <span className="min-w-0 flex-1">
-                      <span className="block text-sm font-bold text-white">
+                      <span className="block text-sm font-bold text-[var(--gz-ink)]">
                         {t(entry.labelKey)}
                       </span>
-                      <span className="block text-[11px] text-white/50">
+                      <span className="block text-[11px] text-[var(--gz-ink-soft)]">
                         {t(entry.hintKey)}
                       </span>
                     </span>
                     {entry.value === mode ? (
                       <Icon
-                        className="shrink-0 text-[var(--canvas-electric)]"
+                        className="shrink-0 text-[var(--gz-bronze)]"
                         name="check"
                         size={15}
                       />
@@ -289,7 +334,7 @@ export function SiteHeader({
 
           <button
             aria-label={t("nav.profile")}
-            className="ml-1 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[var(--canvas-electric)] to-[var(--canvas-royal)] text-sm font-black text-white shadow-md ring-2 ring-transparent transition hover:ring-white/30"
+            className="ml-1 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[var(--gz-bronze)] to-[var(--gz-navy)] text-sm font-black text-white shadow-md ring-2 ring-transparent transition hover:ring-white/30"
             onClick={onOpenProfile}
             type="button"
           >

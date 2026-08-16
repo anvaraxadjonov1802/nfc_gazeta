@@ -15,6 +15,10 @@ export const DEFAULT_LOCALE: Locale = "uz";
 type TranslationKey =
   | "nav.home"
   | "nav.archive"
+  | "nav.issues"
+  | "nav.articles"
+  | "nav.videos"
+  | "nav.about"
   | "nav.search"
   | "nav.searchPlaceholder"
   | "nav.language"
@@ -22,10 +26,8 @@ type TranslationKey =
   | "nav.profile"
   | "mode.paper"
   | "mode.paperHint"
-  | "mode.white"
-  | "mode.whiteHint"
-  | "mode.night"
-  | "mode.nightHint"
+  | "mode.warm"
+  | "mode.warmHint"
   | "profile.title"
   | "profile.namePlaceholder"
   | "profile.nameHint"
@@ -66,6 +68,17 @@ type TranslationKey =
   | "partners.title"
   | "testimonials.eyebrow"
   | "testimonials.title"
+  | "featured.eyebrow"
+  | "featured.title"
+  | "featured.lead"
+  | "featured.stat1Label"
+  | "featured.stat2Label"
+  | "featured.stat3Label"
+  | "featured.stat4Label"
+  | "featured.cta"
+  | "video.modalHint"
+  | "video.openYoutube"
+  | "video.close"
   | "footer.sections"
   | "footer.home"
   | "footer.archive"
@@ -73,24 +86,37 @@ type TranslationKey =
   | "footer.nfcTitle"
   | "footer.nfcText"
   | "footer.rights"
-  | "footer.official";
+  | "footer.official"
+  | "footer.editorInChief"
+  | "footer.dutyEditor"
+  | "footer.proofreader"
+  | "footer.photoCorrespondent"
+  | "footer.layoutDesigner"
+  | "footer.founders"
+  | "footer.address"
+  | "footer.phone"
+  | "footer.registration"
+  | "footer.masthead"
+  | "footer.issueLabel";
 
 type Dictionary = Record<TranslationKey, string>;
 
 const uz: Dictionary = {
   "nav.home": "Bosh sahifa",
   "nav.archive": "Gazeta arxivi",
+  "nav.issues": "Nashrlar",
+  "nav.articles": "Maqolalar",
+  "nav.videos": "Videolar",
+  "nav.about": "Biz haqimizda",
   "nav.search": "Qidiruv",
   "nav.searchPlaceholder": "Maqola yoki gazeta izlash...",
   "nav.language": "Til",
   "nav.readingMode": "O‘qish rejimi",
   "nav.profile": "Profil",
-  "mode.paper": "Qaymoq",
-  "mode.paperHint": "Ko‘zga yumshoq, gazeta uslubi",
-  "mode.white": "Oq fon",
-  "mode.whiteHint": "Klassik, yorqin fon",
-  "mode.night": "Tungi rejim",
-  "mode.nightHint": "Qorong‘uda qulay o‘qish",
+  "mode.paper": "Qog‘oz",
+  "mode.paperHint": "Standart, och qaymoq fon",
+  "mode.warm": "Iliq qog‘oz",
+  "mode.warmHint": "Kindle uslubidagi yumshoq fon",
   "profile.title": "Profil",
   "profile.namePlaceholder": "Ismingizni kiriting",
   "profile.nameHint": "Bu qurilmada mahalliy saqlanadi",
@@ -131,6 +157,17 @@ const uz: Dictionary = {
   "partners.title": "Biz bilan ishlaydiganlar",
   "testimonials.eyebrow": "Fikr-mulohazalar",
   "testimonials.title": "O‘quvchilar bizni shunday baholaydi",
+  "featured.eyebrow": "Uzoq kutilgan orzu",
+  "featured.title": "“Jaloliddin Manguberdi” Toshkent — Xivaga yo‘l oldi",
+  "featured.lead": "Joriy yilning 5 may kunidan boshlab xalqimiz uzoq kutgan yuqori tezlikda harakatlanuvchi zamonaviy “Jaloliddin Manguberdi” yo‘lovchi poyezdi “Toshkent-Markaziy” vokzalidan Xorazm viloyatining Xiva shahriga ilk qatnovini rasman boshladi. 1022 kilometrlik masofa endi 7 yarim soatda bosib o‘tilmoqda — avvalgi 14 soat o‘rniga.",
+  "featured.stat1Label": "km/soat tezlik",
+  "featured.stat2Label": "soatda Xivaga",
+  "featured.stat3Label": "o‘rinli, 7 vagon",
+  "featured.stat4Label": "km Toshkent — Xiva",
+  "featured.cta": "To‘liq maqolani o‘qish",
+  "video.modalHint": "Yopish uchun ESC tugmasini bosing",
+  "video.openYoutube": "YouTube’da ochish",
+  "video.close": "Yopish",
   "footer.sections": "Asosiy bo‘limlar",
   "footer.home": "Bosh sahifa",
   "footer.archive": "Gazeta arxivi",
@@ -139,22 +176,35 @@ const uz: Dictionary = {
   "footer.nfcText": "Bosma gazetadagi NFC stikerga telefonni yaqinlashtiring va aynan o‘sha elektron sonni oching.",
   "footer.rights": "Barcha huquqlar himoyalangan.",
   "footer.official": "Rasmiy elektron nashr",
+  "footer.editorInChief": "Bosh muharrir",
+  "footer.dutyEditor": "Navbatchi muharrir",
+  "footer.proofreader": "Musahhih",
+  "footer.photoCorrespondent": "Fotomuxbir",
+  "footer.layoutDesigner": "Sahifalovchi",
+  "footer.founders": "Muassislar",
+  "footer.address": "Manzil",
+  "footer.phone": "Telefon",
+  "footer.registration": "Ro‘yxatga olingan",
+  "footer.masthead": "Tahririyat",
+  "footer.issueLabel": "Maxsus son",
 };
 
 const ru: Dictionary = {
   "nav.home": "Главная",
   "nav.archive": "Архив газеты",
+  "nav.issues": "Номера",
+  "nav.articles": "Статьи",
+  "nav.videos": "Видео",
+  "nav.about": "О нас",
   "nav.search": "Поиск",
   "nav.searchPlaceholder": "Поиск статьи или номера...",
   "nav.language": "Язык",
   "nav.readingMode": "Режим чтения",
   "nav.profile": "Профиль",
-  "mode.paper": "Кремовый",
-  "mode.paperHint": "Комфортно для глаз, газетный стиль",
-  "mode.white": "Белый фон",
-  "mode.whiteHint": "Классический, яркий фон",
-  "mode.night": "Ночной режим",
-  "mode.nightHint": "Удобно читать в темноте",
+  "mode.paper": "Бумага",
+  "mode.paperHint": "Стандартный кремовый фон",
+  "mode.warm": "Тёплая бумага",
+  "mode.warmHint": "Мягкий фон в стиле Kindle",
   "profile.title": "Профиль",
   "profile.namePlaceholder": "Введите имя",
   "profile.nameHint": "Сохраняется локально на этом устройстве",
@@ -195,6 +245,17 @@ const ru: Dictionary = {
   "partners.title": "С нами работают",
   "testimonials.eyebrow": "Отзывы",
   "testimonials.title": "Читатели оценивают нас так",
+  "featured.eyebrow": "Долгожданная мечта",
+  "featured.title": "«Жалолиддин Мангуберди» отправился в Ташкент — Хиву",
+  "featured.lead": "С 5 мая этого года долгожданный современный скоростной поезд «Жалолиддин Мангуберди» официально начал курсировать от вокзала «Ташкент-Марказий» до города Хива Хорезмской области. Расстояние в 1022 км теперь преодолевается за 7,5 часов вместо прежних 14.",
+  "featured.stat1Label": "км/ч скорость",
+  "featured.stat2Label": "часов до Хивы",
+  "featured.stat3Label": "мест, 7 вагонов",
+  "featured.stat4Label": "км Ташкент — Хива",
+  "featured.cta": "Читать статью полностью",
+  "video.modalHint": "Нажмите ESC, чтобы закрыть",
+  "video.openYoutube": "Открыть на YouTube",
+  "video.close": "Закрыть",
   "footer.sections": "Основные разделы",
   "footer.home": "Главная",
   "footer.archive": "Архив газеты",
@@ -203,22 +264,35 @@ const ru: Dictionary = {
   "footer.nfcText": "Поднесите телефон к NFC-стикеру на печатной газете, чтобы открыть именно этот электронный номер.",
   "footer.rights": "Все права защищены.",
   "footer.official": "Официальное электронное издание",
+  "footer.editorInChief": "Главный редактор",
+  "footer.dutyEditor": "Дежурный редактор",
+  "footer.proofreader": "Корректор",
+  "footer.photoCorrespondent": "Фотокорреспондент",
+  "footer.layoutDesigner": "Верстальщик",
+  "footer.founders": "Учредители",
+  "footer.address": "Адрес",
+  "footer.phone": "Телефон",
+  "footer.registration": "Зарегистрировано",
+  "footer.masthead": "Редакция",
+  "footer.issueLabel": "Спецвыпуск",
 };
 
 const en: Dictionary = {
   "nav.home": "Home",
   "nav.archive": "Newspaper archive",
+  "nav.issues": "Issues",
+  "nav.articles": "Articles",
+  "nav.videos": "Videos",
+  "nav.about": "About us",
   "nav.search": "Search",
   "nav.searchPlaceholder": "Search an article or issue...",
   "nav.language": "Language",
   "nav.readingMode": "Reading mode",
   "nav.profile": "Profile",
-  "mode.paper": "Cream",
-  "mode.paperHint": "Easy on the eyes, newspaper style",
-  "mode.white": "White",
-  "mode.whiteHint": "Classic, bright background",
-  "mode.night": "Night mode",
-  "mode.nightHint": "Comfortable reading in the dark",
+  "mode.paper": "Paper",
+  "mode.paperHint": "Standard cream background",
+  "mode.warm": "Warm paper",
+  "mode.warmHint": "Soft Kindle-style background",
   "profile.title": "Profile",
   "profile.namePlaceholder": "Enter your name",
   "profile.nameHint": "Saved locally on this device",
@@ -259,6 +333,17 @@ const en: Dictionary = {
   "partners.title": "Who we work with",
   "testimonials.eyebrow": "Feedback",
   "testimonials.title": "What readers say",
+  "featured.eyebrow": "The long-awaited dream",
+  "featured.title": "“Jaloliddin Manguberdi” now runs Tashkent — Khiva",
+  "featured.lead": "Starting May 5 this year, the long-awaited modern high-speed “Jaloliddin Manguberdi” passenger train officially began service from Tashkent-Markaziy station to the city of Khiva in the Khorezm region. The 1,022-kilometre distance is now covered in 7.5 hours — down from the previous 14.",
+  "featured.stat1Label": "km/h top speed",
+  "featured.stat2Label": "hours to Khiva",
+  "featured.stat3Label": "seats, 7 carriages",
+  "featured.stat4Label": "km Tashkent — Khiva",
+  "featured.cta": "Read the full story",
+  "video.modalHint": "Press ESC to close",
+  "video.openYoutube": "Open on YouTube",
+  "video.close": "Close",
   "footer.sections": "Main sections",
   "footer.home": "Home",
   "footer.archive": "Newspaper archive",
@@ -267,6 +352,17 @@ const en: Dictionary = {
   "footer.nfcText": "Tap your phone on the NFC sticker in the printed newspaper to open that exact digital issue.",
   "footer.rights": "All rights reserved.",
   "footer.official": "Official digital edition",
+  "footer.editorInChief": "Editor-in-chief",
+  "footer.dutyEditor": "Duty editor",
+  "footer.proofreader": "Proofreader",
+  "footer.photoCorrespondent": "Photo correspondent",
+  "footer.layoutDesigner": "Layout designer",
+  "footer.founders": "Founders",
+  "footer.address": "Address",
+  "footer.phone": "Phone",
+  "footer.registration": "Registered",
+  "footer.masthead": "Masthead",
+  "footer.issueLabel": "Special issue",
 };
 
 export const dictionaries: Record<Locale, Dictionary> = {

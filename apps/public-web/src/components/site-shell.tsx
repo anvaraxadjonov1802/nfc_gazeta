@@ -30,7 +30,7 @@ export function SiteShell({ children }: SiteShellProps) {
       <ReadingModeProvider>
         <ProfileProvider>
           <AccessibilityProvider>
-            <div className="flex min-h-screen flex-col bg-[#EFE6D2] text-slate-900 selection:bg-[#D9622B] selection:text-[#0F0C09]">
+            <div className="flex min-h-screen flex-col bg-paper text-[var(--gz-ink)] selection:bg-[var(--gz-bronze)] selection:text-white">
               <ScrollProgress />
               <SiteHeader
                 onOpenProfile={() =>
