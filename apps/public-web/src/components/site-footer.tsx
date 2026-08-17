@@ -22,14 +22,6 @@ export function SiteFooter({
         ? "Наверх"
         : "Yuqoriga";
 
-  const mastheadRoles: { role: string; name: string }[] = [
-    { role: t("footer.editorInChief"), name: "Rustam Haydarov" },
-    { role: t("footer.dutyEditor"), name: "Dilrabo Tolipova" },
-    { role: t("footer.proofreader"), name: "Umida To‘ychiboyeva" },
-    { role: t("footer.photoCorrespondent"), name: "Yoqubjon Murotov" },
-    { role: t("footer.layoutDesigner"), name: "Gulzoda Boltayeva" },
-  ];
-
   return (
     <footer
       className="relative w-full overflow-hidden bg-[var(--gz-navy-deep)] text-white/70"
@@ -39,8 +31,8 @@ export function SiteFooter({
 
       <div className="rail-lines pointer-events-none absolute inset-0 opacity-10" />
 
-      <div className="relative mx-auto w-full max-w-7xl px-4 pb-10 pt-12 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-start justify-between gap-8 border-b border-white/10 pb-10">
+      <div className="relative mx-auto w-full max-w-7xl px-4 pb-6 pt-12 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap items-start justify-between gap-8 pb-6">
           <div className="flex items-center gap-3">
             <span className="relative h-11 w-11 shrink-0">
               <Image
@@ -91,65 +83,6 @@ export function SiteFooter({
           </div>
         </div>
 
-        <div className="grid gap-10 py-10 sm:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <span className="editorial-label text-white/50 before:bg-[var(--gz-bronze-soft)]">
-              {t("footer.masthead")}
-            </span>
-            <ul className="mt-4 space-y-2 text-[13px] leading-6 text-white/70">
-              {mastheadRoles.map((entry) => (
-                <li key={entry.role}>
-                  <span className="text-white/45">
-                    {entry.role}:
-                  </span>{" "}
-                  <span className="font-semibold text-white/85">
-                    {entry.name}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <span className="editorial-label text-white/50 before:bg-[var(--gz-bronze-soft)]">
-              {t("footer.founders")}
-            </span>
-            <ul className="mt-4 space-y-3 text-[13px] leading-6 text-white/70">
-              <li>“O‘zbekiston temir yo‘llari” aksiyadorlik jamiyati</li>
-              <li>
-                O‘zbekiston temiryo‘lchilari va transport quruvchilari
-                kasaba uyushmasi Respublika Kengashi
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <span className="editorial-label text-white/50 before:bg-[var(--gz-bronze-soft)]">
-              {t("footer.address")}
-            </span>
-            <p className="mt-4 text-[13px] leading-6 text-white/70">
-              100047, Toshkent sh.,
-              <br />
-              Amir Temur shohko‘chasi, 4-uy
-            </p>
-            <span className="editorial-label mt-5 text-white/50 before:bg-[var(--gz-bronze-soft)]">
-              {t("footer.phone")}
-            </span>
-            <p className="mt-2 text-[13px] font-semibold leading-6 text-white/85">
-              +998 71 236-48-54
-            </p>
-          </div>
-
-          <div>
-            <span className="editorial-label text-white/50 before:bg-[var(--gz-bronze-soft)]">
-              {t("footer.registration")}
-            </span>
-            <p className="mt-4 text-[13px] leading-6 text-white/70">
-              O‘zbekiston Matbuot va axborot agentligida 0139-raqam
-              bilan 2007-yil 11-yanvarda ro‘yxatga olingan.
-            </p>
-          </div>
-        </div>
       </div>
 
       <div className="relative border-t border-white/10">

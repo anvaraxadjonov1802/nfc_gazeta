@@ -1,13 +1,9 @@
 import { AnimatedBanner } from "@/components/home/animated-banner";
 import { ArchiveCtaSection } from "@/components/home/archive-cta-section";
 import { ArticlesSection } from "@/components/home/articles-section";
-import { FaqSection } from "@/components/home/faq-section";
 import { FeaturedStorySection } from "@/components/home/featured-story-section";
 import { HomeIntro } from "@/components/home/home-intro";
-import { HowItWorksSection } from "@/components/home/how-it-works-section";
 import { IssueCarousel } from "@/components/home/issue-carousel";
-import { PartnersMarquee } from "@/components/home/partners-marquee";
-import { TestimonialsSection } from "@/components/home/testimonials-section";
 import { VideoSection } from "@/components/home/video-section";
 import { Icon } from "@/components/ui/icon";
 import {
@@ -77,8 +73,6 @@ export default async function HomePage() {
         videosCount={featuredVideos.length}
       />
 
-      <HowItWorksSection />
-
       <FeaturedStorySection
         latestIssueSlug={latestIssueSlug}
       />
@@ -88,12 +82,6 @@ export default async function HomePage() {
       <IssueCarousel issues={issues} />
 
       <VideoSection />
-
-      <TestimonialsSection />
-
-      <FaqSection />
-
-      <PartnersMarquee />
 
       <ArchiveCtaSection />
     </main>
