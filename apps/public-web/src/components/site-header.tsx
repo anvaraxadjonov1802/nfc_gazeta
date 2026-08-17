@@ -68,7 +68,6 @@ export function SiteHeader({
   );
 
   const isHome = pathname === "/";
-  const isTransparent = isHome && !isScrolled;
 
   useEffect(() => {
     if (!isHome) {
@@ -132,20 +131,12 @@ export function SiteHeader({
     };
   }, [openPanel]);
 
-  const chromeText = isTransparent
-    ? "text-white"
-    : "text-[var(--gz-ink)]";
-  const chromeHover = isTransparent
-    ? "hover:bg-white/10"
-    : "hover:bg-[var(--gz-bronze)]/10";
+  const chromeText = "text-[var(--gz-ink)]";
+  const chromeHover = "hover:bg-[var(--gz-ink)]/8";
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-500 ${
-        isTransparent
-          ? "border-b border-transparent bg-transparent"
-          : "paper-panel border-b border-[var(--gz-bronze)]/15 backdrop-blur-sm"
-      }`}
+      className="paper-panel sticky top-0 z-50 border-b border-[var(--gz-hairline)] transition-all duration-500"
       ref={containerRef}
     >
       <div
@@ -182,13 +173,7 @@ export function SiteHeader({
               key={link.href}
             >
               {t(link.labelKey)}
-              <span
-                className={`absolute inset-x-3 -bottom-0.5 h-[2px] origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100 ${
-                  isTransparent
-                    ? "bg-white"
-                    : "bg-[var(--gz-bronze)]"
-                }`}
-              />
+              <span className="absolute inset-x-3 -bottom-0.5 h-[2px] origin-left scale-x-0 bg-[var(--gz-ink)] transition-transform duration-300 group-hover:scale-x-100" />
             </Link>
           ))}
         </nav>
@@ -207,11 +192,7 @@ export function SiteHeader({
             <button
               aria-label={t("nav.language")}
               className={`grid h-10 w-10 place-items-center rounded-full transition ${chromeText} ${chromeHover} ${
-                openPanel === "lang"
-                  ? isTransparent
-                    ? "bg-white/10"
-                    : "bg-[var(--gz-bronze)]/10"
-                  : ""
+                openPanel === "lang" ? "bg-[var(--gz-ink)]/8" : ""
               }`}
               onClick={() =>
                 setOpenPanel((current) =>
@@ -271,11 +252,7 @@ export function SiteHeader({
             <button
               aria-label={t("nav.readingMode")}
               className={`grid h-10 w-10 place-items-center rounded-full transition ${chromeText} ${chromeHover} ${
-                openPanel === "mode"
-                  ? isTransparent
-                    ? "bg-white/10"
-                    : "bg-[var(--gz-bronze)]/10"
-                  : ""
+                openPanel === "mode" ? "bg-[var(--gz-ink)]/8" : ""
               }`}
               onClick={() =>
                 setOpenPanel((current) =>

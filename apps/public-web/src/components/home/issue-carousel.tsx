@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 import { Icon } from "@/components/ui/icon";
+import { RevealHeading } from "@/components/ui/reveal-heading";
 import { useLocale } from "@/context/locale-context";
 import type { PublicIssueListItem } from "@/lib/public-types";
 
@@ -23,11 +24,11 @@ function IssueMini({
       className="group w-32 shrink-0 sm:w-44"
       href={`/n/${issue.nfc_slug}`}
     >
-      <span className="paper-card grid aspect-[0.72] w-full place-items-center overflow-hidden rounded-lg transition group-hover:-translate-y-2">
+      <span className="paper-card grid aspect-[0.72] w-full place-items-center overflow-hidden rounded-sm transition group-hover:-translate-y-2">
         {issue.cover_image ? (
           <img
             alt={issue.title}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover grayscale transition group-hover:grayscale-0"
             loading="lazy"
             src={issue.cover_image}
           />
@@ -85,9 +86,11 @@ export function IssueCarousel({
           <span className="editorial-label">
             {t("carousel.eyebrow")}
           </span>
-          <h2 className="font-display mt-3 text-3xl font-black leading-tight text-[var(--gz-ink)] sm:text-4xl lg:text-5xl">
-            {t("carousel.title")}
-          </h2>
+          <RevealHeading
+            as="h2"
+            className="font-display mt-3 text-3xl font-black leading-tight text-[var(--gz-ink)] sm:text-4xl lg:text-5xl"
+            text={t("carousel.title")}
+          />
         </div>
         <Link
           className="inline-flex shrink-0 items-center gap-1.5 text-xs font-bold text-[var(--gz-ink-soft)] transition hover:text-[var(--gz-bronze)]"

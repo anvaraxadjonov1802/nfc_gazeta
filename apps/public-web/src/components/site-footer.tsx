@@ -13,8 +13,14 @@ interface SiteFooterProps {
 export function SiteFooter({
   onOpenAccessibility,
 }: SiteFooterProps) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   const year = new Date().getFullYear();
+  const goToTopLabel =
+    locale === "en"
+      ? "Go to top"
+      : locale === "ru"
+        ? "Наверх"
+        : "Yuqoriga";
 
   const mastheadRoles: { role: string; name: string }[] = [
     { role: t("footer.editorInChief"), name: "Rustam Haydarov" },
@@ -29,13 +35,9 @@ export function SiteFooter({
       className="relative w-full overflow-hidden bg-[var(--gz-navy-deep)] text-white/70"
       id="masthead"
     >
-      <div aria-hidden="true" className="flex h-[3px] w-full">
-        <span className="h-full flex-1 bg-[var(--gz-bronze)]" />
-        <span className="h-full flex-1 bg-white/70" />
-        <span className="h-full flex-1 bg-[var(--gz-red)]" />
-      </div>
+      <div aria-hidden="true" className="h-[3px] w-full bg-white/80" />
 
-      <div className="rail-lines pointer-events-none absolute inset-0 opacity-20" />
+      <div className="rail-lines pointer-events-none absolute inset-0 opacity-10" />
 
       <div className="relative mx-auto w-full max-w-7xl px-4 pb-10 pt-12 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-start justify-between gap-8 border-b border-white/10 pb-10">
@@ -161,6 +163,22 @@ export function SiteFooter({
           </span>
         </div>
       </div>
+
+      <a
+        className="group relative flex flex-col items-center gap-1.5 py-8 text-white/50 transition hover:text-white/85"
+        href="#top"
+      >
+        <svg
+          className="go-to-top-doodle h-6 w-6 stroke-current transition group-hover:-translate-y-1"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 19V5M6 10l6-6 6 6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <span className="masthead-label text-white/50">
+          {goToTopLabel}
+        </span>
+      </a>
     </footer>
   );
 }

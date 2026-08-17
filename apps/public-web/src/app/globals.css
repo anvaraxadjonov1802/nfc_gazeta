@@ -291,24 +291,80 @@ html.mode-night .shadow-2xl {
 }
 
 /* ---------------------------------------------------------------- */
-/* "Living newspaper" warm-paper system — the dominant palette for   */
-/* every section outside the hero. Blue (--gz-navy) is reserved for  */
-/* Temiryo‘lchi identity accents only (logo, badges, nav underline). */
+/* "Vintage broadsheet" monochrome system — cream / ink / white only, */
+/* matching the reference newspaper-portfolio template. --gz-bronze   */
+/* and --gz-navy are kept as aliases (now near-black/cream) so every  */
+/* component built against them stays monochrome without a rewrite.  */
 /* ---------------------------------------------------------------- */
 
 :root {
   --gz-paper: #f8f3ea;
   --gz-paper-warm: #efe7d8;
-  --gz-ink: #1a1a1a;
+  --gz-ink: #17140f;
   --gz-ink-soft: #4a453c;
-  --gz-bronze: #9a6b35;
-  --gz-bronze-soft: #c9a468;
-  --gz-navy: #163a63;
-  --gz-navy-deep: #0f2847;
-  --gz-red: #8e2b2b;
+  --gz-bronze: #17140f;
+  --gz-bronze-soft: #e7ded0;
+  --gz-navy: #141210;
+  --gz-navy-deep: #0c0a08;
+  --gz-red: #17140f;
+  --gz-hairline: rgba(23, 20, 15, 0.22);
   --font-display: var(--font-playfair, Georgia, serif);
   --font-editorial: var(--font-cormorant, Georgia, serif);
   --font-body-serif: var(--font-source-serif, Georgia, serif);
+}
+
+/* Masthead / small-caps label, shared across the whole site */
+.masthead-label {
+  font-family: var(--font-sans, var(--font-sans-fallback));
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gz-ink-soft);
+}
+
+.hairline-box {
+  border: 1px solid var(--gz-hairline);
+  background: var(--gz-paper);
+}
+
+.hairline-top {
+  border-top: 1px solid var(--gz-hairline);
+}
+
+.hairline-bottom {
+  border-bottom: 1px solid var(--gz-hairline);
+}
+
+.rule-thick {
+  border-top: 3px solid var(--gz-ink);
+}
+
+.dark-panel {
+  background: var(--gz-navy-deep);
+  color: #f1ece1;
+}
+
+.drop-cap::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 3.6em;
+  line-height: 0.82;
+  padding-right: 0.08em;
+  padding-top: 0.03em;
+  color: var(--gz-ink);
+}
+
+.justify-columns {
+  text-align: justify;
+  hyphens: auto;
+}
+
+.go-to-top-doodle {
+  stroke: var(--gz-ink-soft);
+  stroke-width: 1.4;
+  fill: none;
 }
 
 html.reading-warm {
@@ -356,7 +412,7 @@ body {
 }
 
 .paper-card:hover {
-  border-color: rgba(154, 107, 53, 0.45);
+  border-color: rgba(23, 20, 15, 0.4);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 26px 50px -22px rgba(26, 18, 8, 0.4);
 }
 

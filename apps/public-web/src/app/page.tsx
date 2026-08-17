@@ -1,5 +1,7 @@
 import { AnimatedBanner } from "@/components/home/animated-banner";
+import { ArchiveCtaSection } from "@/components/home/archive-cta-section";
 import { ArticlesSection } from "@/components/home/articles-section";
+import { FaqSection } from "@/components/home/faq-section";
 import { FeaturedStorySection } from "@/components/home/featured-story-section";
 import { HomeIntro } from "@/components/home/home-intro";
 import { HowItWorksSection } from "@/components/home/how-it-works-section";
@@ -26,15 +28,15 @@ export default async function HomePage() {
     ]);
   } catch {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-canvas px-4 py-16 sm:px-6 lg:px-8">
-        <section className="glass-card w-full max-w-lg rounded-3xl p-10 text-center">
-          <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-red-500/15 text-red-300">
+      <main className="flex min-h-screen items-center justify-center bg-paper px-4 py-16 sm:px-6 lg:px-8">
+        <section className="hairline-box w-full max-w-lg rounded-sm p-10 text-center">
+          <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-[var(--gz-ink)]/8 text-[var(--gz-ink)]">
             <Icon name="close" size={28} />
           </div>
-          <h1 className="mt-4 text-2xl font-black text-white">
+          <h1 className="font-display mt-4 text-2xl font-black text-[var(--gz-ink)]">
             Ma’lumotlarni yuklab bo‘lmadi
           </h1>
-          <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-white/60">
+          <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-[var(--gz-ink-soft)]">
             Backend server ishlayotganini tekshiring va sahifani yangilang.
           </p>
         </section>
@@ -70,9 +72,12 @@ export default async function HomePage() {
       <AnimatedBanner
         articlesCount={articlesById.size}
         issuesCount={issues.length}
+        latestIssue={data.latest_issue}
         latestIssueSlug={latestIssueSlug}
         videosCount={featuredVideos.length}
       />
+
+      <HowItWorksSection />
 
       <FeaturedStorySection
         latestIssueSlug={latestIssueSlug}
@@ -84,11 +89,13 @@ export default async function HomePage() {
 
       <VideoSection />
 
-      <HowItWorksSection />
+      <TestimonialsSection />
+
+      <FaqSection />
 
       <PartnersMarquee />
 
-      <TestimonialsSection />
+      <ArchiveCtaSection />
     </main>
   );
 }

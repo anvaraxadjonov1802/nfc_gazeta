@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 import { Icon } from "@/components/ui/icon";
+import { RevealHeading } from "@/components/ui/reveal-heading";
 import { useLocale } from "@/context/locale-context";
 import type { PublicArticleCard } from "@/lib/public-types";
 
@@ -22,7 +23,7 @@ function ArticleCard({
 }) {
   return (
     <motion.div
-      className="paper-card group flex flex-col overflow-hidden rounded-2xl"
+      className="paper-card group flex flex-col overflow-hidden rounded-sm"
       initial={{ opacity: 0, y: 30 }}
       transition={{
         duration: 0.55,
@@ -39,7 +40,7 @@ function ArticleCard({
         {article.main_image ? (
           <img
             alt={article.title}
-            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover grayscale transition duration-500 group-hover:scale-105 group-hover:grayscale-0"
             loading="lazy"
             src={article.main_image}
           />
@@ -115,9 +116,11 @@ export function ArticlesSection({
           <span className="editorial-label">
             {t("articles.eyebrow")}
           </span>
-          <h2 className="font-display mt-3 text-3xl font-black leading-tight text-[var(--gz-ink)] sm:text-4xl lg:text-5xl">
-            {t("articles.title")}
-          </h2>
+          <RevealHeading
+            as="h2"
+            className="font-display mt-3 text-3xl font-black leading-tight text-[var(--gz-ink)] sm:text-4xl lg:text-5xl"
+            text={t("articles.title")}
+          />
         </motion.div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

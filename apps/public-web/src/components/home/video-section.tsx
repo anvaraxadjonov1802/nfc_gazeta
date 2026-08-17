@@ -7,6 +7,7 @@ import type { MouseEvent } from "react";
 import { useEffect, useState } from "react";
 
 import { Icon } from "@/components/ui/icon";
+import { RevealHeading } from "@/components/ui/reveal-heading";
 import { useLocale } from "@/context/locale-context";
 import { featuredVideos } from "@/lib/videos-data";
 
@@ -64,15 +65,17 @@ export function VideoSection() {
           <span className="editorial-label">
             {t("media.eyebrow")}
           </span>
-          <h2 className="font-display mt-3 text-3xl font-black leading-tight text-[var(--gz-ink)] sm:text-4xl lg:text-5xl">
-            {t("media.title")}
-          </h2>
+          <RevealHeading
+            as="h2"
+            className="font-display mt-3 text-3xl font-black leading-tight text-[var(--gz-ink)] sm:text-4xl lg:text-5xl"
+            text={t("media.title")}
+          />
         </motion.div>
 
         <div className="grid gap-5 lg:grid-cols-2">
           {featuredVideos.map((video, index) => (
             <motion.div
-              className="paper-card group flex flex-col gap-4 overflow-hidden rounded-2xl p-4 sm:flex-row sm:items-center sm:gap-5 sm:p-5"
+              className="paper-card group flex flex-col gap-4 overflow-hidden rounded-sm p-4 sm:flex-row sm:items-center sm:gap-5 sm:p-5"
               initial={{ opacity: 0, y: 30 }}
               key={video.id}
               transition={{
@@ -85,13 +88,13 @@ export function VideoSection() {
             >
               <button
                 aria-label={`${video.title} — video ko‘rish`}
-                className="relative aspect-video w-full shrink-0 overflow-hidden rounded-xl bg-[var(--gz-ink)]/10 sm:w-56"
+                className="relative aspect-video w-full shrink-0 overflow-hidden rounded-sm bg-[var(--gz-ink)]/10 sm:w-56"
                 onClick={() => setOpenVideoId(video.id)}
                 type="button"
               >
                 <img
                   alt={video.title}
-                  className="h-full w-full object-cover opacity-90 transition group-hover:scale-105 group-hover:opacity-100"
+                  className="h-full w-full object-cover grayscale opacity-90 transition group-hover:scale-105 group-hover:opacity-100 group-hover:grayscale-0"
                   loading="lazy"
                   src={video.thumbnailUrl}
                 />
