@@ -72,15 +72,15 @@ export function VideoSection() {
           />
         </motion.div>
 
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="flex flex-col gap-6">
           {featuredVideos.map((video, index) => (
             <motion.div
-              className="paper-card group flex flex-col gap-4 overflow-hidden rounded-sm p-4 sm:flex-row sm:items-center sm:gap-5 sm:p-5"
+              className="paper-card group flex flex-col overflow-hidden rounded-sm sm:flex-row sm:items-stretch"
               initial={{ opacity: 0, y: 30 }}
               key={video.id}
               transition={{
                 duration: 0.5,
-                delay: (index % 2) * 0.08,
+                delay: index * 0.06,
                 ease: [0.16, 1, 0.3, 1],
               }}
               viewport={{ once: true, margin: "-60px" }}
@@ -88,7 +88,7 @@ export function VideoSection() {
             >
               <button
                 aria-label={`${video.title} — video ko‘rish`}
-                className="relative aspect-video w-full shrink-0 overflow-hidden rounded-sm bg-[var(--gz-ink)]/10 sm:w-56"
+                className="relative aspect-video w-full shrink-0 overflow-hidden bg-[var(--gz-ink)]/10 sm:aspect-auto sm:w-[46%]"
                 onClick={() => setOpenVideoId(video.id)}
                 type="button"
               >
@@ -99,20 +99,20 @@ export function VideoSection() {
                   src={video.thumbnailUrl}
                 />
                 <span className="absolute inset-0 bg-black/10 transition group-hover:bg-black/20" />
-                <span className="absolute left-1/2 top-1/2 grid h-11 w-11 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[var(--gz-navy)] shadow-lg transition group-hover:scale-110">
-                  <Icon name="play" size={18} />
+                <span className="absolute left-1/2 top-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[var(--gz-navy)] shadow-lg transition group-hover:scale-110 sm:h-16 sm:w-16">
+                  <Icon name="play" size={22} />
                 </span>
-                <span className="absolute bottom-2 right-2 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold text-white">
+                <span className="absolute bottom-3 right-3 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold text-white">
                   {t("media.videoBadge")}
                 </span>
               </button>
 
-              <div className="min-w-0 flex-1">
-                <span className="paper-chip inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-wide">
+              <div className="flex min-w-0 flex-1 flex-col justify-center p-5 sm:p-8">
+                <span className="paper-chip inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-wide">
                   {video.channel}
                 </span>
                 <a
-                  className="mt-3 block text-base font-black leading-snug text-[var(--gz-ink)] transition hover:text-[var(--gz-bronze)] sm:text-lg"
+                  className="mt-4 block text-xl font-black leading-snug text-[var(--gz-ink)] transition hover:text-[var(--gz-bronze)] sm:text-2xl"
                   href={video.watchUrl}
                   rel="noopener noreferrer"
                   target="_blank"
@@ -120,7 +120,7 @@ export function VideoSection() {
                   {video.title}
                 </a>
                 <button
-                  className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-[var(--gz-ink-soft)] transition hover:text-[var(--gz-bronze)]"
+                  className="mt-4 inline-flex w-fit items-center gap-1.5 text-xs font-bold text-[var(--gz-ink-soft)] transition hover:text-[var(--gz-bronze)]"
                   onClick={() => setOpenVideoId(video.id)}
                   type="button"
                 >

@@ -172,7 +172,7 @@ export function AnimatedBanner({
             className="hairline-box overflow-hidden rounded-sm"
             style={{ y: photoY }}
           >
-            <div className="relative aspect-[4/5] w-full">
+            <div className="relative aspect-[4/3] w-full">
               <Image
                 alt="Jaloliddin Manguberdi tezyurar poyezdi"
                 className="object-cover grayscale contrast-[1.05]"
