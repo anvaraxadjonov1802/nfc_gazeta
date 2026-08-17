@@ -7,17 +7,17 @@ import { useLocale } from "@/context/locale-context";
 
 const COPY = {
   uz: {
-    title: "Har bir yakshanba — yangi son",
+    title: "Har bir juma — yangi son",
     text: "Nashrlar arxivini kuzatib boring: har bir chop etilgan son sana bo‘yicha saqlanadi va istalgan vaqt qayta ochiladi.",
     cta: "Arxivni ko‘rish",
   },
   ru: {
-    title: "Каждое воскресенье — новый номер",
+    title: "Каждая пятница — новый номер",
     text: "Следите за архивом номеров: каждый опубликованный выпуск сохраняется по дате и открывается в любое время.",
     cta: "Открыть архив",
   },
   en: {
-    title: "A new issue, every week",
+    title: "A new issue, every Friday",
     text: "Follow the issues archive: every published edition is kept by date and ready to reopen anytime.",
     cta: "Browse the archive",
   },
