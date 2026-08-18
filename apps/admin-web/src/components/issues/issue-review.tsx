@@ -21,6 +21,18 @@ interface IssueReviewProps {
   issueId: string;
 }
 
+interface PageAudioResult {
+  page_id: number;
+  page_number: number;
+  status: "generated" | "skipped" | "failed";
+  message?: string;
+}
+
+interface GenerateAudioResponse {
+  detail: string;
+  results: PageAudioResult[];
+}
+
 function getPageStatusClass(
   status: PageProcessingStatus,
 ): string {
@@ -53,6 +65,15 @@ export function IssueReview({
     useState(true);
 
   const [error, setError] =
+    useState("");
+
+  const [isGeneratingAudio, setIsGeneratingAudio] =
+    useState(false);
+
+  const [audioResults, setAudioResults] =
+    useState<PageAudioResult[] | null>(null);
+
+  const [audioError, setAudioError] =
     useState("");
 
   useEffect(() => {
@@ -139,6 +160,52 @@ export function IssueReview({
       isCancelled = true;
     };
   }, [issueId]);
+
+  async function generateAudio() {
+    setIsGeneratingAudio(true);
+    setAudioError("");
+    setAudioResults(null);
+
+    try {
+      const response = await fetch(
+        `/api/issues/${issueId}/generate-audio`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({}),
+        },
+      );
+
+      const data = await response
+        .json()
+        .catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(
+          getApiErrorMessage(
+            data,
+            "Ovoz yaratib bo‘lmadi.",
+          ),
+        );
+      }
+
+      const result =
+        data as GenerateAudioResponse;
+
+      setAudioResults(result.results);
+    } catch (generateError) {
+      setAudioError(
+        generateError instanceof Error
+          ? generateError.message
+          : "Ovoz yaratishda kutilmagan xatolik yuz berdi.",
+      );
+    } finally {
+      setIsGeneratingAudio(false);
+    }
+  }
 
   if (isLoading) {
     return (
@@ -268,10 +335,95 @@ export function IssueReview({
             </p>
           </div>
 
-          <span className="page-approval-count">
-            {approvedPages}/{pages.length} tasdiqlandi
-          </span>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.75rem",
+            }}
+          >
+            <span className="page-approval-count">
+              {approvedPages}/{pages.length} tasdiqlandi
+            </span>
+
+            {pages.length > 0 ? (
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={() => {
+                  void generateAudio();
+                }}
+                disabled={isGeneratingAudio}
+              >
+                {isGeneratingAudio
+                  ? "Ovoz yaratilmoqda..."
+                  : "Barcha betlar uchun ovoz yaratish"}
+              </button>
+            ) : null}
+          </div>
         </div>
+
+        {audioError ? (
+          <div
+            className="error-message"
+            role="alert"
+          >
+            {audioError}
+          </div>
+        ) : null}
+
+        {audioResults ? (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.35rem",
+              marginBottom: "1.25rem",
+            }}
+          >
+            {audioResults.map((result) => (
+              <div
+                key={result.page_id}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  fontSize: "0.85rem",
+                }}
+              >
+                <span
+                  className={
+                    result.status === "generated"
+                      ? "status-badge status-published"
+                      : result.status === "failed"
+                        ? "status-badge status-failed"
+                        : "status-badge status-draft"
+                  }
+                >
+                  {result.status === "generated"
+                    ? "Yaratildi"
+                    : result.status === "failed"
+                      ? "Xatolik"
+                      : "O‘tkazib yuborildi"}
+                </span>
+
+                <span>
+                  {result.page_number}-bet
+                </span>
+
+                {result.message ? (
+                  <span
+                    style={{
+                      opacity: 0.7,
+                    }}
+                  >
+                    — {result.message}
+                  </span>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        ) : null}
 
         {pages.length === 0 ? (
           <div className="empty-state">
