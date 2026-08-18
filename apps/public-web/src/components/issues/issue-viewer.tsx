@@ -620,7 +620,7 @@ export function IssueViewer({
             className={`hardcover relative flex items-center justify-center bg-[var(--gz-ink)] shadow-2xl ${
               isImmersive
                 ? "h-full w-full rounded-none px-1 py-3"
-                : `mx-auto rounded-sm px-3 py-6 sm:px-8 sm:py-10 lg:py-12 ${
+                : `mx-auto min-h-[480px] w-full rounded-sm px-3 py-6 sm:min-h-[620px] sm:px-8 sm:py-10 lg:min-h-[800px] lg:py-12 ${
                     isFullscreen ? "overflow-auto" : "overflow-hidden"
                   }`
             }`}
@@ -641,7 +641,7 @@ export function IssueViewer({
             </button>
 
             <div
-              className="transition-transform duration-300"
+              className="w-full max-w-full transition-transform duration-300"
               style={{
                 transform: `scale(${zoomLevel})`,
                 transformOrigin: "center",
