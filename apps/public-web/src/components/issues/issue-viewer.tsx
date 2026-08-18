@@ -66,6 +66,8 @@ export function IssueViewer({
   const flipBookRef = useRef<HTMLFlipBook | null>(
     null,
   );
+  const readingWordRef =
+    useRef<HTMLSpanElement | null>(null);
 
   const [currentIndex, setCurrentIndex] =
     useState(0);
@@ -77,9 +79,12 @@ export function IssueViewer({
     useState(false);
   const [isAudioPlaying, setIsAudioPlaying] =
     useState(false);
-
-  const isStageFullscreen =
-    isFullscreen || isImmersive;
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [isFabOpen, setIsFabOpen] = useState(false);
+  const [isReadingMode, setIsReadingMode] =
+    useState(false);
+  const [readingWordIndex, setReadingWordIndex] =
+    useState(0);
 
   const currentPage = useMemo(
     () => pages[currentIndex] ?? null,
@@ -89,6 +94,16 @@ export function IssueViewer({
   const prevDisabled = currentIndex <= 0;
   const nextDisabled =
     currentIndex >= pages.length - 1;
+
+  const readingWords = useMemo(() => {
+    const text = currentPage?.final_text?.trim();
+
+    if (!text) {
+      return [];
+    }
+
+    return text.split(/\s+/).filter(Boolean);
+  }, [currentPage]);
 
   useEffect(() => {
     if (!currentPage) {
@@ -159,6 +174,19 @@ export function IssueViewer({
     };
   }, [isImmersive]);
 
+  useEffect(() => {
+    if (isImmersive) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setIsFabOpen(false);
+      setIsReadingMode(false);
+    }, 0);
+
+    return () => window.clearTimeout(timeout);
+  }, [isImmersive]);
+
   const selectPage = useCallback(
     (pageIndex: number) => {
       resetAudioPlayback();
@@ -194,20 +222,6 @@ export function IssueViewer({
 
     selectPage(currentIndex + 1);
   }, [currentIndex, mode, selectPage]);
-
-  const goToPage = useCallback(
-    (index: number) => {
-      if (mode === "image") {
-        flipBookRef.current
-          ?.pageFlip()
-          .flip(index);
-        return;
-      }
-
-      selectPage(index);
-    },
-    [mode, selectPage],
-  );
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -261,6 +275,103 @@ export function IssueViewer({
     };
   }, []);
 
+  useEffect(() => {
+    if (!isFullscreen) {
+      const timeout = window.setTimeout(() => {
+        setZoomLevel(1);
+      }, 0);
+
+      return () => window.clearTimeout(timeout);
+    }
+  }, [isFullscreen]);
+
+  // Drive the karaoke-style reading simulation: tick through the current
+  // page's words on a fixed cadence, then hand off to the "reached the end"
+  // effect below once every word has been marked as read.
+  useEffect(() => {
+    if (!isReadingMode) {
+      return;
+    }
+
+    if (readingWords.length === 0) {
+      return;
+    }
+
+    let interval: number | undefined;
+
+    const startTimeout = window.setTimeout(() => {
+      setReadingWordIndex(0);
+
+      interval = window.setInterval(() => {
+        setReadingWordIndex((index) => {
+          if (index + 1 >= readingWords.length) {
+            if (interval) {
+              window.clearInterval(interval);
+            }
+
+            return readingWords.length - 1;
+          }
+
+          return index + 1;
+        });
+      }, 230);
+    }, 0);
+
+    return () => {
+      window.clearTimeout(startTimeout);
+
+      if (interval) {
+        window.clearInterval(interval);
+      }
+    };
+  }, [isReadingMode, currentIndex, readingWords.length]);
+
+  // Once the last word on a page has been marked (or the page has no text
+  // at all), pause briefly and auto-advance — exactly like a real reader
+  // turning the page — or stop cleanly at the final page.
+  useEffect(() => {
+    if (!isReadingMode) {
+      return;
+    }
+
+    const isAtLastWord =
+      readingWords.length === 0 ||
+      readingWordIndex >= readingWords.length - 1;
+
+    if (!isAtLastWord) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      if (nextDisabled) {
+        setIsReadingMode(false);
+        return;
+      }
+
+      goToNextPage();
+    }, readingWords.length === 0 ? 1100 : 850);
+
+    return () => window.clearTimeout(timeout);
+  }, [
+    isReadingMode,
+    readingWordIndex,
+    readingWords.length,
+    nextDisabled,
+    goToNextPage,
+  ]);
+
+  useEffect(() => {
+    if (!isReadingMode) {
+      return;
+    }
+
+    readingWordRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
+    });
+  }, [isReadingMode, readingWordIndex]);
+
   async function toggleFullscreen() {
     const viewer = viewerRef.current;
 
@@ -299,16 +410,41 @@ export function IssueViewer({
     }
   }
 
+  async function shareIssue() {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const url = window.location.href;
+    const shareData = {
+      title: issue.newspaper_name,
+      text: `${issue.newspaper_name} — ${issue.year}-yil, ${issue.issue_number}-son`,
+      url,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(url);
+      }
+    } catch {
+      // User dismissed the native share sheet — nothing to do.
+    } finally {
+      setIsFabOpen(false);
+    }
+  }
+
   if (!currentPage || pages.length === 0) {
     return (
-      <section className="rounded-2xl border border-[#CBB98A] bg-[#F8F2E2] p-10 text-center shadow-sm">
-        <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-slate-100 text-slate-400">
+      <section className="hairline-box rounded-sm bg-paper p-10 text-center">
+        <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-[var(--gz-paper-warm)] text-[var(--gz-ink-soft)]">
           <Icon name="file-text" size={30} />
         </div>
-        <h2 className="mt-4 font-serif text-xl font-bold text-[#1B1712]">
+        <h2 className="font-display mt-4 text-xl font-bold text-[var(--gz-ink)]">
           Gazeta betlari topilmadi
         </h2>
-        <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-500">
+        <p className="font-body-serif mx-auto mt-2 max-w-lg text-sm leading-6 text-[var(--gz-ink-soft)]">
           Ushbu nashr betlari hali ommaviy ko‘rish uchun tayyorlanmagan.
         </p>
       </section>
@@ -317,12 +453,12 @@ export function IssueViewer({
 
   const content = (
     <section
-      className={`issue-reader overflow-hidden border border-[#CBB98A] bg-[#F8F2E2] shadow-2xl ${
+      className={`issue-reader ${
         isFullscreen
-          ? "h-screen w-screen rounded-none border-0"
+          ? "h-screen w-screen overflow-y-auto bg-paper p-4 sm:p-6 lg:p-8"
           : isImmersive
-            ? "fixed inset-0 z-50 h-[100dvh] w-screen overflow-y-auto rounded-none border-0"
-            : "rounded-2xl"
+            ? "fixed inset-0 z-50 h-[100dvh] w-screen overflow-hidden bg-[var(--gz-ink)]"
+            : "hairline-box rounded-sm bg-paper p-3 sm:p-5 lg:p-6"
       }`}
       ref={viewerRef}
     >
@@ -332,174 +468,185 @@ export function IssueViewer({
         src={currentPage.audio ?? undefined}
       />
 
-      <div className="flex flex-col border-b border-[#0F0C09] bg-[#1B1712] text-white xl:flex-row xl:items-center xl:justify-between">
-        <div className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-3 xl:border-b-0 xl:px-4">
+      {!isImmersive ? (
+        <div className="paper-panel mb-4 flex flex-col gap-3 rounded-sm border border-[var(--gz-hairline)] px-3 py-3 sm:mb-6 sm:px-4 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex items-center gap-2">
             <button
               aria-label="Oldingi bet"
-              className="grid h-10 w-10 place-items-center rounded-lg border border-white/15 bg-white/5 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-35"
+              className="grid h-10 w-10 place-items-center rounded-sm border border-[var(--gz-hairline)] text-[var(--gz-ink)] transition hover:bg-[var(--gz-paper-warm)] disabled:cursor-not-allowed disabled:opacity-30"
               disabled={prevDisabled}
               onClick={goToPreviousPage}
               type="button"
             >
               <Icon name="chevron-left" />
             </button>
-            <span className="min-w-24 text-center text-xs font-black">
+            <span className="masthead-label min-w-24 text-center">
               {currentPage.page_number} / {pages.length}
             </span>
             <button
               aria-label="Keyingi bet"
-              className="grid h-10 w-10 place-items-center rounded-lg border border-white/15 bg-white/5 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-35"
+              className="grid h-10 w-10 place-items-center rounded-sm border border-[var(--gz-hairline)] text-[var(--gz-ink)] transition hover:bg-[var(--gz-paper-warm)] disabled:cursor-not-allowed disabled:opacity-30"
               disabled={nextDisabled}
               onClick={goToNextPage}
               type="button"
             >
               <Icon name="chevron-right" />
             </button>
+
+            <span className="hidden items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-[var(--gz-ink-soft)] sm:inline-flex">
+              <Icon
+                className="text-[var(--gz-bronze)]"
+                name="nfc"
+                size={14}
+              />
+              NFC elektron o‘quvchi
+            </span>
           </div>
 
-          <span className="hidden items-center gap-1.5 text-[10px] text-slate-300 sm:inline-flex">
-            <Icon
-              className="text-[#D9622B]"
-              name="nfc"
-              size={14}
-            />
-            NFC elektron o‘quvchi
-          </span>
-        </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex rounded-sm border border-[var(--gz-hairline)] p-1">
+              <button
+                className={`inline-flex min-h-9 items-center gap-1.5 rounded-sm px-3 text-[10px] font-bold uppercase tracking-wide transition ${
+                  mode === "image"
+                    ? "bg-[var(--gz-ink)] text-[var(--gz-paper)]"
+                    : "text-[var(--gz-ink-soft)] hover:bg-[var(--gz-paper-warm)]"
+                }`}
+                onClick={() => setMode("image")}
+                type="button"
+              >
+                <Icon name="newspaper" size={15} />
+                Gazeta
+              </button>
+              <button
+                className={`inline-flex min-h-9 items-center gap-1.5 rounded-sm px-3 text-[10px] font-bold uppercase tracking-wide transition ${
+                  mode === "text"
+                    ? "bg-[var(--gz-ink)] text-[var(--gz-paper)]"
+                    : "text-[var(--gz-ink-soft)] hover:bg-[var(--gz-paper-warm)]"
+                }`}
+                onClick={() => setMode("text")}
+                type="button"
+              >
+                <Icon name="text" size={15} />
+                Matn
+              </button>
+            </div>
 
-        <div className="flex flex-wrap items-center gap-2 px-3 py-3 xl:justify-end xl:px-4">
-          <div className="flex rounded-lg border border-white/15 bg-white/5 p-1">
-            <button
-              className={`inline-flex min-h-9 items-center gap-1.5 rounded-md px-3 text-[10px] font-bold transition ${
-                mode === "image"
-                  ? "bg-[#D9622B] text-[#1B1712]"
-                  : "text-white hover:bg-white/10"
-              }`}
-              onClick={() => setMode("image")}
-              type="button"
-            >
-              <Icon name="newspaper" size={15} />
-              Gazeta
-            </button>
-            <button
-              className={`inline-flex min-h-9 items-center gap-1.5 rounded-md px-3 text-[10px] font-bold transition ${
-                mode === "text"
-                  ? "bg-[#D9622B] text-[#1B1712]"
-                  : "text-white hover:bg-white/10"
-              }`}
-              onClick={() => setMode("text")}
-              type="button"
-            >
-              <Icon name="text" size={15} />
-              Matn
-            </button>
-          </div>
+            {currentPage.audio ? (
+              <button
+                className={`inline-flex min-h-10 items-center gap-1.5 rounded-full px-4 text-[10px] font-black uppercase tracking-wide transition ${
+                  isAudioPlaying
+                    ? "border border-[var(--gz-hairline)] text-[var(--gz-ink)]"
+                    : "bg-[var(--gz-ink)] text-[var(--gz-paper)] hover:bg-[var(--gz-ink-soft)]"
+                }`}
+                onClick={() => {
+                  void toggleAudio();
+                }}
+                type="button"
+              >
+                <Icon
+                  name={isAudioPlaying ? "pause" : "volume"}
+                  size={15}
+                />
+                {isAudioPlaying
+                  ? "Ovozni to‘xtatish"
+                  : "Ovozda tinglash"}
+              </button>
+            ) : null}
 
-          {currentPage.audio ? (
+            {isFullscreen ? (
+              <div className="flex items-center gap-1 rounded-full border border-[var(--gz-hairline)] p-1">
+                <button
+                  aria-label="Kichraytirish"
+                  className="grid h-8 w-8 place-items-center rounded-full text-[var(--gz-ink)] transition hover:bg-[var(--gz-paper-warm)] disabled:cursor-not-allowed disabled:opacity-30"
+                  disabled={zoomLevel <= 1}
+                  onClick={() =>
+                    setZoomLevel((value) =>
+                      clamp(
+                        Math.round((value - 0.2) * 10) / 10,
+                        1,
+                        2,
+                      ),
+                    )
+                  }
+                  type="button"
+                >
+                  <Icon name="zoom-out" size={15} />
+                </button>
+                <span className="min-w-9 text-center text-[10px] font-black text-[var(--gz-ink-soft)]">
+                  {Math.round(zoomLevel * 100)}%
+                </span>
+                <button
+                  aria-label="Kattalashtirish"
+                  className="grid h-8 w-8 place-items-center rounded-full text-[var(--gz-ink)] transition hover:bg-[var(--gz-paper-warm)] disabled:cursor-not-allowed disabled:opacity-30"
+                  disabled={zoomLevel >= 2}
+                  onClick={() =>
+                    setZoomLevel((value) =>
+                      clamp(
+                        Math.round((value + 0.2) * 10) / 10,
+                        1,
+                        2,
+                      ),
+                    )
+                  }
+                  type="button"
+                >
+                  <Icon name="zoom-in" size={15} />
+                </button>
+              </div>
+            ) : null}
+
             <button
-              className={`inline-flex min-h-10 items-center gap-1.5 rounded-full px-4 text-[10px] font-black transition ${
-                isAudioPlaying
-                  ? "border border-white/20 bg-white/10 text-white"
-                  : "bg-[#D9622B] text-[#1B1712] hover:bg-[#D9B25E]"
-              }`}
+              aria-label={
+                isFullscreen ? "Yopish" : "To‘liq ekran"
+              }
+              className="grid h-10 w-10 place-items-center rounded-sm border border-[var(--gz-hairline)] text-[var(--gz-ink)] transition hover:bg-[var(--gz-paper-warm)]"
               onClick={() => {
-                void toggleAudio();
+                void toggleFullscreen();
               }}
               type="button"
             >
               <Icon
-                name={isAudioPlaying ? "pause" : "volume"}
-                size={15}
+                name={isFullscreen ? "close" : "fullscreen"}
+                size={17}
               />
-              {isAudioPlaying
-                ? "Ovozni to‘xtatish"
-                : "Ovozda tinglash"}
             </button>
-          ) : null}
-
-          <button
-            aria-label={
-              isStageFullscreen
-                ? "Yopish"
-                : "To‘liq ekran"
-            }
-            className="grid h-10 w-10 place-items-center rounded-lg border border-white/15 bg-white/5 transition hover:bg-white/10"
-            onClick={() => {
-              if (isImmersive) {
-                setIsImmersive(false);
-                return;
-              }
-
-              void toggleFullscreen();
-            }}
-            type="button"
-          >
-            <Icon
-              name={
-                isStageFullscreen
-                  ? "close"
-                  : "fullscreen"
-              }
-              size={17}
-            />
-          </button>
+          </div>
         </div>
-      </div>
+      ) : null}
 
-      <div className="issue-stage-grid grid lg:grid-cols-[150px_minmax(0,1fr)]">
-        <aside className="custom-scrollbar flex gap-2 overflow-x-auto border-b border-[#CBB98A] bg-[#EFE6D2] p-3 lg:block lg:max-h-[780px] lg:space-y-3 lg:overflow-y-auto lg:border-b-0 lg:border-r">
-          {pages.map((page, index) => (
+      <div className={isImmersive ? "h-full w-full" : "min-w-0"}>
+        {mode === "image" ? (
+          <div
+            className={`hardcover relative flex items-center justify-center bg-[var(--gz-ink)] shadow-2xl ${
+              isImmersive
+                ? "h-full w-full rounded-none px-1 py-3"
+                : `mx-auto rounded-sm px-3 py-6 sm:px-8 sm:py-10 lg:py-12 ${
+                    isFullscreen ? "overflow-auto" : "overflow-hidden"
+                  }`
+            }`}
+          >
+            <div className="pointer-events-none absolute inset-y-6 left-1/2 w-10 -translate-x-1/2 bg-gradient-to-r from-black/0 via-black/45 to-black/0 blur-sm" />
+            <span className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 text-[9px] font-black uppercase tracking-[0.4em] text-white/10 sm:bottom-3 sm:text-[10px]">
+              Temiryo‘lchi
+            </span>
+
             <button
-              aria-current={
-                index === currentIndex
-                  ? "page"
-                  : undefined
-              }
-              className={`w-24 shrink-0 rounded-xl border-2 bg-white p-1.5 text-left transition hover:-translate-y-0.5 lg:w-full ${
-                index === currentIndex
-                  ? "border-[#D9622B] shadow-md ring-2 ring-[#D9622B]/20"
-                  : "border-transparent hover:border-[#CBB98A] hover:shadow-md"
-              }`}
-              key={page.id}
-              onClick={() => goToPage(index)}
+              aria-label="Oldingi varaq"
+              className="absolute left-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-[var(--gz-hairline)] bg-white text-[var(--gz-ink)] shadow-md transition hover:scale-105 hover:bg-[var(--gz-paper-warm)] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:h-11 sm:w-11 lg:left-6"
+              disabled={prevDisabled}
+              onClick={goToPreviousPage}
               type="button"
             >
-              <span className="grid aspect-[0.72] place-items-center overflow-hidden rounded-md bg-slate-200">
-                {page.page_image ? (
-                  <img
-                    alt={`${page.page_number}-bet`}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                    src={page.page_image}
-                  />
-                ) : (
-                  <Icon
-                    className="text-slate-400"
-                    name="file-text"
-                  />
-                )}
-              </span>
-              <strong className="mt-1.5 block text-center text-[10px] text-[#1B1712]">
-                {page.page_number}-bet
-              </strong>
+              <Icon name="chevron-left" />
             </button>
-          ))}
-        </aside>
 
-        <div className="min-w-0 bg-[#EFE6D2]">
-          {mode === "image" ? (
-            <div className="issue-stage-book relative flex items-center justify-center px-3 py-6 sm:px-8 sm:py-10 lg:h-[780px] lg:py-12">
-              <button
-                aria-label="Oldingi varaq"
-                className="absolute left-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-[#CBB98A] bg-white text-[#1B1712] shadow-md transition hover:scale-105 hover:bg-[#FBF8F2] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:h-11 sm:w-11 lg:left-6"
-                disabled={prevDisabled}
-                onClick={goToPreviousPage}
-                type="button"
-              >
-                <Icon name="chevron-left" />
-              </button>
-
+            <div
+              className="transition-transform duration-300"
+              style={{
+                transform: `scale(${zoomLevel})`,
+                transformOrigin: "center",
+              }}
+            >
               <HTMLFlipBook
                 className="mx-auto"
                 drawShadow
@@ -537,112 +684,219 @@ export function IssueViewer({
                         Bet rasmi yo‘q
                       </div>
                     )}
-                    <span className="absolute bottom-2 right-3 text-[10px] font-semibold text-[#A79E8C]">
+                    <span className="absolute bottom-2 right-3 text-[10px] font-semibold text-[var(--gz-ink-soft)]/70">
                       {page.page_number}-bet
                     </span>
                   </FlipPage>
                 ))}
               </HTMLFlipBook>
-
-              <button
-                aria-label="Keyingi varaq"
-                className="absolute right-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-[#CBB98A] bg-white text-[#1B1712] shadow-md transition hover:scale-105 hover:bg-[#FBF8F2] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:h-11 sm:w-11 lg:right-6"
-                disabled={nextDisabled}
-                onClick={goToNextPage}
-                type="button"
-              >
-                <Icon name="chevron-right" />
-              </button>
             </div>
-          ) : (
-            <article className="custom-scrollbar max-h-[80vh] overflow-y-auto bg-[#EFE6D2] px-3 py-6 sm:px-8 sm:py-10 lg:h-[780px] lg:max-h-none lg:px-10 lg:py-12">
-              <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-[#CBB98A] bg-white shadow-sm">
-                <div className="flex items-center gap-3 border-b border-[#E6D9B4] px-5 py-4">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#1B1712] font-serif text-base font-bold text-[#D9622B]">
-                    T
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-[#1B1712]">
-                      {issue.newspaper_name}
+
+            <button
+              aria-label="Keyingi varaq"
+              className="absolute right-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-[var(--gz-hairline)] bg-white text-[var(--gz-ink)] shadow-md transition hover:scale-105 hover:bg-[var(--gz-paper-warm)] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:h-11 sm:w-11 lg:right-6"
+              disabled={nextDisabled}
+              onClick={goToNextPage}
+              type="button"
+            >
+              <Icon name="chevron-right" />
+            </button>
+
+            {isReadingMode ? (
+              <div className="pointer-events-none absolute inset-x-3 bottom-3 z-20 sm:inset-x-8 sm:bottom-8 lg:inset-x-16">
+                <div className="pointer-events-auto mx-auto max-h-28 max-w-2xl overflow-y-auto rounded-sm border border-white/10 bg-[var(--gz-ink)]/92 px-4 py-3 shadow-2xl backdrop-blur sm:max-h-36 sm:px-6 sm:py-4">
+                  {readingWords.length > 0 ? (
+                    <p className="font-body-serif text-[13px] leading-6 sm:text-sm">
+                      {readingWords.map((word, index) => (
+                        <span
+                          className={
+                            index < readingWordIndex
+                              ? "text-white/30"
+                              : index === readingWordIndex
+                                ? "gz-reading-active rounded-[2px] bg-[var(--gz-bronze-soft)] px-1 text-[var(--gz-ink)]"
+                                : "text-white/55"
+                          }
+                          key={`${currentIndex}-${index}`}
+                          ref={
+                            index === readingWordIndex
+                              ? readingWordRef
+                              : undefined
+                          }
+                        >
+                          {word}{" "}
+                        </span>
+                      ))}
                     </p>
-                    <p className="text-[11px] text-slate-500">
-                      {issue.year}-yil, {issue.issue_number}-son
+                  ) : (
+                    <p className="text-center text-[11px] font-semibold uppercase tracking-wide text-white/40">
+                      Bu bet uchun matn mavjud emas — keyingi betga o‘tilmoqda…
                     </p>
-                  </div>
-                  <span className="shrink-0 rounded-full bg-[#EFE6D2] px-2.5 py-1 text-[10px] font-bold text-[#B54D1E]">
-                    {currentPage.page_number}-bet
-                  </span>
-                </div>
-
-                {currentPage.page_image ? (
-                  <div className="relative aspect-[16/10] w-full bg-slate-100">
-                    <img
-                      alt={`${currentPage.page_number}-bet`}
-                      className="h-full w-full object-cover"
-                      src={currentPage.page_image}
-                    />
-                  </div>
-                ) : null}
-
-                <div className="px-5 py-6 sm:px-7">
-                  <h2 className="text-lg font-bold text-[#1B1712] sm:text-xl">
-                    {currentPage.page_number}-bet matni
-                  </h2>
-
-                  <div className="mt-4 space-y-4 text-[15px] leading-7 text-[#2B2620]">
-                    {currentPage.final_text ? (
-                      currentPage.final_text
-                        .split(/\n{2,}/)
-                        .map((paragraph) =>
-                          paragraph.trim(),
-                        )
-                        .filter(Boolean)
-                        .map((paragraph, index) => (
-                          <p
-                            className={
-                              index === 0
-                                ? "first-letter:float-left first-letter:mr-2 first-letter:font-serif first-letter:text-4xl first-letter:font-black first-letter:leading-none first-letter:text-[#1B1712]"
-                                : undefined
-                            }
-                            key={index}
-                          >
-                            {paragraph}
-                          </p>
-                        ))
-                    ) : (
-                      <p className="text-slate-500">
-                        Ushbu bet uchun matn mavjud emas.
-                      </p>
-                    )}
-                  </div>
-
-                  {currentPage.audio ? (
-                    <p className="mt-6 text-xs font-semibold text-[#B54D1E]">
-                      Bu betni yuqoridagi “Ovozda tinglash” tugmasi orqali tinglashingiz mumkin.
-                    </p>
-                  ) : null}
-                </div>
-
-                <div className="flex items-center justify-between border-t border-[#E6D9B4] px-5 py-3 text-[11px] text-slate-400">
-                  <span>{issue.newspaper_name}</span>
-                  <span>
-                    {currentPage.page_number} / {pages.length} bet
-                  </span>
+                  )}
                 </div>
               </div>
-            </article>
-          )}
-        </div>
+            ) : null}
+          </div>
+        ) : (
+          <article className="custom-scrollbar max-h-[80vh] overflow-y-auto bg-[var(--gz-paper-warm)] px-3 py-6 sm:px-8 sm:py-10 lg:max-h-none lg:px-10 lg:py-12">
+            <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-[var(--gz-hairline)] bg-white shadow-sm">
+              <div className="flex items-center gap-3 border-b border-[var(--gz-hairline)] px-5 py-4">
+                <span className="font-display grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[var(--gz-ink)] text-base font-bold text-[var(--gz-bronze-soft)]">
+                  T
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-bold text-[var(--gz-ink)]">
+                    {issue.newspaper_name}
+                  </p>
+                  <p className="text-[11px] text-[var(--gz-ink-soft)]">
+                    {issue.year}-yil, {issue.issue_number}-son
+                  </p>
+                </div>
+                <span className="paper-chip shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold">
+                  {currentPage.page_number}-bet
+                </span>
+              </div>
+
+              {currentPage.page_image ? (
+                <div className="relative aspect-[16/10] w-full bg-slate-100">
+                  <img
+                    alt={`${currentPage.page_number}-bet`}
+                    className="h-full w-full object-cover"
+                    src={currentPage.page_image}
+                  />
+                </div>
+              ) : null}
+
+              <div className="px-5 py-6 sm:px-7">
+                <h2 className="font-display text-lg font-bold text-[var(--gz-ink)] sm:text-xl">
+                  {currentPage.page_number}-bet matni
+                </h2>
+
+                <div className="font-body-serif mt-4 space-y-4 text-[15px] leading-7 text-[var(--gz-ink)]">
+                  {currentPage.final_text ? (
+                    currentPage.final_text
+                      .split(/\n{2,}/)
+                      .map((paragraph) =>
+                        paragraph.trim(),
+                      )
+                      .filter(Boolean)
+                      .map((paragraph, index) => (
+                        <p
+                          className={
+                            index === 0 ? "drop-cap" : undefined
+                          }
+                          key={index}
+                        >
+                          {paragraph}
+                        </p>
+                      ))
+                  ) : (
+                    <p className="text-[var(--gz-ink-soft)]">
+                      Ushbu bet uchun matn mavjud emas.
+                    </p>
+                  )}
+                </div>
+
+                {currentPage.audio ? (
+                  <p className="mt-6 text-xs font-semibold text-[var(--gz-bronze)]">
+                    Bu betni yuqoridagi “Ovozda tinglash” tugmasi orqali tinglashingiz mumkin.
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="flex items-center justify-between border-t border-[var(--gz-hairline)] px-5 py-3 text-[11px] text-[var(--gz-ink-soft)]">
+                <span>{issue.newspaper_name}</span>
+                <span>
+                  {currentPage.page_number} / {pages.length} bet
+                </span>
+              </div>
+            </div>
+          </article>
+        )}
       </div>
 
-      <footer className="flex flex-col gap-2 border-t border-[#CBB98A] bg-[#F8F2E2] px-4 py-3 text-[10px] text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-        <span>
-          Klaviatura: ← → varaq almashtirish
-        </span>
-        <span>
-          {issue.newspaper_name} · {issue.year}-yil, {issue.issue_number}-son
-        </span>
-      </footer>
+      {!isImmersive ? (
+        <footer className="mt-4 flex flex-col gap-2 border-t border-[var(--gz-hairline)] pt-3 text-[10px] text-[var(--gz-ink-soft)] sm:flex-row sm:items-center sm:justify-between">
+          <span>Klaviatura: ← → varaq almashtirish</span>
+          <span>
+            {issue.newspaper_name} · {issue.year}-yil, {issue.issue_number}-son
+          </span>
+        </footer>
+      ) : null}
+
+      {isImmersive ? (
+        <div className="pointer-events-none fixed bottom-5 right-4 z-[80] flex flex-col items-end gap-2.5">
+          {isFabOpen && !isReadingMode ? (
+            <div className="pointer-events-auto flex flex-col items-end gap-2.5">
+              <button
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[var(--gz-ink)]/95 px-4 py-2 text-[11px] font-bold text-[var(--gz-bronze-soft)] shadow-xl backdrop-blur transition hover:bg-[var(--gz-ink)]"
+                onClick={() => {
+                  setIsFabOpen(false);
+                  setIsImmersive(false);
+                }}
+                type="button"
+              >
+                Chiqish
+                <Icon name="close" size={15} />
+              </button>
+              <button
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[var(--gz-ink)]/95 px-4 py-2 text-[11px] font-bold text-[var(--gz-bronze-soft)] shadow-xl backdrop-blur transition hover:bg-[var(--gz-ink)]"
+                onClick={() => {
+                  void shareIssue();
+                }}
+                type="button"
+              >
+                Ulashish
+                <Icon name="share" size={15} />
+              </button>
+              <button
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[var(--gz-ink)]/95 px-4 py-2 text-[11px] font-bold text-[var(--gz-bronze-soft)] shadow-xl backdrop-blur transition hover:bg-[var(--gz-ink)]"
+                onClick={() => {
+                  setMode("image");
+                  setIsReadingMode(true);
+                  setIsFabOpen(false);
+                }}
+                type="button"
+              >
+                Kitobni o‘qib berish
+                <Icon name="volume" size={15} />
+              </button>
+            </div>
+          ) : null}
+
+          <button
+            aria-label={
+              isReadingMode
+                ? "O‘qishni to‘xtatish"
+                : isFabOpen
+                  ? "Menyuni yopish"
+                  : "Menyu"
+            }
+            className={`pointer-events-auto grid h-14 w-14 place-items-center rounded-full border border-white/10 bg-[var(--gz-ink)] text-[var(--gz-bronze-soft)] shadow-2xl transition ${
+              !isFabOpen && !isReadingMode ? "gz-fab-glow" : ""
+            }`}
+            onClick={() => {
+              if (isReadingMode) {
+                setIsReadingMode(false);
+                return;
+              }
+
+              setIsFabOpen((open) => !open);
+            }}
+            type="button"
+          >
+            <Icon
+              name={
+                isReadingMode
+                  ? "pause"
+                  : isFabOpen
+                    ? "close"
+                    : "book"
+              }
+              size={20}
+            />
+          </button>
+        </div>
+      ) : null}
     </section>
   );
 

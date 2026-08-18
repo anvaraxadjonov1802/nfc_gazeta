@@ -97,11 +97,11 @@ export default async function IssuePage({
   } catch {
     return (
       <main className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <section className="rounded-2xl border border-red-200 bg-red-50 p-10 text-center">
-          <h1 className="font-serif text-2xl font-black text-red-900">
+        <section className="hairline-box rounded-sm p-10 text-center">
+          <h1 className="font-display text-2xl font-black text-[var(--gz-ink)]">
             Nashrni yuklab bo‘lmadi
           </h1>
-          <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-red-700">
+          <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-[var(--gz-ink-soft)]">
             Backend server bilan aloqa mavjudligini tekshiring.
           </p>
         </section>
@@ -114,15 +114,16 @@ export default async function IssuePage({
   }
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+    <main className="mx-auto w-full max-w-7xl px-0 py-0 md:px-6 md:py-10 lg:px-8">
       <AnalyticsTracker
         eventType="ISSUE_OPEN"
         issueId={issue.id}
         source={trackingSource}
       />
-      <div className="animate-fade-in-up mb-5 flex flex-wrap items-center justify-between gap-3">
+
+      <div className="hidden md:mb-5 md:flex md:flex-wrap md:items-center md:justify-between md:gap-3">
         <Link
-          className="inline-flex items-center gap-2 text-xs font-bold text-[#1B1712] transition hover:text-[#D9622B]"
+          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.06em] text-[var(--gz-ink)] transition hover:text-[var(--gz-bronze)]"
           href="/arxiv"
         >
           <Icon name="arrow-left" size={16} />
@@ -130,44 +131,36 @@ export default async function IssuePage({
         </Link>
 
         <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-emerald-800">
+          <span className="paper-chip inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[10px] font-black uppercase tracking-wider">
             <Icon name="nfc" size={14} />
             {trackingSource === "NFC"
               ? "NFC orqali ochilgan nashr"
               : "Elektron gazeta nashri"}
           </span>
-          <span className="rounded-full bg-[#F8F2E2] px-3 py-1.5 text-[10px] font-bold text-[#5C6673]">
+          <span className="masthead-label hairline-box rounded-full px-3 py-1.5">
             {formatUzbekDate(issue.publication_date)}
           </span>
         </div>
       </div>
 
-      <div
-        className="animate-fade-in-up"
-        style={{ animationDelay: "0.08s" }}
-      >
-        <IssueViewer
-          issue={issue}
-          trackingSource={trackingSource}
-        />
-      </div>
+      <IssueViewer
+        issue={issue}
+        trackingSource={trackingSource}
+      />
 
-      <header
-        className="animate-fade-in-up mt-8 rounded-2xl border border-[#CBB98A] border-t-4 border-t-[#D9622B] bg-[#F8F2E2] p-5 shadow-sm sm:p-7"
-        style={{ animationDelay: "0.16s" }}
-      >
+      <header className="hidden md:mt-8 md:block md:rounded-sm md:border md:border-[var(--gz-hairline)] md:bg-paper md:p-7">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-4xl">
-            <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-[#B54D1E]">
+            <span className="editorial-label">
               {issue.newspaper_name}
             </span>
-            <h1 className="mt-2 font-serif text-4xl font-black tracking-tight text-[#1B1712] sm:text-5xl lg:text-6xl">
+            <h1 className="font-display mt-3 text-4xl font-black tracking-tight text-[var(--gz-ink)] sm:text-5xl lg:text-6xl">
               {issueLabel(
                 issue.year,
                 issue.issue_number,
               )}
             </h1>
-            <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600 sm:text-base">
+            <p className="font-body-serif mt-4 max-w-3xl text-sm leading-7 text-[var(--gz-ink-soft)] sm:text-base">
               {issue.description ||
                 `${issue.page_count} betli rasmiy elektron gazeta soni.`}
             </p>
@@ -176,7 +169,7 @@ export default async function IssuePage({
           <div className="flex flex-col items-stretch gap-3 sm:flex-row lg:flex-col lg:items-end">
             {issue.original_pdf ? (
               <a
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#CBB98A] bg-white px-5 text-xs font-bold text-[#1B1712] transition hover:border-[#1B1712]"
+                className="inline-flex min-h-11 items-center justify-center gap-2 border border-[var(--gz-ink)] px-5 text-xs font-bold uppercase tracking-[0.08em] text-[var(--gz-ink)] transition hover:bg-[var(--gz-ink)] hover:text-[var(--gz-paper)]"
                 href={issue.original_pdf}
                 rel="noreferrer"
                 target="_blank"
@@ -185,42 +178,42 @@ export default async function IssuePage({
                 Original PDF
               </a>
             ) : null}
-            <code className="rounded-lg bg-[#EFE6D2] px-3 py-2 text-[10px] text-slate-500">
+            <code className="masthead-label border border-[var(--gz-hairline)] px-3 py-2">
               /n/{issue.nfc_slug}
             </code>
           </div>
         </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-3 border-t border-[#CBB98A] pt-5 text-xs sm:grid-cols-4">
-          <div className="rounded-xl bg-[#EFE6D2] p-3">
-            <span className="block text-[10px] text-slate-500">
+        <div className="mt-6 grid grid-cols-2 gap-3 border-t border-[var(--gz-hairline)] pt-5 text-xs sm:grid-cols-4">
+          <div className="border border-[var(--gz-hairline)] p-3">
+            <span className="masthead-label block">
               Nashr soni
             </span>
-            <strong className="mt-1 block text-[#1B1712]">
+            <strong className="font-display mt-1.5 block text-[var(--gz-ink)]">
               {issue.issue_number}-son
             </strong>
           </div>
-          <div className="rounded-xl bg-[#EFE6D2] p-3">
-            <span className="block text-[10px] text-slate-500">
+          <div className="border border-[var(--gz-hairline)] p-3">
+            <span className="masthead-label block">
               Gazeta betlari
             </span>
-            <strong className="mt-1 block text-[#1B1712]">
+            <strong className="font-display mt-1.5 block text-[var(--gz-ink)]">
               {issue.page_count} bet
             </strong>
           </div>
-          <div className="rounded-xl bg-[#EFE6D2] p-3">
-            <span className="block text-[10px] text-slate-500">
+          <div className="border border-[var(--gz-hairline)] p-3">
+            <span className="masthead-label block">
               Elektron maqolalar
             </span>
-            <strong className="mt-1 block text-[#1B1712]">
+            <strong className="font-display mt-1.5 block text-[var(--gz-ink)]">
               {issue.article_count} ta
             </strong>
           </div>
-          <div className="rounded-xl bg-[#EFE6D2] p-3">
-            <span className="block text-[10px] text-slate-500">
+          <div className="border border-[var(--gz-hairline)] p-3">
+            <span className="masthead-label block">
               Holati
             </span>
-            <strong className="mt-1 block text-emerald-700">
+            <strong className="font-display mt-1.5 block text-[var(--gz-ink)]">
               Ommaga ochiq
             </strong>
           </div>
@@ -228,16 +221,13 @@ export default async function IssuePage({
       </header>
 
       {issue.articles.length > 0 ? (
-        <section
-          className="animate-fade-in-up mt-10 space-y-6"
-          style={{ animationDelay: "0.24s" }}
-        >
-          <div className="flex items-end justify-between gap-4 border-b border-[#CBB98A] pb-3">
+        <section className="hidden md:mt-10 md:block md:space-y-6">
+          <div className="hairline-bottom flex items-end justify-between gap-4 pb-3">
             <div>
-              <span className="text-[10px] font-black uppercase tracking-[0.17em] text-[#B54D1E]">
+              <span className="editorial-label">
                 Ushbu gazeta sonida
               </span>
-              <h2 className="mt-1 font-serif text-2xl font-black text-[#1B1712] sm:text-3xl">
+              <h2 className="font-display mt-2 text-2xl font-black text-[var(--gz-ink)] sm:text-3xl">
                 Elektron maqolalar
               </h2>
             </div>
