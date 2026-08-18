@@ -504,10 +504,10 @@ export function IssueViewer({
                 className="mx-auto"
                 drawShadow
                 flippingTime={700}
-                height={733}
+                height={700}
                 maxHeight={1350}
                 maxShadowOpacity={0.5}
-                maxWidth={1000}
+                maxWidth={1500}
                 minHeight={420}
                 minWidth={280}
                 mobileScrollSupport={false}
@@ -522,7 +522,7 @@ export function IssueViewer({
                 style={{}}
                 useMouseEvents
                 usePortrait
-                width={550}
+                width={480}
               >
                 {pages.map((page) => (
                   <FlipPage key={page.id}>
