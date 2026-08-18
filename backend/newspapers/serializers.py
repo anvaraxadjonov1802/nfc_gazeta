@@ -480,7 +480,12 @@ class PageTextUpdateSerializer(serializers.ModelSerializer):
         model = Page
         fields = (
             "final_text",
+            "audio",
         )
+        extra_kwargs = {
+            "final_text": {"required": False},
+            "audio": {"required": False},
+        }
 
     def validate_final_text(self, value: str) -> str:
         return value.replace("\r\n", "\n").strip()

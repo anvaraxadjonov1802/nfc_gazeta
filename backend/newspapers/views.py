@@ -528,12 +528,19 @@ class AdminPageViewSet(
         return PageDetailSerializer
 
     def perform_update(self, serializer):
-        serializer.save(
-            processing_status=(
-                Page.ProcessingStatus.REVIEW
-            ),
-            is_approved=False,
-        )
+        # Only kick the page back into review when the actual
+        # article text changes. Audio-only updates (e.g. the
+        # Aisha TTS pipeline saving a generated audio URL) must
+        # not silently un-approve an already-approved page.
+        if "final_text" in serializer.validated_data:
+            serializer.save(
+                processing_status=(
+                    Page.ProcessingStatus.REVIEW
+                ),
+                is_approved=False,
+            )
+        else:
+            serializer.save()
 
     def partial_update(
         self,

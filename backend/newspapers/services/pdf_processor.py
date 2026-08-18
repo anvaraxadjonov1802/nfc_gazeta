@@ -190,10 +190,9 @@ def delete_existing_pages(
                 save=False
             )
 
-        if existing_page.audio:
-            existing_page.audio.delete(
-                save=False
-            )
+        # `audio` is a URLField pointing at an externally-hosted
+        # file (Vercel Blob), not a Django-managed FileField, so
+        # there is no local/storage-backed file to delete here.
 
     issue.pages.all().delete()
 

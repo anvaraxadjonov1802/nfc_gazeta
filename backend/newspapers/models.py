@@ -321,8 +321,8 @@ class Page(TimeStampedModel):
         blank=True,
         verbose_name="Yakuniy matn",
     )
-    audio = models.FileField(
-        upload_to=page_audio_upload_path,
+    audio = models.URLField(
+        max_length=1000,
         blank=True,
         null=True,
         verbose_name="Audio",
