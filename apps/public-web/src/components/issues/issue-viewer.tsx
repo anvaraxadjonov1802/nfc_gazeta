@@ -9,7 +9,9 @@ import {
   useMemo,
   useRef,
   useState,
+  type MouseEvent as ReactMouseEvent,
   type ReactNode,
+  type TouchEvent as ReactTouchEvent,
 } from "react";
 import { createPortal } from "react-dom";
 import HTMLFlipBook from "react-pageflip";
@@ -68,6 +70,15 @@ export function IssueViewer({
   );
   const readingWordRef =
     useRef<HTMLSpanElement | null>(null);
+  const hardcoverRef = useRef<HTMLDivElement | null>(
+    null,
+  );
+  const panOriginRef = useRef<{
+    x: number;
+    y: number;
+    scrollLeft: number;
+    scrollTop: number;
+  } | null>(null);
 
   const [currentIndex, setCurrentIndex] =
     useState(0);
@@ -319,6 +330,81 @@ export function IssueViewer({
       return () => window.clearTimeout(timeout);
     }
   }, [isFullscreen]);
+
+  // Drag-to-pan while zoomed in. react-pageflip attaches its own raw
+  // mousedown/touchstart listeners to interpret drags as page turns, so a
+  // plain mousemove/mouseup pair here is not enough — the pan has to start
+  // by stopping that drag from ever reaching react-pageflip's handler (see
+  // handleZoomPanStart/handleZoomTouchStart below), then this effect just
+  // follows the pointer to scroll the zoomed book into view.
+  useEffect(() => {
+    function handlePanMove(event: MouseEvent) {
+      const origin = panOriginRef.current;
+      const container = hardcoverRef.current;
+
+      if (!origin || !container) {
+        return;
+      }
+
+      container.scrollLeft =
+        origin.scrollLeft - (event.clientX - origin.x);
+      container.scrollTop =
+        origin.scrollTop - (event.clientY - origin.y);
+    }
+
+    function handlePanEnd() {
+      panOriginRef.current = null;
+    }
+
+    window.addEventListener("mousemove", handlePanMove);
+    window.addEventListener("mouseup", handlePanEnd);
+
+    return () => {
+      window.removeEventListener("mousemove", handlePanMove);
+      window.removeEventListener("mouseup", handlePanEnd);
+    };
+  }, []);
+
+  const handleZoomPanStart = useCallback(
+    (event: ReactMouseEvent<HTMLDivElement>) => {
+      if (zoomLevel <= 1) {
+        return;
+      }
+
+      // Block this drag from ever reaching react-pageflip's own mousedown
+      // handler on the flipbook (a descendant element), so it isn't read
+      // as a page-turn swipe — then track it ourselves for panning.
+      event.stopPropagation();
+
+      const container = hardcoverRef.current;
+
+      if (!container) {
+        return;
+      }
+
+      panOriginRef.current = {
+        x: event.clientX,
+        y: event.clientY,
+        scrollLeft: container.scrollLeft,
+        scrollTop: container.scrollTop,
+      };
+    },
+    [zoomLevel],
+  );
+
+  const handleZoomTouchStart = useCallback(
+    (event: ReactTouchEvent<HTMLDivElement>) => {
+      if (zoomLevel <= 1) {
+        return;
+      }
+
+      // Same idea for touch: once react-pageflip's touchstart handler
+      // never fires, the browser's native touch-scroll takes over the
+      // now-scrollable, zoomed-in container on its own.
+      event.stopPropagation();
+    },
+    [zoomLevel],
+  );
 
   // Drive the karaoke-style reading simulation: tick through the current
   // page's words on a fixed cadence, then hand off to the "reached the end"
@@ -657,8 +743,11 @@ export function IssueViewer({
                 ? "h-full w-full rounded-none px-1 py-3"
                 : `mx-auto min-h-[480px] w-full rounded-sm px-3 py-6 sm:min-h-[620px] sm:px-8 sm:py-10 lg:min-h-[800px] lg:py-12 ${
                     isFullscreen ? "overflow-auto" : "overflow-hidden"
-                  }`
+                  } ${zoomLevel > 1 ? "cursor-grab active:cursor-grabbing" : ""}`
             }`}
+            onMouseDownCapture={handleZoomPanStart}
+            onTouchStartCapture={handleZoomTouchStart}
+            ref={hardcoverRef}
           >
             <div className="pointer-events-none absolute inset-y-6 left-1/2 w-10 -translate-x-1/2 bg-gradient-to-r from-black/0 via-black/45 to-black/0 blur-sm" />
             <span className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 text-[9px] font-black uppercase tracking-[0.4em] text-white/10 sm:bottom-3 sm:text-[10px]">
