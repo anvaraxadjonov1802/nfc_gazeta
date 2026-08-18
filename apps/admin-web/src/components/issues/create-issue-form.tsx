@@ -277,6 +277,44 @@ export function CreateIssueForm() {
         createData as CreatedIssue;
 
       setStage(
+        "Yuklash uchun ruxsat olinmoqda...",
+      );
+
+      // Large PDFs can't be proxied through this app's own Next.js API
+      // route on Vercel (hard 4.5 MB request-body limit on the platform
+      // itself), so we fetch a short-lived upload token here and then
+      // upload the file straight from the browser to the Django backend,
+      // which has no such limit.
+      const tokenResponse = await fetch(
+        `/api/issues/${createdIssue.id}/upload-token`,
+        {
+          method: "GET",
+          cache: "no-store",
+        },
+      );
+
+      const tokenData = await tokenResponse
+        .json()
+        .catch(() => null);
+
+      if (!tokenResponse.ok) {
+        throw new Error(
+          `Nashr yaratildi, lekin PDF yuklashga ruxsat olinmadi. ${
+            getApiErrorMessage(
+              tokenData,
+              "Ruxsat olishda xatolik.",
+            )
+          }`,
+        );
+      }
+
+      const { upload_url: uploadUrl, access_token: accessToken } =
+        tokenData as {
+          upload_url: string;
+          access_token: string;
+        };
+
+      setStage(
         "PDF serverga yuklanmoqda...",
       );
 
@@ -289,13 +327,13 @@ export function CreateIssueForm() {
       );
 
       const uploadResponse =
-        await fetch(
-          `/api/issues/${createdIssue.id}/upload`,
-          {
-            method: "POST",
-            body: uploadFormData,
+        await fetch(uploadUrl, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
           },
-        );
+          body: uploadFormData,
+        });
 
       const uploadData =
         await uploadResponse
