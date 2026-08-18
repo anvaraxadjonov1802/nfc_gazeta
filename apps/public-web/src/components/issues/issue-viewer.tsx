@@ -590,7 +590,11 @@ export function IssueViewer({
       />
 
       {!isImmersive ? (
-        <div className="paper-panel mb-4 flex flex-col gap-3 rounded-sm border border-[var(--gz-hairline)] px-3 py-3 sm:mb-6 sm:px-4 xl:flex-row xl:items-center xl:justify-between">
+        <div
+          className={`paper-panel mb-4 flex flex-col gap-3 rounded-sm border border-[var(--gz-hairline)] px-3 py-3 sm:mb-6 sm:px-4 xl:flex-row xl:items-center xl:justify-between ${
+            isFullscreen ? "sticky top-0 z-30 backdrop-blur-sm" : ""
+          }`}
+        >
           <div className="flex items-center gap-2">
             <button
               aria-label="Oldingi bet"
