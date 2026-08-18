@@ -44,11 +44,15 @@ function clamp(
 
 const FlipPage = forwardRef<
   HTMLDivElement,
-  { children: ReactNode }
->(function FlipPage({ children }, ref) {
+  { children: ReactNode; isCover?: boolean }
+>(function FlipPage({ children, isCover = false }, ref) {
   return (
     <div
-      className="relative h-full w-full overflow-hidden bg-white"
+      className={`relative h-full w-full overflow-hidden bg-white ${
+        isCover
+          ? "shadow-[inset_0_0_0_10px_rgba(23,20,15,0.94)]"
+          : ""
+      }`}
       ref={ref}
     >
       {children}
@@ -663,7 +667,7 @@ export function IssueViewer({
                   setCurrentIndex(event.data);
                 }}
                 ref={flipBookRef}
-                showCover={false}
+                showCover
                 size="stretch"
                 startPage={currentIndex}
                 style={{}}
@@ -671,8 +675,13 @@ export function IssueViewer({
                 usePortrait
                 width={480}
               >
-                {pages.map((page) => (
-                  <FlipPage key={page.id}>
+                {pages.map((page, index) => (
+                  <FlipPage
+                    isCover={
+                      index === 0 || index === pages.length - 1
+                    }
+                    key={page.id}
+                  >
                     {page.page_image ? (
                       <img
                         alt={`${page.page_number}-bet`}
