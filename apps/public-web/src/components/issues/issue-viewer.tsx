@@ -44,15 +44,11 @@ function clamp(
 
 const FlipPage = forwardRef<
   HTMLDivElement,
-  { children: ReactNode; isCover?: boolean }
->(function FlipPage({ children, isCover = false }, ref) {
+  { children: ReactNode }
+>(function FlipPage({ children }, ref) {
   return (
     <div
-      className={`relative h-full w-full overflow-hidden bg-white ${
-        isCover
-          ? "shadow-[inset_0_0_0_10px_rgba(23,20,15,0.94)]"
-          : ""
-      }`}
+      className="relative h-full w-full overflow-hidden bg-white"
       ref={ref}
     >
       {children}
@@ -98,6 +94,41 @@ export function IssueViewer({
   const prevDisabled = currentIndex <= 0;
   const nextDisabled =
     currentIndex >= pages.length - 1;
+
+  // On desktop, bookend the real pages with a pair of blank "cover" slots so
+  // page 1 always lands on the right and the last page on the left — just
+  // like an actual book. A trailing cover is only added when it keeps the
+  // total item count even, otherwise the flip library forces a rigid
+  // "hard" flip on whatever page is left dangling alone at the end. Mobile
+  // (isImmersive) skips this entirely and shows the real pages as-is.
+  const showBookCovers = !isImmersive;
+
+  const flipItems = useMemo(() => {
+    if (!showBookCovers) {
+      return pages.map((page) => ({
+        kind: "page" as const,
+        page,
+      }));
+    }
+
+    const items: Array<
+      | { kind: "page"; page: (typeof pages)[number] }
+      | { kind: "cover-front" }
+      | { kind: "cover-back" }
+    > = [{ kind: "cover-front" }];
+
+    for (const page of pages) {
+      items.push({ kind: "page", page });
+    }
+
+    if (pages.length % 2 === 0) {
+      items.push({ kind: "cover-back" });
+    }
+
+    return items;
+  }, [pages, showBookCovers]);
+
+  const flipIndexOffset = showBookCovers ? 1 : 0;
 
   const readingWords = useMemo(() => {
     const text = currentPage?.final_text?.trim();
@@ -664,40 +695,71 @@ export function IssueViewer({
                 mobileScrollSupport={false}
                 onFlip={(event) => {
                   resetAudioPlayback();
-                  setCurrentIndex(event.data);
+                  setCurrentIndex(
+                    clamp(
+                      event.data - flipIndexOffset,
+                      0,
+                      Math.max(pages.length - 1, 0),
+                    ),
+                  );
                 }}
                 ref={flipBookRef}
-                showCover
+                showCover={false}
                 size="stretch"
-                startPage={currentIndex}
+                startPage={currentIndex + flipIndexOffset}
                 style={{}}
                 useMouseEvents
                 usePortrait
                 width={480}
               >
-                {pages.map((page, index) => (
-                  <FlipPage
-                    isCover={
-                      index === 0 || index === pages.length - 1
-                    }
-                    key={page.id}
-                  >
-                    {page.page_image ? (
-                      <img
-                        alt={`${page.page_number}-bet`}
-                        className="h-full w-full object-contain"
-                        src={page.page_image}
-                      />
-                    ) : (
-                      <div className="grid h-full place-items-center text-xs text-slate-400">
-                        Bet rasmi yo‘q
+                {flipItems.map((item) => {
+                  if (item.kind === "page") {
+                    const page = item.page;
+
+                    return (
+                      <FlipPage key={page.id}>
+                        {page.page_image ? (
+                          <img
+                            alt={`${page.page_number}-bet`}
+                            className="h-full w-full object-contain"
+                            src={page.page_image}
+                          />
+                        ) : (
+                          <div className="grid h-full place-items-center text-xs text-slate-400">
+                            Bet rasmi yo‘q
+                          </div>
+                        )}
+                        <span className="absolute bottom-2 right-3 text-[10px] font-semibold text-[var(--gz-ink-soft)]/70">
+                          {page.page_number}-bet
+                        </span>
+                      </FlipPage>
+                    );
+                  }
+
+                  return (
+                    <FlipPage key={item.kind}>
+                      <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-[var(--gz-ink)] px-6 text-center">
+                        {item.kind === "cover-front" ? (
+                          <>
+                            <span className="masthead-label text-[var(--gz-bronze-soft)]">
+                              {issue.newspaper_name}
+                            </span>
+                            <h2 className="font-display text-2xl font-black text-white sm:text-3xl">
+                              Temiryo‘lchi
+                            </h2>
+                            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/50">
+                              {issue.year}-yil · {issue.issue_number}-son
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-white/25">
+                            Temiryo‘lchi
+                          </span>
+                        )}
                       </div>
-                    )}
-                    <span className="absolute bottom-2 right-3 text-[10px] font-semibold text-[var(--gz-ink-soft)]/70">
-                      {page.page_number}-bet
-                    </span>
-                  </FlipPage>
-                ))}
+                    </FlipPage>
+                  );
+                })}
               </HTMLFlipBook>
             </div>
 
