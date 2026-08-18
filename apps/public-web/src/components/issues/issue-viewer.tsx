@@ -516,7 +516,7 @@ export function IssueViewer({
                   setCurrentIndex(event.data);
                 }}
                 ref={flipBookRef}
-                showCover
+                showCover={false}
                 size="stretch"
                 startPage={currentIndex}
                 style={{}}
