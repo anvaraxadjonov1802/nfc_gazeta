@@ -269,6 +269,33 @@ export function IssueViewer({
     selectPage(currentIndex + 1);
   }, [currentIndex, mode, selectPage]);
 
+  // Used only for hands-free auto-advance during audio reading mode. A
+  // regular animated flipNext() there reads as the page "swinging" on its
+  // own mid-listen, which feels broken — turnToPage() swaps the page
+  // instantly with no flip animation instead. Manual swipe/tap navigation
+  // still goes through goToNextPage above and keeps the real flip.
+  const advanceReadingModePage = useCallback(
+    (nextIndex: number) => {
+      const clampedIndex = clamp(
+        nextIndex,
+        0,
+        Math.max(pages.length - 1, 0),
+      );
+
+      flipBookRef.current
+        ?.pageFlip()
+        .turnToPage(clampedIndex + flipIndexOffset);
+
+      resetAudioPlayback();
+      setCurrentIndex(clampedIndex);
+    },
+    [
+      pages.length,
+      flipIndexOffset,
+      resetAudioPlayback,
+    ],
+  );
+
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       const target = event.target as HTMLElement | null;
@@ -481,16 +508,17 @@ export function IssueViewer({
         return;
       }
 
-      goToNextPage();
+      advanceReadingModePage(currentIndex + 1);
     }, readingWords.length === 0 ? 1100 : 850);
 
     return () => window.clearTimeout(timeout);
   }, [
     isReadingMode,
+    currentIndex,
     readingWordIndex,
     readingWords.length,
     nextDisabled,
-    goToNextPage,
+    advanceReadingModePage,
     currentPage.audio,
   ]);
 
@@ -528,7 +556,7 @@ export function IssueViewer({
         return;
       }
 
-      goToNextPage();
+      advanceReadingModePage(currentIndex + 1);
     }
 
     audio.addEventListener("timeupdate", handleTimeUpdate);
@@ -553,7 +581,7 @@ export function IssueViewer({
     currentPage.audio,
     readingWords.length,
     nextDisabled,
-    goToNextPage,
+    advanceReadingModePage,
     resetAudioPlayback,
   ]);
 
