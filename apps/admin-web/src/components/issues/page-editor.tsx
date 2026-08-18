@@ -424,6 +424,50 @@ export function PageEditor({
             </span>
           </div>
 
+          <div
+            style={{
+              marginTop: "0.75rem",
+              marginBottom: "0.75rem",
+            }}
+          >
+            <span
+              style={{
+                display: "block",
+                marginBottom: "0.35rem",
+                fontSize: "0.85rem",
+                opacity: 0.75,
+              }}
+            >
+              Ovoz (audio):{" "}
+              <strong>
+                {page.audio
+                  ? "mavjud"
+                  : "yo‘q"}
+              </strong>
+            </span>
+
+            {page.audio ? (
+              <>
+                <audio
+                  controls
+                  src={page.audio}
+                  style={{
+                    width: "100%",
+                    marginBottom: "0.35rem",
+                  }}
+                />
+                <code
+                  style={{
+                    fontSize: "0.75rem",
+                    wordBreak: "break-all",
+                  }}
+                >
+                  {page.audio}
+                </code>
+              </>
+            ) : null}
+          </div>
+
           <div className="page-editor-actions">
             {canEdit ? (
               <button
