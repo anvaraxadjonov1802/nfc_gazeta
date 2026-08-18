@@ -408,9 +408,15 @@ export function IssueViewer({
 
   // Drive the karaoke-style reading simulation: tick through the current
   // page's words on a fixed cadence, then hand off to the "reached the end"
-  // effect below once every word has been marked as read.
+  // effect below once every word has been marked as read. This is only a
+  // fallback for pages that don't have narrated audio yet — pages with real
+  // Aisha audio are driven by the effect further below instead.
   useEffect(() => {
     if (!isReadingMode) {
+      return;
+    }
+
+    if (currentPage.audio) {
       return;
     }
 
@@ -445,13 +451,19 @@ export function IssueViewer({
         window.clearInterval(interval);
       }
     };
-  }, [isReadingMode, currentIndex, readingWords.length]);
+  }, [isReadingMode, currentIndex, readingWords.length, currentPage.audio]);
 
   // Once the last word on a page has been marked (or the page has no text
   // at all), pause briefly and auto-advance — exactly like a real reader
-  // turning the page — or stop cleanly at the final page.
+  // turning the page — or stop cleanly at the final page. Only applies to
+  // the simulated fallback above; real-audio pages advance on "ended"
+  // instead (see the effect below).
   useEffect(() => {
     if (!isReadingMode) {
+      return;
+    }
+
+    if (currentPage.audio) {
       return;
     }
 
@@ -479,6 +491,70 @@ export function IssueViewer({
     readingWords.length,
     nextDisabled,
     goToNextPage,
+    currentPage.audio,
+  ]);
+
+  // Real narrated-audio reading: when the current page has Aisha-generated
+  // audio, play it for real (instead of the fixed-cadence simulation above)
+  // and drive the karaoke word highlight proportionally to actual playback
+  // progress, then auto-advance to the next page when the audio ends.
+  useEffect(() => {
+    const audio = audioRef.current;
+
+    if (!isReadingMode || !audio || !currentPage.audio) {
+      return;
+    }
+
+    function handleTimeUpdate() {
+      if (!audio || !audio.duration || readingWords.length === 0) {
+        return;
+      }
+
+      const ratio = audio.currentTime / audio.duration;
+      const wordIndex = clamp(
+        Math.floor(ratio * readingWords.length),
+        0,
+        readingWords.length - 1,
+      );
+
+      setReadingWordIndex(wordIndex);
+    }
+
+    function handleEnded() {
+      setIsAudioPlaying(false);
+
+      if (nextDisabled) {
+        setIsReadingMode(false);
+        return;
+      }
+
+      goToNextPage();
+    }
+
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("ended", handleEnded);
+
+    setReadingWordIndex(0);
+    audio.currentTime = 0;
+
+    void audio
+      .play()
+      .then(() => setIsAudioPlaying(true))
+      .catch(() => setIsAudioPlaying(false));
+
+    return () => {
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("ended", handleEnded);
+      resetAudioPlayback();
+    };
+  }, [
+    isReadingMode,
+    currentIndex,
+    currentPage.audio,
+    readingWords.length,
+    nextDisabled,
+    goToNextPage,
+    resetAudioPlayback,
   ]);
 
   useEffect(() => {
@@ -1018,6 +1094,22 @@ export function IssueViewer({
                   setMode("image");
                   setIsReadingMode(true);
                   setIsFabOpen(false);
+
+                  // Kick off the very first play() synchronously inside
+                  // this tap handler — iOS Safari only allows autoplay
+                  // when play() is called directly from a user gesture,
+                  // not from a useEffect that fires a tick later. Later
+                  // page-to-page auto-advance is handled by the reading
+                  // effect once this first play has "unlocked" playback.
+                  const audio = audioRef.current;
+
+                  if (audio && currentPage.audio) {
+                    audio.currentTime = 0;
+                    void audio
+                      .play()
+                      .then(() => setIsAudioPlaying(true))
+                      .catch(() => setIsAudioPlaying(false));
+                  }
                 }}
                 type="button"
               >
